@@ -152,21 +152,18 @@
     <form method="get">
       <label for="status_filter">Filtrar por Status:</label>
       <select id="status_filter" name="status">
-        <option value="">Todos</option>
-        <option value="Aguardando">Aguardando</option>
-        <option value="Urgente">Urgente</option>
-        <option value="Concluído">Concluído</option>
-        <option value="Atenção">Atenção</option>
+          <option value="">Todos</option>
+          <option value="Aguardando">Aguardando</option>
+          <option value="Urgente">Urgente</option>
+          <option value="Concluído">Concluído</option>
+          <option value="Atenção">Atenção</option>
       </select>
+      
+      <label for="previsao_chegada_filter">Previsão de Chegada:</label>
+      <input type="date" id="previsao_chegada_filter" name="previsao_chegada" />
+      
       <input type="submit" value="Filtrar" />
-    </form>
-<br> 
-    <form method="get">
-      <label for="previsao_chegada_filter"
-        >Previsão de Chegada:</label>
-      <input type="date" id="previsao_chegada_filter" name="previsao_chegada_filter"/>
-      <input type="submit" value="Filtrar" />
-    </form>
+  </form>
     <!-- Div que envolve o botão e a classe "button-container" para centralizá-lo -->
     <div class="button-container">
       <a href="{% url 'ordens_finalizadas' %}" class="btn-finalizadas">Ver OS's Finalizadas</a>
@@ -196,7 +193,7 @@
           <td class="{% if ordem.status == 'Concluído' %}status-concluido{% elif ordem.status == 'Atenção' %}status-atendimento{% elif ordem.status == 'Urgente' %}status-urgente{% elif ordem.status == 'Aguardando' %}status-aguardando{% endif %}">
             {{ ordem.status }}
           <td>
-            <a href="{% url 'ordem_de_servico_detail' ordem.id %}">Detalhes</a>
+            <a href="{% url 'ordens_detail' ordem.id %}">Detalhes</a>
           </td>
         </tr>
         {% endfor %}

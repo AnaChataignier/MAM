@@ -24,7 +24,11 @@ def minhas_ordens_de_servico(request):
         if previsao_chegada_filter:
             ordens_ativas = ordens_ativas.filter(previsao_chegada=previsao_chegada_filter)
 
-        return render(request,"minhas_ordens_de_servico.html",{"ordens_de_servico": ordens_ativas, "user": user})
+        return render(request, "minhas_ordens_de_servico.html", {
+            "ordens_de_servico": ordens_ativas,
+            "user": user,
+            "status_filter": status_filter,
+            "previsao_chegada_filter": previsao_chegada_filter })
     except Exception as e:
         return render(request, "error.html", {"error_message": str(e)})
 
