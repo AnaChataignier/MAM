@@ -196,33 +196,31 @@
 
     <!-- Formulários de filtro -->
     <form method="get">
-        <label for="status_filter">Filtrar por Status:</label>
-        <select id="status_filter" name="status">
-            <option value="">Todos</option>
-            <option value="Aguardando">Aguardando</option>
-            <option value="Urgente">Urgente</option>
-            <option value="Concluído">Concluído</option>
-            <option value="Atenção">Atenção</option>
-        </select>
-        <input type="submit" value="Filtrar" />
-    </form>
-    <form method="get">
-        <label for="tecnico_filter">Filtrar por Técnico:</label>
-        <select id="tecnico_filter" name="técnico">
-            <option value="">Todos</option>
-            {% for user in users %}
-            <option value="{{ user.id }}">{{ user.username }}</option>
-            {% endfor %}
-        </select>
-        <input type="submit" value="Filtrar" />
-    </form>
-    <form method="get">
-        <label for="data_chegada_min_filter">Previsão de Chegada (Data Mínima):</label>
-        <input type="date" id="data_chegada_min_filter" name="data_chegada_min" />
-        <label for="data_chegada_max_filter">Previsão de Chegada (Data Máxima):</label>
-        <input type="date" id="data_chegada_max_filter" name="data_chegada_max" />
-        <input type="submit" value="Filtrar" />
-    </form>
+      <label for="status_filter">Filtrar por Status:</label>
+      <select id="status_filter" name="status">
+          <option value="">Todos</option>
+          <option value="Aguardando">Aguardando</option>
+          <option value="Urgente">Urgente</option>
+          <option value="Concluído">Concluído</option>
+          <option value="Atenção">Atenção</option>
+      </select>
+      
+      <label for="tecnico_filter">Filtrar por Técnico:</label>
+      <select id="tecnico_filter" name="tecnico">
+          <option value="">Todos</option>
+          {% for user in users %}
+          <option value="{{ user.id }}">{{ user.username }}</option>
+          {% endfor %}
+      </select>
+      
+      <label for="data_chegada_min_filter">Previsão de Chegada (Data Mínima):</label>
+      <input type="date" id="data_chegada_min_filter" name="data_chegada_min" />
+      <label for="data_chegada_max_filter">Previsão de Chegada (Data Máxima):</label>
+      <input type="date" id="data_chegada_max_filter" name="data_chegada_max" />
+      
+      <input type="submit" value="Filtrar" />
+  </form>
+  
 
     <!-- Tabela de Ordens de Serviço -->
     <h1>Lista de Ordens de Serviço</h1>

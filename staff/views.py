@@ -23,7 +23,7 @@ def staff(request):
 @user_passes_test(is_staff)
 def lista_os(request):
     status_filter = request.GET.get("status")
-    tecnico_filter = request.GET.get("técnico")
+    tecnico_filter = request.GET.get("tecnico")
     data_chegada_min_filter = request.GET.get("data_chegada_min")
     data_chegada_max_filter = request.GET.get("data_chegada_max")
     
@@ -38,7 +38,7 @@ def lista_os(request):
     if data_chegada_min_filter:
         try:
             data_chegada_min_filter = datetime.strptime(data_chegada_min_filter, "%Y-%m-%d").date()
-            ordens_de_servico = ordens_de_servico.filter( previsao_chegada__gte=data_chegada_min_filter)
+            ordens_de_servico = ordens_de_servico.filter(previsao_chegada__gte=data_chegada_min_filter)
         except ValueError:
             pass
 
@@ -50,21 +50,22 @@ def lista_os(request):
             pass
 
     items_per_page = 20
-    # Criando um objeto Paginator
     paginator = Paginator(ordens_de_servico, items_per_page)
-    # Obter o número da página a partir dos parâmetros GET
     page = request.GET.get("page")
     try:
-        # Obter a página atual
         ordens_de_servico = paginator.page(page)
     except PageNotAnInteger:
-        # Se 'page' não for um número inteiro, mostre a primeira página
         ordens_de_servico = paginator.page(1)
     except EmptyPage:
-        # Se 'page' estiver fora dos limites, mostre a última página
         ordens_de_servico = paginator.page(paginator.num_pages)
 
-    return render(request,"lista_os.html",{"ordens_de_servico": ordens_de_servico, "users": users})
+    return render(request,"lista_os.html", {
+        "ordens_de_servico": ordens_de_servico, 
+        "users": users,
+        "status_filter": status_filter,
+        "tecnico_filter": tecnico_filter,
+        "data_chegada_min_filter": data_chegada_min_filter,
+        "data_chegada_max_filter": data_chegada_max_filter})
 
 
 
