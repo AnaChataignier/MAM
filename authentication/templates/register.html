@@ -1,0 +1,30 @@
+{% extends 'base.html' %}{%load static%}  {% block styles %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/register.css' %}" />
+{% endblock %} {% block title %} Register {% endblock %}
+
+{% block content %}
+  <h2>Registrar</h2>
+  <form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <h2>Endereço</h2>
+    {{ endereco.as_p}}
+    <button type="submit">Registrar</button>
+  </form>
+  <script>
+    document.getElementById("id_cep").addEventListener("blur", function () {
+      var cep = this.value;
+      var url = `http://viacep.com.br/ws/${cep}/json/`;
+
+      fetch(url)
+        .then((response) => response.json())
+        .then((data) => {
+          document.getElementById("id_rua").value = data.logradouro;
+          document.getElementById("id_bairro").value = data.bairro;
+          document.getElementById("id_cidade").value = data.localidade;
+          document.getElementById("id_estado").value = data.uf;
+        });
+    });
+  </script>
+  <p>Já tem uma conta? <a href="{% url 'user_login' %}">Faça login</a></p>
+{% endblock %}

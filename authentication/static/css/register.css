@@ -1,0 +1,48 @@
+/* Estilizando o formulário de registro */
+form {
+    max-width: 400px;
+    margin: 0 auto;
+  }
+  
+  /* Estilizando o título "Registrar" */
+  h2 {
+    font-size: 24px;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  /* Estilizando os campos do formulário de registro */
+  input[type="text"],
+  input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  /* Estilizando o botão de registro */
+  button[type="submit"] {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff; /* Cor de fundo azul */
+    color: #fff; /* Cor do texto branco */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  /* Estilizando o link "Faça login" */
+  p a {
+    text-decoration: none;
+    color: #007bff; /* Cor do link azul */
+    margin-right: 10px;
+  }
+  
+  /* Estilizando o texto "Já tem uma conta?" */
+  p {
+    text-align: center;
+    margin-top: 20px;
+  }
+  
