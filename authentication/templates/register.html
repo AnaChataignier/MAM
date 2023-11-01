@@ -1,30 +1,117 @@
-{% extends 'base.html' %}{%load static%}  {% block styles %}
-<link rel="stylesheet" type="text/css" href="{% static 'css/register.css' %}" />
-{% endblock %} {% block title %} Register {% endblock %}
+{%load static%}
+<!doctype html>
+<html lang="en" data-bs-theme="auto">
+  <head>
 
-{% block content %}
-  <h2>Registrar</h2>
-  <form method="POST">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <h2>Endereço</h2>
-    {{ endereco.as_p}}
-    <button type="submit">Registrar</button>
-  </form>
-  <script>
-    document.getElementById("id_cep").addEventListener("blur", function () {
-      var cep = this.value;
-      var url = `http://viacep.com.br/ws/${cep}/json/`;
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="J.M.Campos">
+    
+    <meta name="generator" content="DGBZ">
+    <title>App Mamminfo</title>
+    <link rel="canonical" href="">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3">
+    <link href="{% static 'assets/dist/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/css/app_mamminfo.css' %}" rel="stylesheet">
+  </head>
 
-      fetch(url)
-        .then((response) => response.json())
-        .then((data) => {
-          document.getElementById("id_rua").value = data.logradouro;
-          document.getElementById("id_bairro").value = data.bairro;
-          document.getElementById("id_cidade").value = data.localidade;
-          document.getElementById("id_estado").value = data.uf;
-        });
-    });
-  </script>
-  <p>Já tem uma conta? <a href="{% url 'user_login' %}">Faça login</a></p>
-{% endblock %}
+  <body>
+
+    <main>
+
+      <section id="login_scr" class="bg02">
+        <div class="container">
+          <h1 class="font-bold">Mamminfo</h1>
+          {% if messages %}
+          <br>
+          {% for message in messages %}
+          <div class="alert alert-sm alert-{{ message.tags }} d-flex justify-content-center align-items-center" role="alert">
+              {{ message }}
+          </div>
+      {% endfor %}
+      
+          {% endif %}
+          <form id="form_cadastro" class="row" method="post">
+            {% csrf_token %}
+           
+            <div class="mb-3">
+              {{ form.username }}
+            </div>
+            <div class="mb-3 col-6">
+              {{ form.first_name }}
+            </div>
+            <div class="mb-3 col-6">
+              {{ form.last_name }}
+            </div>
+            <div class="mb-3">
+              {{ form.email }}
+            </div>
+            <div class="mb-3 col-6">
+              {{ form.telefone }}
+            </div>
+            <div class="mb-3 col-6">
+              {{ endereco_form.cep }}
+            </div>
+            <div class="mb-3" >
+              {{ endereco_form.rua }}
+            </div>
+            <div class="mb-3" >
+                {{ endereco_form.bairro }}
+              </div>
+            <div class="mb-3" >
+                {{ endereco_form.cidade }}
+              </div>
+            <div class="mb-3">
+                {{ endereco_form.estado}}
+              </div>
+            <div class="mb-3">
+                {{ endereco_form.numero }}
+              </div>
+            <div class="mb-3">
+                {{ endereco_form.complemento }}
+              </div>
+            <div class="mb-3">
+              {{ form.password1 }}
+            </div>
+            <div class="mb-3">
+              {{ form.password2 }}
+            </div>
+            <div class="mb-2">
+              {{ form.group }}
+            </div>
+            <div class="mb-3">
+              <button type="submit" class="btn bg01 text-light w-100 font-bold">Entrar</button>
+          </div>
+        </form>
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                var cepField = document.querySelector("[name='cep']");
+                if (cepField) {
+                    cepField.addEventListener("blur", function () {
+                        var cep = this.value;
+                        var url = `http://viacep.com.br/ws/${cep}/json/`;
+        
+                        fetch(url)
+                            .then((response) => response.json())
+                            .then((data) => {
+                                document.querySelector("[name='rua']").value = data.logradouro;
+                                document.querySelector("[name='bairro']").value = data.bairro;
+                                document.querySelector("[name='cidade']").value = data.localidade;
+                                document.querySelector("[name='estado']").value = data.uf;
+                            });
+                    });
+                }
+            });
+        </script>
+        
+          <a href={% url 'user_login' %} class="w-100">Já tenho cadastro.</a>
+        </div>
+      </section>
+      
+    </main>
+
+    <script src={% static 'assets/dist/js/bootstrap.bundle.min.js' %}></script>
+  </body>
+
+  </html>

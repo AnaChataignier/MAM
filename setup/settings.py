@@ -4,7 +4,7 @@ from pathlib import Path
 import os
 from datetime import timedelta
 from config import KEY_PROJETO
-from django.contrib.messages import constants
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -119,7 +119,8 @@ USE_TZ = True
 STATIC_URL = "/static/"
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "authentication/static"),
+
+    os.path.join(BASE_DIR, "main/templates/static"),
 ]
 
 MEDIA_URL = "/media/"
@@ -145,6 +146,7 @@ SIMPLE_JWT = {
     "SLIDING_TOKEN_LIFETIME": timedelta(days=1),
 }
 
+from django.contrib.messages import constants
 
 MESSAGE_TAGS = {
     constants.DEBUG: 'alert-primary',

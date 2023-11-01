@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Ordens de Serviço</title>
+    <style>
+      /* Reset de estilos padrão do navegador */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      /* Estilize o corpo da página */
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f5f5f5;
+        margin: 0;
+        padding: 0;
+      }
+
+      /* Estilize o cabeçalho da tabela */
+      h1 {
+        text-align: center;
+        margin-top: 20px;
+      }
+
+      /* Estilize a tabela */
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        border-spacing: 0;
+        margin: 20px auto;
+      }
+
+      /* Estilize as células da tabela */
+      table td,
+      table th {
+        padding: 10px;
+        border: 1px solid #ccc;
+        text-align: left;
+      }
+
+      /* Estilize as células do cabeçalho */
+      table th {
+        background-color: #007bff;
+        color: #fff;
+      }
+
+      /* Estilize as células da tabela com bordas alternadas */
+      table tr:nth-child(even) {
+        background-color: #f2f2f2;
+      }
+
+      /* Estilize o link dentro das células da tabela */
+      table a {
+        color: #007bff;
+        text-decoration: none;
+      }
+
+      /* Estilize o link quando o cursor passa por cima */
+      table a:hover {
+        text-decoration: underline;
+      }
+
+      /* Estilize os formulários */
+      form {
+        display: inline-block; /* Alinhe os formulários lado a lado */
+        margin: 10px;
+        padding: 10px;
+        background-color: #f9f9f9;
+        border: 1px solid #ccc;
+        width: 400px;
+      }
+
+      /* Estilize os rótulos dos formulários */
+      label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+        width: 800px;
+      }
+
+      /* Estilize as listas suspensas (select) nos formulários */
+      select {
+        width: 200px;
+        padding: 5px;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+      }
+
+      /* Estilize os botões de envio nos formulários */
+      input[type="submit"] {
+        background-color: #007bff;
+        color: #fff;
+        padding: 10px 20px;
+        border: none;
+        cursor: pointer;
+        border-radius: 3px;
+      }
+
+      /* Estilize os botões de envio quando o cursor passa por cima */
+      input[type="submit"]:hover {
+        background-color: #0056b3;
+      }
+      table a:hover {
+        text-decoration: underline;
+      }
+      .status-concluido {
+        background-color: green;
+        color: white;
+      }
+
+      .status-atendimento {
+        background-color: yellow;
+      }
+
+      .status-urgente {
+        background-color: red;
+        color: white;
+      }
+
+      .status-aguardando {
+        background-color: lightblue;
+      }
+      /* Estilos para a paginação */
+      .pagination {
+          text-align: center;
+          margin: 20px 0;
+      }
+      
+      .pagination a {
+          color: #007bff;
+          text-decoration: none;
+          margin: 0 10px;
+          text-weight: bold;
+      }
+      
+      .pagination a:hover {
+          text-decoration: underline;
+      }
+      
+      /* Estilos para a página atual */
+      .current-page {
+          font-weight: bold;
+      }      
+
+      /* Reset de margem e preenchimento */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Estilo da barra de navegação */
+.navbar {
+  background-color: #333; /* Cor de fundo da barra de navegação */
+  overflow: hidden;
+}
+
+/* Estilo da lista de links na barra de navegação */
+.navbar ul {
+  list-style-type: none; /* Remover marcadores de lista */
+}
+
+/* Estilo dos itens da lista (links) na barra de navegação */
+.navbar li {
+  float: left; /* Alinhar os itens horizontalmente */
+}
+
+/* Estilo dos links na barra de navegação */
+.navbar a {
+  display: block; /* Transformar os links em blocos para ocupar toda a largura disponível */
+  color: white; /* Cor do texto dos links */
+  text-align: center; /* Alinhar texto ao centro */
+  padding: 14px 16px; /* Preenchimento interno dos links */
+  text-decoration: none; /* Remover sublinhado padrão dos links */
+}
+
+/* Efeito de destaque quando o mouse passa por cima dos links */
+.navbar a:hover {
+  background-color: #555; /* Cor de fundo quando passa o mouse por cima */
+}
+    </style>
+</head>
+<body>
+    <!-- Barra de navegação -->
+    <nav class="navbar">
+        <ul>
+            <li><a href="{% url 'staff' %}">Home</a></li>
+            <li><a href="{% url 'lista_os' %}">Lista OS</a></li>
+            <li><a href="{% url 'lista_clientes' %}">Lista clientes</a></li>
+            <li><a href="{% url 'lista_tecnicos' %}">Lista tecnicos</a></li>
+            <li><a href="{% url 'sair' %}">Logout</a></li>
+        </ul>
+    </nav>
+    <br>
+
+    <!-- Formulários de filtro -->
+  <!-- Formulário de filtro para clientes -->
+<form method="get">
+    <label for="nome_filter">Filtrar por Nome do Cliente:</label>
+    <input type="text" id="nome_filter" name="nome" />
+    
+    <label for="telefone_filter">Filtrar por Telefone:</label>
+    <input type="text" id="telefone_filter" name="telefone" />
+    
+    <label for="rg_filter">Filtrar por RG:</label>
+    <input type="text" id="rg_filter" name="rg" />
+    
+    <label for="estado_filter">Filtrar por Estado:</label>
+    <input type="text" id="estado_filter" name="Estado" />
+    
+    <input type="submit" value="Filtrar" />
+</form>
+
+  
+
+    <!-- Tabela de Ordens de Serviço -->
+    <h1>Lista de Ordens de Serviço</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>RG</th>
+                <th>Endereço</th>
+                <th>Telefone</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for cliente in clientes %}
+            <tr>
+                <td>{{ cliente.nome }}</td>
+                <td>{{ cliente.rg }}</td>
+                <td>{{ cliente.endereco }}</td>
+                <td>{{ cliente.telefone1 }}</td>
+            
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Paginação -->
+    <div class="pagination">
+        <span class="step-links">
+            {% if ordens_de_servico.has_previous %}
+                <a href="?page=1">&laquo; primeira</a>
+                <a href="?page={{ ordens_de_servico.previous_page_number }}">anterior</a>
+            {% endif %}
+
+            <span class="current-page">
+                Página {{ ordens_de_servico.number }} de {{ ordens_de_servico.paginator.num_pages }}.
+            </span>
+
+            {% if ordens_de_servico.has_next %}
+                <a href="?page={{ ordens_de_servico.next_page_number }}">próxima</a>
+                <a href="?page={{ ordens_de_servico.paginator.num_pages }}">última &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
+</body>
+</html>

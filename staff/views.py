@@ -126,3 +126,36 @@ def formulario_cliente(request):
         return render(request,"formulario_cliente.html",{ "cliente_form": cliente_form,"endereco_form": endereco_form,})
     except Exception as e:
         return render(request, "error.html", {"error_message": str(e)})
+    
+    
+def lista_clientes(request):
+    nome_filter = request.GET.get("nome")
+    telefone_filter = request.GET.get("telefone")
+    rg_filter = request.GET.get("rg")
+    estado_filter = request.GET.get("endereco")
+    
+    clientes = Cliente.objects.all()
+    
+    if nome_filter:
+        clientes = clientes.filter(nome__icontains=nome_filter)
+    
+    if telefone_filter:
+        clientes = clientes.filter(telefone1__icontains=telefone_filter)
+    
+    if rg_filter:
+        clientes = clientes.filter(rg__icontains=rg_filter)
+    
+    if estado_filter:
+        clientes = clientes.filter(cliente__endereco__estado__icontains=estado_filter)  # Substitua 'endereco_field' pelo campo correto no modelo de Endereço
+    
+    return render(request,"lista_clientes.html", {
+        "clientes": clientes, 
+        "nome_filter": nome_filter,
+        "telefone_filter": telefone_filter,
+        "rg_filter": rg_filter,
+        "estado_filter": estado_filter})
+
+
+
+def lista_tecnicos(request):
+    pass

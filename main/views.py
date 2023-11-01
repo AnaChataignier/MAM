@@ -5,12 +5,15 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from config import CHAVE_API_GOOGLE
 from .helpers import *
+from django.db.models import Q, Count, F, FloatField
+from datetime import date, timedelta
+from decimal import Decimal
 
 
 
 
 @user_passes_test(is_tecnico)
-def minhas_ordens_de_servico(request):
+def minhas_os(request):
     try:
         status_filter = request.GET.get("status")
         previsao_chegada_filter = request.GET.get("previsao_chegada")
@@ -24,7 +27,7 @@ def minhas_ordens_de_servico(request):
         if previsao_chegada_filter:
             ordens_ativas = ordens_ativas.filter(previsao_chegada=previsao_chegada_filter)
 
-        return render(request, "minhas_ordens_de_servico.html", {
+        return render(request, "minhas_os.html", {
             "ordens_de_servico": ordens_ativas,
             "user": user,
             "status_filter": status_filter,
@@ -42,7 +45,7 @@ def home(request):
 
 
 @is_tecnico_and_owner
-def ordens_detail(request, ordem_id):
+def os_detail(request, ordem_id):
     try:
         api_google_maps_key = CHAVE_API_GOOGLE
         user = request.user
@@ -51,7 +54,7 @@ def ordens_detail(request, ordem_id):
             return HttpResponse("Ordem de Serviço já finalizada")
         status_ordem = ordem.status
         return render(
-            request,"ordens_detail.html",{"ordem": ordem, "user": user, "status_ordem": status_ordem, "api_google_maps_key": api_google_maps_key,})
+            request,"os_detail.html",{"ordem": ordem, "user": user, "status_ordem": status_ordem, "api_google_maps_key": api_google_maps_key,})
     except Exception as e:
         return render(request, "error.html", {"error_message": str(e)})
 
@@ -110,7 +113,7 @@ def finalizar_os(request, ordem_id):
 
                 historico.save()
 
-                return redirect("minhas_ordens_de_servico")
+                return redirect("minhas_os")
             else:
                 return render(
                     request,
@@ -123,7 +126,7 @@ def finalizar_os(request, ordem_id):
 
 
 @user_passes_test(is_tecnico)
-def ordens_finalizadas(request):
+def os_finalizadas(request):
     try:
         user = request.user
         ordens_finalizadas = OrdemDeServico.objects.filter(tecnico=user, status="Concluído")
@@ -131,7 +134,166 @@ def ordens_finalizadas(request):
         for ordem in ordens_finalizadas:
             historicos_ordem = HistoricoOsFinalizada.objects.filter(ordem_de_servico=ordem)
             historicos.extend(historicos_ordem)
-        return render(request, "ordens_finalizadas.html",
+        return render(request, "os_finalizadas.html",
         {"ordens_finalizadas": ordens_finalizadas, "historicos": historicos,"user": user })
     except Exception as e:
+        return render(request, "error.html", {"error_message": str(e)})
+
+
+@user_passes_test(is_tecnico)
+def dashboard(request):
+    try:
+        status_filter = request.GET.get("status")
+
+        user = request.user
+
+        # Obtém a data de hoje e as datas de ontem, antes de ontem, 3 dias atrás e 4 dias atrás
+        today = date.today()
+        yesterday = today - timedelta(days=1)
+        day_before_yesterday = today - timedelta(days=2)
+        three_days_ago = today - timedelta(days=3)
+        four_days_ago = today - timedelta(days=4)
+
+        # Formate as datas no formato "DD/MM/YYYY"
+        today_str = today.strftime("%d/%m/%Y")
+        yesterday_str = yesterday.strftime("%d/%m/%Y")
+        day_before_yesterday_str = day_before_yesterday.strftime("%d/%m/%Y")
+        three_days_ago_str = three_days_ago.strftime("%d/%m/%Y")
+        four_days_ago_str = four_days_ago.strftime("%d/%m/%Y")
+
+        # Filtra todas as ordens ativas
+        ordens_ativas = OrdemDeServico.objects.filter(
+            tecnico=user, status__in=["Atenção", "Urgente", "Aguardando"]
+        )
+        # Filtra todas as ordens finalizadas
+        ordens_finalizadas = OrdemDeServico.objects.filter(
+            tecnico=user, status__in=["Concluído"]
+        )
+
+        # Filtra as ordens ativas com base nas datas de previsão de chegada
+        ordens_ativas_today = ordens_ativas.filter(previsao_chegada__date=today)
+        ordens_ativas_yesterday = ordens_ativas.filter(previsao_chegada__date=yesterday)
+        ordens_ativas_day_before_yesterday = ordens_ativas.filter(
+            previsao_chegada__date=day_before_yesterday
+        )
+        ordens_ativas_three_days_ago = ordens_ativas.filter(
+            previsao_chegada__date=three_days_ago
+        )
+        ordens_ativas_four_days_ago = ordens_ativas.filter(
+            previsao_chegada__date=four_days_ago
+        )
+
+        # Use a função annotate para contar a quantidade de ordens com cada status
+        ordens_ativas_today = ordens_ativas_today.values("status").annotate(
+            total=Count("status")
+        )
+        ordens_ativas_yesterday = ordens_ativas_yesterday.values("status").annotate(
+            total=Count("status")
+        )
+        ordens_ativas_day_before_yesterday = ordens_ativas_day_before_yesterday.values(
+            "status"
+        ).annotate(total=Count("status"))
+        ordens_ativas_three_days_ago = ordens_ativas_three_days_ago.values(
+            "status"
+        ).annotate(total=Count("status"))
+        ordens_ativas_four_days_ago = ordens_ativas_four_days_ago.values(
+            "status"
+        ).annotate(total=Count("status"))
+
+        if status_filter:
+            # Se você ainda quiser filtrar por um status específico
+            ordens_ativas_today = ordens_ativas_today.filter(status=status_filter)
+            ordens_ativas_yesterday = ordens_ativas_yesterday.filter(
+                status=status_filter
+            )
+            ordens_ativas_day_before_yesterday = (
+                ordens_ativas_day_before_yesterday.filter(status=status_filter)
+            )
+            ordens_ativas_three_days_ago = ordens_ativas_three_days_ago.filter(
+                status=status_filter
+            )
+            ordens_ativas_four_days_ago = ordens_ativas_four_days_ago.filter(
+                status=status_filter
+            )
+
+        # Obtém o número total de ordens para cada dia
+        total_ordens_today = ordens_ativas_today.aggregate(total=Count("id"))
+        total_ordens_yesterday = ordens_ativas_yesterday.aggregate(total=Count("id"))
+        total_ordens_day_before_yesterday = (
+            ordens_ativas_day_before_yesterday.aggregate(total=Count("id"))
+        )
+        total_ordens_three_days_ago = ordens_ativas_three_days_ago.aggregate(
+            total=Count("id")
+        )
+        total_ordens_four_days_ago = ordens_ativas_four_days_ago.aggregate(
+            total=Count("id")
+        )
+
+        # Filtra todas as ordens de serviço sem filtro de status
+        all_ordens = OrdemDeServico.objects.filter(tecnico=user)
+
+        # Calcula o número de ordens de serviço para cada status
+        counts = all_ordens.values("status").annotate(total=Count("status"))
+
+        # Calcula o total de ordens de serviço
+        total_ordens = all_ordens.count()
+
+        # Inicializa as variáveis para armazenar a porcentagem de cada status
+        percent_concluido = 0
+        percent_atencao = 0
+        percent_urgente = 0
+        percent_aguardando = 0
+
+        # Calcula a porcentagem de cada status em relação ao total de ordens
+        for count in counts:
+            if count["status"] == "Concluído":
+                percent_concluido = round(
+                    Decimal(count["total"]) / Decimal(total_ordens) * 100, 0
+                )
+            elif count["status"] == "Atenção":
+                percent_atencao = round(
+                    Decimal(count["total"]) / Decimal(total_ordens) * 100, 0
+                )
+            elif count["status"] == "Urgente":
+                percent_urgente = round(
+                    Decimal(count["total"]) / Decimal(total_ordens) * 100, 0
+                )
+            elif count["status"] == "Aguardando":
+                percent_aguardando = round(
+                    Decimal(count["total"]) / Decimal(total_ordens) * 100, 0
+                )
+
+        return render(
+            request,
+            "dashboard.html",
+            {
+                "ordens_ativas": ordens_ativas,
+                "today": today_str,
+                "yesterday": yesterday_str,
+                "day_before_yesterday": day_before_yesterday_str,
+                "three_days_ago": three_days_ago_str,
+                "four_days_ago": four_days_ago_str,
+                "ordens_ativas_today": ordens_ativas_today,
+                "ordens_ativas_yesterday": ordens_ativas_yesterday,
+                "ordens_ativas_day_before_yesterday": ordens_ativas_day_before_yesterday,
+                "ordens_ativas_three_days_ago": ordens_ativas_three_days_ago,
+                "ordens_ativas_four_days_ago": ordens_ativas_four_days_ago,
+                "total_ordens_today": total_ordens_today["total"],
+                "total_ordens_yesterday": total_ordens_yesterday["total"],
+                "total_ordens_day_before_yesterday": total_ordens_day_before_yesterday[
+                    "total"
+                ],
+                "total_ordens_three_days_ago": total_ordens_three_days_ago["total"],
+                "total_ordens_four_days_ago": total_ordens_four_days_ago["total"],
+                "user": user,
+                "ordens_finalizadas": ordens_finalizadas,
+                "percent_concluido": percent_concluido,
+                "percent_atencao": percent_atencao,
+                "percent_urgente": percent_urgente,
+                "percent_aguardando": percent_aguardando,
+            },
+        )
+    except Exception as e:
+        # Tratamento de erro genérico
+        # Ou personalize o tratamento de erro com base no tipo de exceção
         return render(request, "error.html", {"error_message": str(e)})

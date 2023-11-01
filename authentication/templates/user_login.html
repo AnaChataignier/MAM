@@ -1,14 +1,58 @@
-{% extends 'base.html' %}{%load static%}  {% block styles %}
-<link rel="stylesheet" type="text/css" href="{% static 'css/login.css' %}" />
-{% endblock %} {% block title %} Login {% endblock %} {% block content %}
+{%load static%}
+<!doctype html>
+<html lang="en" data-bs-theme="auto">
+  <head>
 
-<h2>Login</h2>
-<form method="post">
-  {% csrf_token %} {{ form.as_p }}
-  <button type="submit">Login</button>
-</form>
-<p>Não tem uma conta? <a href="{% url 'register' %}">Registre-se</a></p>
-<p>
-  Esqueci sua senha? <a href="{% url 'password_reset' %}">Recuperar senha</a>
-</p>
-{% endblock %}
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="J.M.Campos">
+    
+    <meta name="generator" content="DGBZ">
+    <title>App Mamminfo</title>
+    <link rel="canonical" href="">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3">
+    <link href="{% static 'assets/dist/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/css/app_mamminfo.css' %}" rel="stylesheet">
+  </head>
+
+  <body>
+
+    <main>
+
+      <section id="login_scr" class="bg01">
+        <div class="container">
+          <h1 class="font-bold">Mamminfo</h1>
+          {% if messages %}
+          <br>
+          {% for message in messages %}
+          <div class="alert alert-sm alert-{{ message.tags }} d-flex justify-content-center align-items-center" role="alert">
+              {{ message }}
+            </div>
+          {% endfor %}
+      
+          {% endif %}
+          <form id="form_login" method="post">
+            {% csrf_token %}
+            <div class="mb-2">
+              {{form.username}}
+            </div>
+            <div class="mb-4">
+              {{form.password}}
+            </div>
+            <div class="mb-2">
+              <button type="submit" class="btn bg02 text-light w-100 font-bold">Entrar</button>
+            </div>
+          </form>
+          <a href="{% url 'password_reset' %}" class="w-100 mb-3 mt-4">Esqueci minha senha.</a>
+          <a href="{% url 'register' %}" class="w-100">Quero fazer meu cadastro.</a>
+        </div>
+      </section>
+      
+    </main>
+
+    <script src={% static 'assets/dist/js/bootstrap.bundle.min.js' %}></script>
+
+  </body>
+
+  </html>

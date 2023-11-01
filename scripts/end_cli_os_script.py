@@ -1,6 +1,7 @@
 import random
 from faker import Faker
-from main.models import Cliente, Endereco, OrdemDeServico
+from staff.models import Cliente,  OrdemDeServico
+from authentication.models import Endereco
 from django.contrib.auth.models import Group
 import pytz
 

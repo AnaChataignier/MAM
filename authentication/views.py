@@ -1,11 +1,15 @@
-from django.contrib.auth import login, logout
+from django.contrib.auth import login, logout, authenticate
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import AuthenticationForm
-from .forms import CustomUserForm, EnderecoForm
+from .forms import CustomUserForm, EnderecoForm, CustomAuthenticationForm
 from django.contrib.auth.models import Group
+from django.contrib import messages
+from django.contrib.messages import constants
+from django.conf import settings
 
 
 def register(request):
+
     if request.method == "POST":
         form = CustomUserForm(request.POST)
         endereco_form = EnderecoForm(request.POST)
@@ -22,28 +26,38 @@ def register(request):
             user.groups.add(group)
             login(request, user)
             if user.groups.filter(name="Técnico").exists():
-                return redirect("minhas_ordens_de_servico")  # Redireciona para a página de Técnico
+                return redirect("dashboard")  # Redireciona para a página de Técnico
             elif user.groups.filter(name="Staff").exists():
                 return redirect("staff")  # Redireciona para a página de Staff
+            
+        else:
+            messages.add_message(request, constants.ERROR, 'As senhas não sao iguais')
+            return redirect('register')
     else:
         form = CustomUserForm()
-        endereco = EnderecoForm() 
-    return render(request, "register.html", {"form": form, 'endereco':endereco})
+        endereco_form = EnderecoForm() 
+    return render(request, "register.html", {"form": form, 'endereco_form': endereco_form})
 
 
 def user_login(request):
     if request.method == "POST":
-        form = AuthenticationForm(data=request.POST)
+        form =  CustomAuthenticationForm(data=request.POST)
         if form.is_valid():
-            user = form.get_user()
-            login(request, user)
-            if user.groups.filter(name="Técnico").exists():
-                return redirect("minhas_ordens_de_servico")  # Redireciona para a página de Técnico
-            elif user.groups.filter(name="Staff").exists():
-                return redirect("staff")  # Redireciona para a página de Staff
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                    login(request, user)
+                    if user.groups.filter(name="Técnico").exists():
+                        return redirect("dashboard")  # Redireciona para a página de Técnico
+                    elif user.groups.filter(name="Staff").exists():
+                        return redirect("staff")  # Redireciona para a página de Staff
+        else:
+            messages.add_message(request, constants.ERROR, 'Senha ou usuário incorretos')
+            return redirect('user_login')    
     else:
-        form = AuthenticationForm()
-    return render(request, "user_login.html", {"form": form})
+        form = CustomAuthenticationForm()
+    return render(request, "user_login.html",  {"form": form} )
 
 
 def sair(request):

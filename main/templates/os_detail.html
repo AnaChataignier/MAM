@@ -1,0 +1,356 @@
+{%load static%}
+<!doctype html>
+<html lang="en" data-bs-theme="auto">
+  <head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="J.M.Campos">
+    <meta name="generator" content="DGBZ">
+    <title>App Mamminfo</title>
+    <link rel="canonical" href="">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link href="{% static 'assets/dist/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/css/app_mamminfo.css' %}" rel="stylesheet">
+    <script src="https://maps.googleapis.com/maps/api/js?key={{api_google_maps_key}}"></script>
+  </head>
+
+  <body>
+
+    <main class="bg03_light">
+
+        <header>
+            <div class="container">
+              <div id="super_menu">
+                <div class="row">
+                  <div class="col-3 text-start">
+                    <i class="bi bi-justify i_main"></i>
+                  </div>
+                  <div class="col-9 text-end">
+                    <p class="mt-2">
+                      Olá,<br>
+                      <strong>{{ user.first_name }} {{ user.last_name }}</strong>
+                    </p>
+                    <div class="photo_user mt-1">
+                      <img src="https://cdn-icons-png.flaticon.com/512/3106/3106807.png?auto=format&fit=crop&q=80&w=1760&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="">
+                    </div>
+                  </div>
+                </div>
+                <button class="" type="button" data-bs-toggle="collapse" data-bs-target="#col_menu_main" aria-expanded="false" aria-controls="collapseExample"></button>
+                <div class="collapse" id="col_menu_main">
+                  <div class="card card-body box-shadow">
+                    <ul>
+                      {% comment %} <!-- Botao caso app tenha fechado e user precisa voltar para OS que ja estava em andamento -->
+                      {% comment %} <li><a href="tela_os-aguardando.html" class="font-medium text-light bg02 p-2"><i class="bi bi-arrow-return-left"></i> Retomar atual Ocorrência</a></li>  {% endcomment %}
+                      <!-- Botao caso app tenha fechado e user precisa voltar para OS que ja estava em andamento -->
+                      <li><a href="{% url 'dashboard'%}" class="font-medium color04"><i class="bi bi-house"></i> Dashboard</a></li>
+                      <hr>
+                      <li><a href="{% url 'sair'%}" class="font-medium color04"><i class="bi bi-door-open"></i></i> Logout</a></li>
+                      {% comment %} <li><a href="tela_lista_ocs_dia.html" class="font-medium color04"><i class="bi bi-card-heading"></i> Lista de Ocorrências</a></li>
+                      <li><a href="tela_lista_ocs_urgentes.html" class="font-medium color04"><i class="bi bi-exclamation-triangle-fill"></i> Ocorrências Urgentes</a></li>
+                      <li><a href="tela_lista_ocs_atencao.html" class="font-medium color04"><i class="bi bi-flag-fill"></i> Ocorrências em Atenção</a></li>
+                      <hr>
+                      <li><a href="tela_busca.html" class="font-medium color04"><i class="bi bi-search"></i> Busca</a></li>
+                      <li><a href="tela_user.html" class="font-medium color04"><i class="bi bi-gear-fill"></i> Configurações</a></li> {% endcomment %}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </header>
+
+      <section id="detalhes_oc_scr">
+        <div class="container">
+ 
+            <div id="oc_detalhes">
+
+              <div class="oc_titulo mb-1 mb-md-3">
+                <div class="row">
+                  <div class="col-3 col-md-1">
+                    <div class="{% if ordem.status == 'Aguardando' %}icon bg01{% elif ordem.status == 'Atenção' %}icon bg06{% else %}icon bg05{% endif %}">
+                        <i class="bi bi-briefcase text-light"></i>
+                      </div>
+                  </div>
+                  <div class="col-9 col-md-10">
+                    <h4 class="font-bold">
+                      Ticket OS - #{{ordem.ticket}}
+                    </h4>
+                    <div class="row">
+                      <div class="col-8 col-md-10">
+                        <p class="font-medium color04">Criada em {{ordem.data_criacao}}</p>
+                      </div>
+                      <div class="col-4 col-md-2">
+                        <p class="font-medium color04">STATUS: 
+                          <span class="{% if ordem.status == 'Aguardando' %}icon_sm bg01{% elif ordem.status == 'Atenção' %}icon_sm bg06{% else %}icon_sm bg05{% endif %}">
+                            {% if ordem.status == 'Aguardando' %}
+                              <i class="bi bi-clock text-light"></i>
+                            {% elif ordem.status == 'Atenção' %}
+                              <i class="bi bi-flag text-light"></i>
+                            {% else %}
+                              <i class="bi bi-exclamation-triangle-fill text-light"></i>
+                            {% endif %}
+                          </span>
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="oc_espec box-shadow">
+                <a class="btn btn-primary" data-bs-toggle="collapse" href="#oc_espec" role="button" aria-expanded="false" aria-controls="oc_espec">
+                  Clique para expandir
+                </a>
+                <span class="icon"><i class="bi bi-arrow-down-circle"></i></span>
+                <div class="collapse" id="oc_espec">
+                  <div class="card card-body color04">
+                    <div class="row">
+                      <div class="col-12">
+                        <p><strong>Especificações da OS:</strong></p>
+                        <p>{{ordem.descricao}} </p>
+                      </div>
+                      <div class="col-12 mt-2">
+                        <p><strong>Endereço:</strong></p>
+                        <p id="endereco">{{ordem.cliente.endereco}}</p>
+                      </div>
+                      <div class="col-6 mt-2">
+                        <p><strong>Previsão de Chegada:</strong></p>
+                        <p>{{ordem.previsao_chegada}}</p>
+                      </div>
+                      <div class="col-6 mt-2">
+                        <p><strong>Previsão de Execução:</strong></p>
+                        <p>{{ordem.previsao_execucao}}</p>
+                      </div>
+                      <div class="col-12 mt-2">
+                        <p><strong>Contato:</strong></p>
+                        <p>{{ordem.cliente.telefone1}}.</p>
+                      </div>
+                      <div class="col-12 mt-2">
+                        <p><strong>Material:</strong></p>
+                        <p>{{ordem.material}}</p>
+                      </div>
+                      <div class="col-12 mt-2">
+                        <p><strong>Equipamento:</strong></p>
+                        <p>{{ordem.equipamento}}</p>
+                      </div>
+                      <div class="col-12 mt-2">
+                        <p><strong>Tempo Estimado:</strong></p>
+                        <p id="tempo-estimado"></p>
+                    </div>
+                    <div class="col-12 mt-2">
+                        <p><strong>Distância:</strong></p>
+                        <p id="distancia"></p>
+                    </div>
+                    <div class="col-12 mt-2">
+                        <p><strong>Status Técnico</strong></p>
+                        <p>{{ ordem.status_tecnico }}</p>
+                    </div>
+        
+                     
+                        <br/>
+                        <br/>
+                        <ul id="instrucoes-list" style="display: none;"></ul>
+                     
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <br>
+              <div id="map" style="width: 600px; height: 400px; margin: 0 auto"></div>
+
+              <div class="oc_action">
+    
+                <a href="{% url 'a_caminho' ordem.id %}" class="btn bg02 text-light w-100 box-shadow fs-6 font-bold mt-3" {% if ordem.status == 'Concluído' %}disabled{% endif %}>Iniciar OS</a>
+                <a href="{% url 'dashboard' %}"  class="btn bg04 text-light w-100 box-shadow fs-6 font-bold mt-3">Voltar</a>
+              </div>
+                
+             
+            </div>
+            
+        </div>
+      </section>
+      
+    </main>
+
+    <footer>
+        <ul class="row">
+          <li class="col-3 mt-1"><a href="tela_dashboard.html"><i class="bi bi-house"></i></a></li>
+          <li class="col-3 p-0 mt-1 text-start text-md-center"><a href="tela_lista_ocs_dia.html" class="text-start text-md-center"><i class="bi bi-card-text"></i></a></li>
+          <li class="col-3 p-0 mt-1 text-end text-md-center"><a href="tela_busca.html" class="text-end text-md-center"><i class="bi bi-search"></i></a></li>
+          <li class="col-3 mt-1"><a href="tela_user"><i class="bi bi-person-gear"></i></a></li>
+
+        </ul>
+
+      
+    </footer>
+    <script src={% static 'assets/dist/js/bootstrap.bundle.min.js' %}></script>
+    <script>
+        // Função para obter a sua localização atual
+        function obterSuaLocalizacao() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function (position) {
+                    let suaLocalizacao = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude
+                    };
+                    criarMapaESeguirRota(suaLocalizacao);
+                });
+            } else {
+                console.error("Geolocalização não é suportada pelo seu navegador.");
+            }
+        }
+    
+        // Função para criar o mapa e exibir a rota
+        function criarMapaESeguirRota(suaLocalizacao) {
+            let enderecoDestino = document.getElementById("endereco").textContent;
+            let geocoder = new google.maps.Geocoder();
+            let directionsService = new google.maps.DirectionsService();
+            let directionsDisplay = new google.maps.DirectionsRenderer();
+            let mapOptions = {
+                center: suaLocalizacao,
+                zoom: 15
+            };
+    
+            let map = new google.maps.Map(
+                document.getElementById("map"),
+                mapOptions
+            );
+    
+            directionsDisplay.setMap(map);
+    
+            geocoder.geocode({ address: enderecoDestino }, function (results, status) {
+                if (status == "OK") {
+                    let destino = results[0].geometry.location;
+                    let request = {
+                        origin: suaLocalizacao,
+                        destination: destino,
+                        travelMode: "DRIVING"
+                    };
+    
+                    directionsService.route(request, function (result, status) {
+                        if (status == "OK") {
+                            directionsDisplay.setDirections(result);
+                        }
+                    });
+                } else {
+                    console.error("Geocodificação do destino não foi bem-sucedida por causa de: " + status);
+                }
+            });
+        }
+    
+        obterSuaLocalizacao();
+    
+        document.addEventListener("DOMContentLoaded", function () {
+            const instrucoesList = document.getElementById("instrucoes-list");
+            const mostrarInstrucoesBtn = document.getElementById("mostrar-instrucoes-btn");
+        
+            mostrarInstrucoesBtn.addEventListener("click", function () {
+                instrucoesList.style.display === "none"
+                if (instrucoesList.style.display === "none") {
+                    // Se a lista de instruções estiver oculta, mostra-a e atualiza o texto do botão
+                    instrucoesList.style.display = "block";
+                    mostrarInstrucoesBtn.textContent = "Ocultar Instruções";
+                } else {
+                    // Caso contrário, se a lista de instruções estiver visível, oculta-a e atualiza o texto do botão
+                    instrucoesList.style.display = "none";
+                    mostrarInstrucoesBtn.textContent = "Mostrar Instruções";
+                }
+            });
+        });
+        
+        
+    
+        function calcularTempoEDistancia() {
+            let enderecoDestino = document.getElementById("endereco").textContent;
+            let geocoder = new google.maps.Geocoder();
+            let directionsService = new google.maps.DirectionsService();
+            const instrucoesList = document.getElementById("instrucoes-list"); // Elemento ul onde você deseja exibir as instruções
+        
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function (position) {
+                    let suaLocalizacao = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude
+                    };
+        
+                    geocoder.geocode({ address: enderecoDestino }, function (results, status) {
+                        if (status == "OK") {
+                            let destino = results[0].geometry.location;
+                            let request = {
+                                origin: suaLocalizacao,
+                                destination: destino,
+                                travelMode: "DRIVING",
+                                provideRouteAlternatives: true
+                            };
+        
+                            directionsService.route(request, function (result, status) {
+                                if (status == "OK") {
+                                    let route = result.routes[0];
+                                    let leg = route.legs[0];
+                                    let steps = route.legs[0].steps;
+        
+                                    // Limpe o conteúdo do elemento ul onde serão exibidas as instruções
+                                    instrucoesList.innerHTML = '';
+        
+                                    steps.forEach(function(step, index) {
+                                        // Crie um elemento <li> para cada instrução e defina o HTML interno
+                                        const instructionItem = document.createElement('li');
+                                        instructionItem.innerHTML = `<strong>Passo ${index + 1}:</strong> ${step.instructions}`;
+                                        // Adicione o elemento ao contêiner ul
+                                        instrucoesList.appendChild(instructionItem);
+                                    });
+        
+                                    let tempoEstimado = leg.duration.text;
+                                    let distancia = leg.distance.text;
+        
+                                    document.getElementById("tempo-estimado").textContent = tempoEstimado;
+                                    document.getElementById("distancia").textContent = distancia;
+                                }
+                            });
+                        } else {
+                            console.error("Geocodificação do destino não foi bem-sucedida por causa de: " + status);
+                        }
+                    });
+                });
+            } else {
+                console.error("Geolocalização não é suportada pelo seu navegador.");
+            }
+        }
+        
+        calcularTempoEDistancia();
+    
+        document.addEventListener("DOMContentLoaded", function () {
+            const enderecoSpan = document.getElementById("endereco");
+            const copiarEnderecoBtn = document.getElementById("copiar-endereco-btn");
+        
+            copiarEnderecoBtn.addEventListener("click", function () {
+                // Cria um elemento de input para armazenar o texto a ser copiado
+                const inputElement = document.createElement("input");
+                inputElement.value = enderecoSpan.textContent;
+                document.body.appendChild(inputElement);
+        
+                // Seleciona o texto no elemento de input
+                inputElement.select();
+        
+                // Executa o comando de cópia para copiar o texto selecionado
+                document.execCommand("copy");
+        
+                // Remove o elemento de input (opcional)
+                document.body.removeChild(inputElement);
+        
+                // Exibe uma mensagem informando que o endereço foi copiado (opcional)
+                alert("Endereço copiado para a área de transferência");
+            });
+        });    
+        
+        
+        
+        
+    </script>
+    
+  </body>
+
+  </html>
