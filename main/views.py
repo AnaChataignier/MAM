@@ -17,21 +17,34 @@ def minhas_os(request):
     try:
         status_filter = request.GET.get("status")
         previsao_chegada_filter = request.GET.get("previsao_chegada")
+        
+        hoje = date.today().strftime('%d.%m')
+        ontem = (date.today() - timedelta(days=1)).strftime('%d.%m')
 
         user = request.user
-        ordens_ativas = OrdemDeServico.objects.filter(tecnico=user, status__in=["Atenção", "Urgente", "Aguardando"])
+        ordens_ativas = OrdemDeServico.objects.filter(tecnico=user, status__in=["Atenção", "Urgente", "Aguardando", "Concluído"])
 
         if status_filter:
             ordens_ativas = ordens_ativas.filter(status=status_filter)
-            
-        if previsao_chegada_filter:
-            ordens_ativas = ordens_ativas.filter(previsao_chegada=previsao_chegada_filter)
+           
+        if previsao_chegada_filter:    
+            if previsao_chegada_filter == 'Hoje':
+                ordens_ativas = ordens_ativas.filter(previsao_chegada=date.today().strftime('%d.%m.%Y'))
+            elif previsao_chegada_filter == 'Ontem':
+                ordens_ativas = ordens_ativas.filter(previsao_chegada=date.today() - timedelta(days=1))
+            elif previsao_chegada_filter == 'Últimos 7 dias':
+                ordens_ativas = ordens_ativas.filter(previsao_chegada__gte=date.today() - timedelta(days=7))
+            elif previsao_chegada_filter == 'Últimos 30 dias':
+                ordens_ativas = ordens_ativas.filter(previsao_chegada__gte=date.today() - timedelta(days=30))
 
         return render(request, "minhas_os.html", {
             "ordens_de_servico": ordens_ativas,
             "user": user,
             "status_filter": status_filter,
-            "previsao_chegada_filter": previsao_chegada_filter })
+            "previsao_chegada_filter": previsao_chegada_filter,
+            "hoje": hoje,
+            "ontem": ontem,
+        })
     except Exception as e:
         return render(request, "error.html", {"error_message": str(e)})
 
@@ -113,7 +126,7 @@ def finalizar_os(request, ordem_id):
 
                 historico.save()
 
-                return redirect("minhas_os")
+                return redirect("dashboard")
             else:
                 return render(
                     request,

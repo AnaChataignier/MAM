@@ -27,7 +27,7 @@ class CustomUserForm(UserCreationForm):
         for field_name, field in self.fields.items():
             field.widget.attrs["class"] = "form-control"
    
-        self.fields["first_name"].widget.attrs["placeholder"] = "Primeiro Nome"
+        self.fields["first_name"].widget.attrs["placeholder"] = "Nome"
         self.fields["last_name"].widget.attrs["placeholder"] = "Sobrenome"
         self.fields["telefone"].widget.attrs["placeholder"] = "Telefone"
         self.fields["email"].widget.attrs["placeholder"] = "Email"

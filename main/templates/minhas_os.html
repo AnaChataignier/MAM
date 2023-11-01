@@ -13,6 +13,23 @@
     <link href="/static/assets/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <link href="/static/assets/css/app_mamminfo.css" rel="stylesheet">
+    <style>
+      /* Estilo para status Urgente (Vermelho) */
+.color-red {
+    color: red;
+}
+
+/* Estilo para status Atenção (Amarelo) */
+.color-yellow {
+    color: #ffae00;
+}
+
+/* Estilo para status Aguardando (Azul) */
+.color-blue {
+    color: blue;
+}
+
+    </style>
   </head>
 
   <body>
@@ -76,9 +93,9 @@
                           <i class="bi bi-calendar-week color03 me-1"></i>
                         </div>
                         <div class="col-10 p-0">
-                          <select class="form-control ms-1">
-                            <option selected>Lista de hoje (30.08)</option>
-                            <option>Lista de ontem (29.08)</option>
+                          <select class="form-control ms-1" id = 'date-filter'>
+                            <option selected>Hoje</option>
+                            <option>Ontem</option>
                             <option>Últimos 7 dias</option>
                             <option>Últimos 30 dias</option>
                           </select>
@@ -91,64 +108,84 @@
                           <i class="bi bi-bar-chart-fill color03 me-1"></i>
                         </div>
                         <div class="col-10 p-0">
-                          <select class="form-control ms-1">
+                          <select class="form-control ms-1" id='status-filter'>
                             <option selected>Todos os Status</option>
-                            <option>Urgentes</option>
+                            <option>Urgente</option>
                             <option>Atenção</option>
                             <option>Aguardando</option>
-                            <option>Realizadas</option>
+                            <option>Concluído</option>
                           </select>
                         </div>
                       </div>                      
                     </div>
                   </div>
                 </form>
-                {% for ordem in ordens_de_servico %}
-                <div class="listas_here box-shadow">
-                    <div class="tab-content" id="pills-tabContent">
-                        <div class="tab-pane pt-3 fade show active" id="pills-01" role="tabpanel" aria-labelledby="pills-home-tab" tabindex="0">
-                            <!-- OS Urgente -->
-                            <div class="oc_lista_item">
-                                <a href="{% url 'os_detail' ordem.id %}" class="a-whole"></a>
-                                <div class="row">
-                                    <div class="col-2 col-md-1">
-                                        <div class="icon bg-light"><i class="bi bi-briefcase text-dark"></i></div>
-                                    </div>
-                                    <div class="col-9 col-md-11">
-                                        <div class="oc_l_data color04 font-light">{{ordem.previsao_chegada}}</div>
-                                        <div class="oc_l_nome font-medium color04">{{ordem.cliente}}</div>
-                                        <div class="oc_l_status font-medium color05">{{ordem.status}}</div>
-                                    </div>
-                                    <div class="status_icon bg05 text-light">
-                                        <i class="bi bi-exclamation-triangle-fill"></i>
-                                    </div>
-                                </div>
-                            </div>
+                <script>
+                  document.addEventListener("DOMContentLoaded", function () {
+                      const selectStatus = document.querySelector('#status-filter');
+                      const selectDate = document.querySelector('#date-filter');
+ // Obtém o elemento select
+              
+                      selectStatus.addEventListener('change', function () {
+                          const selectedStatus = selectStatus.value; // Obtém o valor selecionado
+              
+                          window.location.href = window.location.pathname + '?status=' + selectedStatus; // Atualiza a URL para acionar a view com o filtro de status
+                      });
+                      selectDate.addEventListener('change', function () {
+                        const selectedDate = selectDate.value;
+                        window.location.href = window.location.pathname + '?previsao_chegada=' + selectedDate;
+                    });
+                  });
+              </script>
+                <div class="tab-pane fade show active" id="pills-01" role="tabpanel" aria-labelledby="pills-home-tab" tabindex="0">
+                  <!-- OS Urgente -->
+                  {% for ordem in ordens_de_servico %}
+                  <div class="oc_lista_item">
+                      <a href="{% url 'os_detail' ordem.id %}" class="a-whole"></a>
+                      <div class="row">
+                          <div class="col-2 col-md-1">
+                              <div class="icon bg-light"><i class="bi bi-briefcase text-dark"></i></div>
+                          </div>
+                          <div class="col-9 col-md-11">
+                              <div class="oc_l_data color04 font-light">Previsão de chegada - {{ ordem.previsao_chegada }}</div>
+                              <div class="oc_l_nome font-medium color04">Ticket #{{ ordem.ticket }}</div>
+                              <div class="oc_l_status font-medium {% if ordem.status == 'Urgente' %}color-red{% elif ordem.status == 'Atenção' %}color-yellow{% elif ordem.status == 'Aguardando' %}color-blue{% endif %}">{{ ordem.status }}</div>
+                          </div>
+                          {% if ordem.status == "Urgente" %}
+                              <div class="status_icon bg05 text-light">
+                                  <i class="bi bi-exclamation-triangle-fill"></i>
+                              </div>
+                          {% elif ordem.status == "Atenção" %}
+                              <div class="status_icon bg06 text-dark">
+                                  <i class="bi bi-flag"></i>
+                              </div>
+                          {% elif ordem.status == "Aguardando" %}
+                              <div class="status_icon bg01 text-light">
+                                  <i class="bi bi-clock"></i>
+                              </div>
+                          {% endif %}
+                      </div>
+                  </div>
                   {% endfor %}
-  
-
-
-                    </div>
-                </div>
-            </div>
+                       
+              </div>
             <!-- Lista das OS -->
-            
         </div>
       </section>
       
     </main>
 
     <footer>
-        <ul class="row">
-          <li class="col-3 mt-1"><a href="tela_dashboard.html"><i class="bi bi-house"></i></a></li>
-          <li class="col-3 p-0 mt-1 text-start text-md-center"><a href="tela_lista_ocs_dia.html" class="text-start text-md-center"><i class="bi bi-card-text"></i></a></li>
-          <li class="col-3 p-0 mt-1 text-end text-md-center"><a href="tela_busca.html" class="text-end text-md-center"><i class="bi bi-search"></i></a></li>
-          <li class="col-3 mt-1"><a href="tela_user"><i class="bi bi-person-gear"></i></a></li>
+      <ul class="row">
+        <li class="col-3 mt-1"><a href="{% url 'dashboard' %}"><i class="bi bi-house"></i></a></li>
+        <li class="col-3 p-0 mt-1 text-start text-md-center"><a href="{% url 'minhas_os' %}" class="text-start text-md-center"><i class="bi bi-card-text"></i></a></li>
+        <li class="col-3 p-0 mt-1 text-end text-md-center"><a href="tela_busca.html" class="text-end text-md-center"><i class="bi bi-search"></i></a></li>
+        <li class="col-3 mt-1"><a href="tela_user"><i class="bi bi-person-gear"></i></a></li>
 
-        </ul>
+      </ul>
 
-      
-    </footer>
+    
+  </footer>
 
     <script src="/static/assets/dist/js/bootstrap.bundle.min.js"></script>
 
