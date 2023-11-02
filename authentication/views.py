@@ -30,9 +30,7 @@ def register(request):
             elif user.groups.filter(name="Staff").exists():
                 return redirect("staff")  # Redireciona para a página de Staff
             
-        else:
-            messages.add_message(request, constants.ERROR, 'As senhas não sao iguais')
-            return redirect('register')
+        
     else:
         form = CustomUserForm()
         endereco_form = EnderecoForm() 

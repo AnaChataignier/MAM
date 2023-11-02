@@ -17,21 +17,37 @@
   </head>
 
   <body>
-
     <main>
-
       <section id="login_scr" class="bg02">
         <div class="container">
           <h1 class="font-bold">Mamminfo</h1>
-          {% if messages %}
-          <br>
-          {% for message in messages %}
-          <div class="alert alert-sm alert-{{ message.tags }} d-flex justify-content-center align-items-center" role="alert">
-              {{ message }}
+
+          {% if form.errors %}
+          <div class="error-messages">
+            <strong>Ocorreu um erro no formulário:</strong>
+            <ul>
+              {% for field in form %}
+                {% for error in field.errors %}
+                  <li>{{ field.label }}: {{ error }}</li>
+                {% endfor %}
+              {% endfor %}
+            </ul>
           </div>
-      {% endfor %}
-      
-          {% endif %}
+        {% endif %}
+        
+        {% if endereco_form.errors %}
+          <div class="error-messages">
+            <strong>Ocorreu um erro no formulário de endereço:</strong>
+            <ul>
+              {% for field in endereco_form %}
+                {% for error in field.errors %}
+                  <li>{{ field.label }}: {{ error }}</li>
+                {% endfor %}
+              {% endfor %}
+            </ul>
+          </div>
+        {% endif %}
+
           <form id="form_cadastro" class="row" method="post">
             {% csrf_token %}
            
