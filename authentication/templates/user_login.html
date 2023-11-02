@@ -26,7 +26,7 @@
           {% if messages %}
           <br>
           {% for message in messages %}
-          <div class="alert alert-sm alert-{{ message.tags }} d-flex justify-content-center align-items-center" role="alert">
+          <div class="alert alert-danger" role="alert">
               {{ message }}
             </div>
           {% endfor %}

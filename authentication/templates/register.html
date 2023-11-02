@@ -23,8 +23,7 @@
           <h1 class="font-bold">Mamminfo</h1>
 
           {% if form.errors %}
-          <div class="error-messages">
-            <strong>Ocorreu um erro no formulário:</strong>
+          <div  class="alert alert-danger" role="alert">
             <ul>
               {% for field in form %}
                 {% for error in field.errors %}
@@ -36,8 +35,7 @@
         {% endif %}
         
         {% if endereco_form.errors %}
-          <div class="error-messages">
-            <strong>Ocorreu um erro no formulário de endereço:</strong>
+          <div  class="alert alert-danger" role="alert">
             <ul>
               {% for field in endereco_form %}
                 {% for error in field.errors %}

@@ -26,16 +26,17 @@ def minhas_os(request):
 
         if status_filter:
             ordens_ativas = ordens_ativas.filter(status=status_filter)
-           
+        if status_filter == "Todas":
+            ordens_ativas = OrdemDeServico.objects.filter(tecnico=user, status__in=["Atenção", "Urgente", "Aguardando", "Concluído"])            
         if previsao_chegada_filter:    
             if previsao_chegada_filter == 'Hoje':
-                ordens_ativas = ordens_ativas.filter(previsao_chegada=date.today().strftime('%d.%m.%Y'))
+                ordens_ativas = ordens_ativas.filter(previsao_chegada=date.today())
             elif previsao_chegada_filter == 'Ontem':
                 ordens_ativas = ordens_ativas.filter(previsao_chegada=date.today() - timedelta(days=1))
             elif previsao_chegada_filter == 'Últimos 7 dias':
-                ordens_ativas = ordens_ativas.filter(previsao_chegada__gte=date.today() - timedelta(days=7))
+                ordens_ativas = ordens_ativas.filter(previsao_chegada__date__gte=date.today() - timedelta(days=7))
             elif previsao_chegada_filter == 'Últimos 30 dias':
-                ordens_ativas = ordens_ativas.filter(previsao_chegada__gte=date.today() - timedelta(days=30))
+                ordens_ativas = ordens_ativas.filter(previsao_chegada__date__gte=date.today() - timedelta(days=30))
 
         return render(request, "minhas_os.html", {
             "ordens_de_servico": ordens_ativas,

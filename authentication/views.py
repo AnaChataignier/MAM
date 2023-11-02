@@ -1,6 +1,5 @@
 from django.contrib.auth import login, logout, authenticate
 from django.shortcuts import render, redirect
-from django.contrib.auth.forms import AuthenticationForm
 from .forms import CustomUserForm, EnderecoForm, CustomAuthenticationForm
 from django.contrib.auth.models import Group
 from django.contrib import messages
