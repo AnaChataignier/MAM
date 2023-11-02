@@ -8,7 +8,7 @@ from .models import *
 from .forms import *
 from django.contrib import messages
 from django.contrib.messages import constants
-
+from authentication.forms import EnderecoForm
 
 
 @user_passes_test(is_staff)

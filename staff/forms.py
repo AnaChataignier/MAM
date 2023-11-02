@@ -1,6 +1,6 @@
 from django import forms
 from .models import OrdemDeServico, HistoricoOsFinalizada
-from .models import Endereco, Cliente
+from .models import  Cliente
 from authentication.models import CustomUser
 import re
 
@@ -33,18 +33,7 @@ class OrdemDeServicoForm(forms.ModelForm):
         ]
 
 
-class EnderecoForm(forms.ModelForm):
-    cep = forms.CharField(max_length=9, required=True)
 
-    def clean_cep(self):
-        cep = self.cleaned_data["cep"]
-        if not re.match(r"^\d{5}-\d{3}$", cep):
-            raise forms.ValidationError("CEP deve estar no formato XXXXX-XXX")
-        return cep
-
-    class Meta:
-        model = Endereco
-        fields = "__all__"
 
 
 class HistoricoOsFinalizadaForm(forms.ModelForm):

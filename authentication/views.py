@@ -5,7 +5,7 @@ from .forms import CustomUserForm, EnderecoForm, CustomAuthenticationForm
 from django.contrib.auth.models import Group
 from django.contrib import messages
 from django.contrib.messages import constants
-from django.conf import settings
+
 
 
 def register(request):
