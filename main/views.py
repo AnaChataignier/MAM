@@ -9,6 +9,7 @@ from django.db.models import Q, Count, F, FloatField
 from datetime import date, timedelta
 from decimal import Decimal
 from staff.models import OrdemDeServico
+from authentication.forms import TelaUserForm
 
 
 
@@ -179,10 +180,16 @@ def dashboard(request):
         ordens_ativas = OrdemDeServico.objects.filter(
             tecnico=user, status__in=["Atenção", "Urgente", "Aguardando"]
         )
+        ordens_ativas_hoje = OrdemDeServico.objects.filter(
+            tecnico=user, previsao_chegada__date=today, status__in=["Atenção", "Urgente", "Aguardando"]
+        )
         # Filtra todas as ordens finalizadas
         ordens_finalizadas = OrdemDeServico.objects.filter(
             tecnico=user, status__in=["Concluído"]
         )
+        
+        ordens_finalizadas_hoje = OrdemDeServico.objects.filter( tecnico=user, status__in=["Concluído"], previsao_chegada__date=today
+        ) 
 
         # Filtra as ordens ativas com base nas datas de previsão de chegada
         ordens_ativas_today = ordens_ativas.filter(previsao_chegada__date=today)
@@ -305,9 +312,30 @@ def dashboard(request):
                 "percent_atencao": percent_atencao,
                 "percent_urgente": percent_urgente,
                 "percent_aguardando": percent_aguardando,
-            },
+                "ordens_ativas_hoje": ordens_ativas_hoje,
+                "ordens_finalizadas_hoje": ordens_finalizadas_hoje,
+            }
         )
     except Exception as e:
         # Tratamento de erro genérico
         # Ou personalize o tratamento de erro com base no tipo de exceção
         return render(request, "error.html", {"error_message": str(e)})
+    
+    
+def tela_user(request):
+    if request.method == 'POST':
+        user = request.user
+        form = TelaUserForm(request.POST, request.FILES, instance=request.user)
+        if form.is_valid():
+            form.save()
+            return redirect('dashboard')  # Redirecione para a página de perfil após a edição
+    else:
+        
+        user = request.user
+        form = TelaUserForm(instance=request.user)
+
+    return render(request, 'tela_user.html', {'form': form, 'user': user})
+
+def tela_busca(request):
+    
+    return render(request, 'tela_busca.html')

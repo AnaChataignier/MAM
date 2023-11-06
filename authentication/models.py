@@ -21,5 +21,6 @@ class Endereco(models.Model):
 class CustomUser(AbstractUser):
     telefone = models.CharField(max_length=15, null=False)
     endereco = models.ForeignKey(Endereco, on_delete=models.CASCADE, null=True, default=None)
+    foto = models.ImageField(upload_to="img/perfil_user/", null=True, blank=True)
 
 

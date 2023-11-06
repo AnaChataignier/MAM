@@ -73,3 +73,18 @@ class CustomAuthenticationForm(AuthenticationForm):
         self.fields["username"].widget.attrs["placeholder"] = "Usuário"
         self.fields["password"].widget.attrs["class"] = "form-control"
         self.fields["password"].widget.attrs["placeholder"] = "Senha"
+        
+class TelaUserForm(forms.ModelForm):
+    class Meta:
+        model = CustomUser
+        fields = ['telefone', 'email', 'first_name', 'last_name', 'foto']
+
+    def __init__(self, *args, **kwargs):
+        super(TelaUserForm, self).__init__(*args, **kwargs)
+        
+        # Adicione a classe 'form-control' a todos os campos do formulário
+        for field_name, field in self.fields.items():
+            if 'class' in field.widget.attrs:
+                field.widget.attrs['class'] += ' form-control'
+            else:
+                field.widget.attrs['class'] = 'form-control'

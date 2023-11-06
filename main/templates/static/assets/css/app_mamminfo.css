@@ -54,7 +54,7 @@ body {}
 .color05 {color: #e10f0f;}
 .color06 {color: #ffae00;}
 
-section {height: auto;min-height: 100vh;max-width: 100vw;width: 100%;}
+section {height: auto;min-height: 90vh;max-width: 100vw;width: 100%;}
 
 .box-shadow {box-shadow: 10px 20px 32px -12px rgba(0,0,0,.2);}
 
@@ -73,7 +73,7 @@ section {height: auto;min-height: 100vh;max-width: 100vw;width: 100%;}
 #login_scr a {color: #fff;text-align: center;text-decoration: none;display: block;}
 
 /* Cadastro Screen */
-#login_scr {}
+#login_scr {min-height: 100vh;}
 #login_scr h1 {text-align: center;color: #fff;padding: 50px 0 25px;font-size: 2.5rem;}
 #login_scr hr {filter: invert(1);}
 #login_scr #form_cadastro {padding: 20px;width: 90%;margin: 0 auto;max-width: 480px;}
@@ -95,7 +95,7 @@ section {height: auto;min-height: 100vh;max-width: 100vw;width: 100%;}
 #col_menu_main {}
 #col_menu_main ul {padding: 20px;margin: 0;}
 #col_menu_main ul li {list-style: none;}
-#col_menu_main ul li a {font-size: 1rem;text-decoration: none;padding: 10px 0;display: block;}
+#col_menu_main ul li a {font-size: 1rem;text-decoration: none;padding: 10px 0;display: block;border-radius: 6px;}
 #col_menu_main .card-body {border: none;}
 
 #dashboard_scr .busca {position: relative;}
@@ -176,7 +176,7 @@ footer li a {color: #fff;font-size: 1.75rem;width: 100%;text-align: center;displ
 #oc_detalhes .oc_espec .collapse::before {position: absolute;bottom: 0;left: 0;right: 0;width: 100%;height: 60px;display: block;content: "";z-index: 1; background: rgb(255,255,255);background: linear-gradient(0deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%);}
 #oc_detalhes .oc_espec .collapse.show::before {display: none;}
 
-#oc_detalhes {}
+#oc_detalhes {padding-bottom: 50px;}
 #oc_detalhes .oc_mapa {}
 #oc_detalhes .oc_mapa label {font-size: .78rem;}
 #oc_detalhes .oc_mapa .map_frame {}
@@ -188,6 +188,7 @@ footer li a {color: #fff;font-size: 1.75rem;width: 100%;text-align: center;displ
 
 #oc_detalhes .oc_ocorrencia {}
 #oc_detalhes .oc_ocorrencia label {font-size: .78rem;}
+#oc_detalhes .oc_ocorrencia .wrapper label {position: absolute;bottom: 6px;left: 10px;}
 #oc_detalhes .oc_ocorrencia .li_ocorrencia {background: #fff;border-radius: 8px;position: relative;margin-bottom: 12px;}
 #oc_detalhes .oc_ocorrencia .li_ocorrencia .btn {width: 100%;border: none;padding: 12px;}
 #oc_detalhes .oc_ocorrencia .li_ocorrencia .btn:hover {background: #fff;}
@@ -199,6 +200,54 @@ footer li a {color: #fff;font-size: 1.75rem;width: 100%;text-align: center;displ
 #oc_detalhes .oc_ocorrencia .li_ocorrencia .card-body {width: 92%;margin: 8px auto;}
 #oc_detalhes .oc_ocorrencia .li_ocorrencia .card-body p {font-size: .75rem;}
 #oc_detalhes .oc_ocorrencia .li_ocorrencia .card-body video, #oc_detalhes .oc_ocorrencia .li_ocorrencia .card-body img {margin: 10px auto;width: 100%;}
+
+
+#oc_detalhes .oc_ocorrencia .detalhes_ocorrencia {background: #fff;border-radius: 8px;padding: 16px;margin-bottom: 75px;}
+#oc_detalhes .oc_ocorrencia .detalhes_ocorrencia form {}
+#oc_detalhes .oc_ocorrencia .detalhes_ocorrencia form .form-control {background: #dde4e8;}
+#oc_detalhes .oc_ocorrencia .detalhes_ocorrencia form input[type="text"]:disabled {background: #f8f8f8;}
+#oc_detalhes .oc_ocorrencia .detalhes_ocorrencia form textarea {min-height: 100px;}
+#oc_detalhes .oc_ocorrencia .detalhes_ocorrencia .btn_wrapper {position: relative;}
+#oc_detalhes .oc_ocorrencia .detalhes_ocorrencia .btn_wrapper input {position: absolute;top: 0;bottom: 0;left: 0;right: 0;width: 100%;height: 100%;display: block;opacity: 0;}
+#oc_detalhes .oc_ocorrencia .detalhes_ocorrencia .oc_acoes {color: #fff;}
+#oc_detalhes .oc_ocorrencia .detalhes_ocorrencia .oc_acoes .btn {color: #fff;}
+#oc_detalhes .oc_ocorrencia .detalhes_ocorrencia .oc_acoes .btn.collapsed {color: #fff;}
+#oc_detalhes .oc_ocorrencia .detalhes_ocorrencia .oc_acoes .btn:hover {background: #b7baca;}
+#oc_detalhes .oc_ocorrencia .detalhes_ocorrencia .oc_acoes .form-check {margin: 4px 0; background: #dde4e8;padding: 8px;border-radius: 6px;}
+#oc_detalhes .oc_ocorrencia .detalhes_ocorrencia .oc_acoes .form-check input {margin: 0;width: 25px;height: 25px;}
+#oc_detalhes .oc_ocorrencia .detalhes_ocorrencia .oc_acoes .form-check label {width: 88%;padding-left: 10px; color: #222;font-size: .84rem;}
+
+#oc_detalhes .oc_ocorrencia #form_finalizar_os {}
+
+#oc_detalhes .chat_wrapper {}
+#oc_detalhes .chat_body {background: #fff;border-radius: 8px;padding: 16px;}
+#oc_detalhes .chat_body .chats {padding: 12px;background: #dde4e8;border-radius: 6px;height: 44vh;max-height: 500px;min-height: 250px;overflow-y: scroll;}
+#oc_detalhes .chat_body .chats .bubble01 {padding-right: 25%;width: 100%;margin-bottom: 15px;}
+#oc_detalhes .chat_body .chats .bubble01 p {font-size: .84rem;line-height: 120%;}
+#oc_detalhes .chat_body .chats .bubble01 .msg {font-size: .86rem;line-height: 132%;display: inline-block;}
+#oc_detalhes .chat_body .chats .bubble02 {padding-left: 25%;width: 100%;text-align: right;margin-bottom: 20px;}
+#oc_detalhes .chat_body .chats .bubble02 p {font-size: .84rem;line-height: 120%;}
+#oc_detalhes .chat_body .chats .bubble02 .msg {font-size: .86rem;line-height: 132%;display: inline-block;background: #fafafa;padding: 8px;border-radius: 6px;}
+#oc_detalhes .chat_body #chat_send_msg {}
+#oc_detalhes .chat_body #chat_send_msg .form-control {background: #dde4e8;}
+
+/* Tela de Busca */
+#busca_scr {}
+#busca_scr #form_buscar {background: #fff;border-radius: 8px;padding: 32px;}
+#busca_scr #form_buscar .form-control {background: #dde4e8;}
+
+/* Tela User */
+#user_scr form {background: #fff;padding: 16px;}
+#user_scr form .form-control {background: #dde4e8;}
+#user_scr form textarea {min-height: 100px;}
+
+
+
+
+
+
+
+
 
 
 

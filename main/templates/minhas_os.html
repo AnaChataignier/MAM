@@ -1,3 +1,4 @@
+{% load static %}
 <!doctype html>
 <html lang="en" data-bs-theme="auto">
   <head>
@@ -49,7 +50,11 @@
                   <strong>Joaquim José da Silva Xavier</strong>
                 </p>
                 <div class="photo_user mt-1">
-                  <img src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?auto=format&fit=crop&q=80&w=1760&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="">
+                  {% if request.user.foto %}
+                  <img src="{{ request.user.foto.url }}" alt="User Photo">
+              {% else %}
+                  <img src="https://cdn-icons-png.flaticon.com/512/3106/3106807.png?auto=format&fit=crop&q=80&w=1760&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="">
+              {% endif %}
                 </div>
               </div>
             </div>
@@ -181,8 +186,8 @@
       <ul class="row">
         <li class="col-3 mt-1"><a href="{% url 'dashboard' %}"><i class="bi bi-house"></i></a></li>
         <li class="col-3 p-0 mt-1 text-start text-md-center"><a href="{% url 'minhas_os' %}" class="text-start text-md-center"><i class="bi bi-card-text"></i></a></li>
-        <li class="col-3 p-0 mt-1 text-end text-md-center"><a href="tela_busca.html" class="text-end text-md-center"><i class="bi bi-search"></i></a></li>
-        <li class="col-3 mt-1"><a href="tela_user"><i class="bi bi-person-gear"></i></a></li>
+        <li class="col-3 p-0 mt-1 text-end text-md-center"><a href="{% url 'tela_busca' %}" class="text-end text-md-center"><i class="bi bi-search"></i></a></li>
+        <li class="col-3 mt-1"><a href="{% url 'tela_user'%}"><i class="bi bi-person-gear"></i></a></li>
 
       </ul>
 

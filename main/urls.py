@@ -1,5 +1,7 @@
 from django.urls import path
 from . import views
+from django.conf import settings
+from django.conf.urls.static import static
 
 
 urlpatterns = [
@@ -11,4 +13,9 @@ urlpatterns = [
     path("finalizar_os/<int:ordem_id>", views.finalizar_os, name="finalizar_os"),
     path("os_finalizadas/", views.os_finalizadas, name="os_finalizadas"),
     path("dashboard/", views.dashboard, name="dashboard"),
-]
+    path("tela_user/", views.tela_user, name="tela_user"),
+    path("tela_busca/", views.tela_busca, name="tela_busca"),
+] 
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
