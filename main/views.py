@@ -12,41 +12,55 @@ from staff.models import OrdemDeServico
 from authentication.forms import TelaUserForm
 
 
-
 @user_passes_test(is_tecnico)
 def minhas_os(request):
     try:
         status_filter = request.GET.get("status")
         previsao_chegada_filter = request.GET.get("previsao_chegada")
-        
-        hoje = date.today().strftime('%d.%m')
-        ontem = (date.today() - timedelta(days=1)).strftime('%d.%m')
+
+        hoje = date.today().strftime("%d.%m")
+        ontem = (date.today() - timedelta(days=1)).strftime("%d.%m")
 
         user = request.user
-        ordens_ativas = OrdemDeServico.objects.filter(tecnico=user, status__in=["Atenção", "Urgente", "Aguardando", "Concluído"])
+        ordens_ativas = OrdemDeServico.objects.filter(
+            tecnico=user, status__in=["Atenção", "Urgente", "Aguardando", "Concluído"]
+        )
 
         if status_filter:
             ordens_ativas = ordens_ativas.filter(status=status_filter)
         if status_filter == "Todas":
-            ordens_ativas = OrdemDeServico.objects.filter(tecnico=user, status__in=["Atenção", "Urgente", "Aguardando", "Concluído"])            
-        if previsao_chegada_filter:    
-            if previsao_chegada_filter == 'Hoje':
+            ordens_ativas = OrdemDeServico.objects.filter(
+                tecnico=user,
+                status__in=["Atenção", "Urgente", "Aguardando", "Concluído"],
+            )
+        if previsao_chegada_filter:
+            if previsao_chegada_filter == "Hoje":
                 ordens_ativas = ordens_ativas.filter(previsao_chegada=date.today())
-            elif previsao_chegada_filter == 'Ontem':
-                ordens_ativas = ordens_ativas.filter(previsao_chegada=date.today() - timedelta(days=1))
-            elif previsao_chegada_filter == 'Últimos 7 dias':
-                ordens_ativas = ordens_ativas.filter(previsao_chegada__date__gte=date.today() - timedelta(days=7))
-            elif previsao_chegada_filter == 'Últimos 30 dias':
-                ordens_ativas = ordens_ativas.filter(previsao_chegada__date__gte=date.today() - timedelta(days=30))
+            elif previsao_chegada_filter == "Ontem":
+                ordens_ativas = ordens_ativas.filter(
+                    previsao_chegada=date.today() - timedelta(days=1)
+                )
+            elif previsao_chegada_filter == "Últimos 7 dias":
+                ordens_ativas = ordens_ativas.filter(
+                    previsao_chegada__date__gte=date.today() - timedelta(days=7)
+                )
+            elif previsao_chegada_filter == "Últimos 30 dias":
+                ordens_ativas = ordens_ativas.filter(
+                    previsao_chegada__date__gte=date.today() - timedelta(days=30)
+                )
 
-        return render(request, "minhas_os.html", {
-            "ordens_de_servico": ordens_ativas,
-            "user": user,
-            "status_filter": status_filter,
-            "previsao_chegada_filter": previsao_chegada_filter,
-            "hoje": hoje,
-            "ontem": ontem,
-        })
+        return render(
+            request,
+            "minhas_os.html",
+            {
+                "ordens_de_servico": ordens_ativas,
+                "user": user,
+                "status_filter": status_filter,
+                "previsao_chegada_filter": previsao_chegada_filter,
+                "hoje": hoje,
+                "ontem": ontem,
+            },
+        )
     except Exception as e:
         return render(request, "error.html", {"error_message": str(e)})
 
@@ -56,7 +70,6 @@ def home(request):
         return render(request, "home.html")
     except Exception as e:
         return render(request, "error.html", {"error_message": str(e)})
-
 
 
 @is_tecnico_and_owner
@@ -69,7 +82,15 @@ def os_detail(request, ordem_id):
             return HttpResponse("Ordem de Serviço já finalizada")
         status_ordem = ordem.status
         return render(
-            request,"os_detail.html",{"ordem": ordem, "user": user, "status_ordem": status_ordem, "api_google_maps_key": api_google_maps_key,})
+            request,
+            "os_detail.html",
+            {
+                "ordem": ordem,
+                "user": user,
+                "status_ordem": status_ordem,
+                "api_google_maps_key": api_google_maps_key,
+            },
+        )
     except Exception as e:
         return render(request, "error.html", {"error_message": str(e)})
 
@@ -84,7 +105,11 @@ def a_caminho(request, ordem_id):
             return HttpResponse("Ordem de Serviço já finalizada")
         ordem.status_tecnico = "À Caminho"
         ordem.save()
-        return render( request, "a_caminho.html", {"ordem": ordem, "user": user, "api_google_maps_key": api_google_maps_key},)
+        return render(
+            request,
+            "a_caminho.html",
+            {"ordem": ordem, "user": user, "api_google_maps_key": api_google_maps_key},
+        )
     except Exception as e:
         return render(request, "error.html", {"error_message": str(e)})
 
@@ -98,7 +123,11 @@ def no_local(request, ordem_id):
             return HttpResponse("Ordem de Serviço já finalizada")
         ordem.status_tecnico = "No Local"
         ordem.save()
-        return render( request, "no_local.html", {"ordem": ordem, "user": user},)
+        return render(
+            request,
+            "no_local.html",
+            {"ordem": ordem, "user": user},
+        )
     except Exception as e:
         return render(request, "error.html", {"error_message": str(e)})
 
@@ -115,7 +144,11 @@ def finalizar_os(request, ordem_id):
             ordem.status_tecnico = "Finalizado"
             ordem.save()
 
-            return render(request, "finalizar_os.html",{"ordem": ordem, "user": user, "historico_form": historico_form},)
+            return render(
+                request,
+                "finalizar_os.html",
+                {"ordem": ordem, "user": user, "historico_form": historico_form},
+            )
 
         elif request.method == "POST":
             historico_form = HistoricoOsFinalizadaForm(request.POST, request.FILES)
@@ -144,13 +177,24 @@ def finalizar_os(request, ordem_id):
 def os_finalizadas(request):
     try:
         user = request.user
-        ordens_finalizadas = OrdemDeServico.objects.filter(tecnico=user, status="Concluído")
+        ordens_finalizadas = OrdemDeServico.objects.filter(
+            tecnico=user, status="Concluído"
+        )
         historicos = []
         for ordem in ordens_finalizadas:
-            historicos_ordem = HistoricoOsFinalizada.objects.filter(ordem_de_servico=ordem)
+            historicos_ordem = HistoricoOsFinalizada.objects.filter(
+                ordem_de_servico=ordem
+            )
             historicos.extend(historicos_ordem)
-        return render(request, "os_finalizadas.html",
-        {"ordens_finalizadas": ordens_finalizadas, "historicos": historicos,"user": user })
+        return render(
+            request,
+            "os_finalizadas.html",
+            {
+                "ordens_finalizadas": ordens_finalizadas,
+                "historicos": historicos,
+                "user": user,
+            },
+        )
     except Exception as e:
         return render(request, "error.html", {"error_message": str(e)})
 
@@ -181,15 +225,18 @@ def dashboard(request):
             tecnico=user, status__in=["Atenção", "Urgente", "Aguardando"]
         )
         ordens_ativas_hoje = OrdemDeServico.objects.filter(
-            tecnico=user, previsao_chegada__date=today, status__in=["Atenção", "Urgente", "Aguardando"]
+            tecnico=user,
+            previsao_chegada__date=today,
+            status__in=["Atenção", "Urgente", "Aguardando"],
         )
         # Filtra todas as ordens finalizadas
         ordens_finalizadas = OrdemDeServico.objects.filter(
             tecnico=user, status__in=["Concluído"]
         )
-        
-        ordens_finalizadas_hoje = OrdemDeServico.objects.filter( tecnico=user, status__in=["Concluído"], previsao_chegada__date=today
-        ) 
+
+        ordens_finalizadas_hoje = OrdemDeServico.objects.filter(
+            tecnico=user, status__in=["Concluído"], previsao_chegada__date=today
+        )
 
         # Filtra as ordens ativas com base nas datas de previsão de chegada
         ordens_ativas_today = ordens_ativas.filter(previsao_chegada__date=today)
@@ -314,28 +361,42 @@ def dashboard(request):
                 "percent_aguardando": percent_aguardando,
                 "ordens_ativas_hoje": ordens_ativas_hoje,
                 "ordens_finalizadas_hoje": ordens_finalizadas_hoje,
-            }
+            },
         )
     except Exception as e:
         # Tratamento de erro genérico
         # Ou personalize o tratamento de erro com base no tipo de exceção
         return render(request, "error.html", {"error_message": str(e)})
-    
-    
+
+
 def tela_user(request):
-    if request.method == 'POST':
+    if request.method == "POST":
         user = request.user
         form = TelaUserForm(request.POST, request.FILES, instance=request.user)
         if form.is_valid():
             form.save()
-            return redirect('dashboard')  # Redirecione para a página de perfil após a edição
+            return redirect(
+                "dashboard"
+            )  # Redirecione para a página de perfil após a edição
     else:
-        
         user = request.user
         form = TelaUserForm(instance=request.user)
 
-    return render(request, 'tela_user.html', {'form': form, 'user': user})
+    return render(request, "tela_user.html", {"form": form, "user": user})
+
 
 def tela_busca(request):
-    
-    return render(request, 'tela_busca.html')
+    return render(request, "tela_busca.html")
+
+
+def tela_busca_resultado(request):
+    ordens = OrdemDeServico.objects.filter(tecnico=request.user)
+    if "buscar" in request.GET:
+        buscar_ticket = request.GET["buscar"]
+        if buscar_ticket:
+            ordens = ordens.filter(
+                Q(ticket__icontains=buscar_ticket)
+                | Q(cliente__nome__icontains=buscar_ticket)
+            )
+
+    return render(request, "tela_busca_resultado.html", {"ordens": ordens})

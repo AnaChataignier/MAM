@@ -1,0 +1,46 @@
+{% extends "base2.html" %}
+
+{%load static%}
+{% block rest %}
+
+<section id="oc_lista">
+    <div class="container">
+      
+      <div class="row">
+        <div class="col-10 offset-1 text-center mt-3">
+          <h5 class="font-bold color04">Resultado da Busca:</h5>
+        </div>
+      </div>
+      
+      <div class="listas_here box-shadow">
+        <div class="tab-content" id="pills-tabContent">
+            <div class="tab-pane pt-3 fade show active" id="pills-01" role="tabpanel" aria-labelledby="pills-home-tab" tabindex="0">
+        {% if ordens %}
+            {% for ordem in ordens %}    
+              <div class="oc_lista_item">
+                <a href="{% url 'os_detail' ordem.id %}" class="a-whole"></a>
+                <div class="row">
+                    <div class="col-2 col-md-1">
+                        <div class="icon bg-light"><i class="bi bi-briefcase text-dark"></i></div>
+                    </div>
+                    <div class="col-9 col-md-11">
+                        <div class="oc_l_data color04 font-light">{{ordem.previsao_chegada}}</div>
+                        <div class="oc_l_nome font-medium color04">Cliente: {{ordem.cliente.nome}}</div>
+                        <div class="oc_l_nome font-medium color04">{{ordem.ticket}}</div>
+                        <div class="oc_l_status font-medium color02">{{ordem.status}}</div>
+                    </div>
+                    <div class="status_icon bg02 text-light">
+                        <i class="bi bi-check-circle"></i>
+                    </div>
+                </div>
+              </div>
+              {% endfor %}
+            {% endif %}
+            </div>
+        </div>
+    </div>        
+    </div>        
+    </div>
+  </section>
+  
+{% endblock %}
