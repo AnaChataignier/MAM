@@ -15,11 +15,11 @@ border-radius: 8px; } {% endblock %} {% block rest %}
             </div>
           </div>
           <div class="col-9 col-md-10">
-            <h4 class="font-bold">Nome da Ordem de Serviço</h4>
+            <h4 class="font-bold">Descrição: {{ordem.descricao}}</h4>
             <div class="row">
               <div class="col-8 col-md-10">
                 <p class="font-medium color04">
-                  CRIADA EM 01.09.2023, as 14:34
+                  Criada {{ordem.data_criacao}}
                 </p>
               </div>
               <div class="col-4 col-md-2">
@@ -50,7 +50,7 @@ border-radius: 8px; } {% endblock %} {% block rest %}
             action="{% url 'finalizar_os' ordem.id %}"
           >
           {% csrf_token %}
-            {% comment %} <div class="col-12">
+             {% comment %} <div class="col-12">
               <div class="wrapper">
                 <canvas id="signature-pad" class="signature-pad"></canvas>
                 <label>Assinatura do Responsável </label>
@@ -60,7 +60,7 @@ border-radius: 8px; } {% endblock %} {% block rest %}
               </button>
               <button class="btn bg03 mt-2" id="clear">Apagar</button>
               <hr />
-            </div> {% endcomment %}
+            </div>  {% endcomment %}
             <div class="col-6">
               {{historico_form.nome_cliente}}
               {% comment %} <input
