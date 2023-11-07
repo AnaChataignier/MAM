@@ -1,6 +1,25 @@
 {% extends "base2.html" %}
 
 {%load static%}
+{% block style %}
+.color-red {
+  color: red;
+}
+
+
+.color-yellow {
+  color: #ffae00;
+}
+
+
+.color-blue {
+  color: blue;
+} 
+
+.color-green {
+  color: #1cbf71;
+} 
+{% endblock %}
 {% block rest %}
 
 <section id="oc_lista">
@@ -27,7 +46,7 @@
                         <div class="oc_l_data color04 font-light">{{ordem.previsao_chegada}}</div>
                         <div class="oc_l_nome font-medium color04">#Ticket {{ordem.ticket}}</div>
                         <div class="oc_l_nome font-medium color04">Cliente: {{ordem.cliente.nome}}</div>
-                        <div class="oc_l_status font-medium color07">{{ordem.status}}</div>
+                        <div class="oc_l_status font-medium {% if ordem.status == 'Urgente' %}color-red{% elif ordem.status == 'Atenção' %}color-yellow{% elif ordem.status == 'Aguardando' %}color-blue{% elif ordem.status == 'Concluído' %}color-green{% endif %}">{{ ordem.status }}</div>
                     </div>
                     {% if ordem.status == "Urgente" %}
                     <div class="status_icon bg05 text-light">
@@ -41,6 +60,10 @@
                     <div class="status_icon bg01 text-light">
                         <i class="bi bi-clock"></i>
                     </div>
+                    {% elif ordem.status == "Concluído" %} 
+                    <div class="status_icon bg02 text-light">
+                      <i class="bi bi-check-circle"></i>
+                  </div>
                 {% endif %}
                 </div>
               </div>
