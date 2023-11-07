@@ -6,9 +6,7 @@ from django.contrib import messages
 from django.contrib.messages import constants
 
 
-
 def register(request):
-
     if request.method == "POST":
         form = CustomUserForm(request.POST)
         endereco_form = EnderecoForm(request.POST)
@@ -28,38 +26,38 @@ def register(request):
                 return redirect("dashboard")  # Redireciona para a página de Técnico
             elif user.groups.filter(name="Staff").exists():
                 return redirect("staff")  # Redireciona para a página de Staff
-            
-        
+
     else:
         form = CustomUserForm()
-        endereco_form = EnderecoForm() 
-    return render(request, "register.html", {"form": form, 'endereco_form': endereco_form})
+        endereco_form = EnderecoForm()
+    return render(
+        request, "register.html", {"form": form, "endereco_form": endereco_form}
+    )
 
 
 def user_login(request):
     if request.method == "POST":
-        form =  CustomAuthenticationForm(data=request.POST)
+        form = CustomAuthenticationForm(data=request.POST)
         if form.is_valid():
-            username = form.cleaned_data['username']
-            password = form.cleaned_data['password']
+            username = form.cleaned_data["username"]
+            password = form.cleaned_data["password"]
             user = authenticate(username=username, password=password)
             if user is not None:
-                    login(request, user)
-                    if user.groups.filter(name="Técnico").exists():
-                        return redirect("dashboard")  # Redireciona para a página de Técnico
-                    elif user.groups.filter(name="Staff").exists():
-                        return redirect("staff")  # Redireciona para a página de Staff
+                login(request, user)
+                if user.groups.filter(name="Técnico").exists():
+                    return redirect("dashboard")  # Redireciona para a página de Técnico
+                elif user.groups.filter(name="Staff").exists():
+                    return redirect("staff")  # Redireciona para a página de Staff
         else:
-            messages.add_message(request, constants.ERROR, 'Senha ou usuário incorretos')
-            return redirect('user_login')    
+            messages.add_message(
+                request, constants.ERROR, "Senha ou usuário incorretos"
+            )
+            return redirect("user_login")
     else:
         form = CustomAuthenticationForm()
-    return render(request, "user_login.html",  {"form": form} )
+    return render(request, "user_login.html", {"form": form})
 
 
 def sair(request):
     logout(request)
     return redirect("user_login")
-
-
-

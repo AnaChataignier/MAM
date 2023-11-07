@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import user_passes_test
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from config import CHAVE_API_GOOGLE
-from .helpers import *
+from .helpers import is_tecnico, is_tecnico_and_owner
 from django.db.models import Q, Count, F, FloatField
 from datetime import date, timedelta
 from decimal import Decimal
@@ -369,6 +369,7 @@ def dashboard(request):
         return render(request, "error.html", {"error_message": str(e)})
 
 
+@user_passes_test(is_tecnico)
 def tela_user(request):
     if request.method == "POST":
         user = request.user
@@ -385,10 +386,12 @@ def tela_user(request):
     return render(request, "tela_user.html", {"form": form, "user": user})
 
 
+@user_passes_test(is_tecnico)
 def tela_busca(request):
     return render(request, "tela_busca.html")
 
 
+@user_passes_test(is_tecnico)
 def tela_busca_resultado(request):
     ordens = OrdemDeServico.objects.filter(tecnico=request.user)
     if "buscar" in request.GET:
