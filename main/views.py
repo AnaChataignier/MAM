@@ -6,10 +6,10 @@ from django.shortcuts import get_object_or_404
 from config import CHAVE_API_GOOGLE
 from .helpers import is_tecnico, is_tecnico_and_owner
 from django.db.models import Q, Count
-from datetime import date, timedelta
 from decimal import Decimal
 from staff.models import OrdemDeServico
 from authentication.forms import TelaUserForm
+from datetime import date, timedelta, datetime, time
 from staff.models import HistoricoOsFinalizada
 
 
@@ -27,27 +27,42 @@ def minhas_os(request):
             tecnico=user, status__in=["Atenção", "Urgente", "Aguardando", "Concluído"]
         )
 
-        if status_filter:
+        # Trate o filtro "Todas" separadamente
+        if status_filter and status_filter != "Todas":
             ordens_ativas = ordens_ativas.filter(status=status_filter)
-        if status_filter == "Todas":
-            ordens_ativas = OrdemDeServico.objects.filter(
-                tecnico=user,
-                status__in=["Atenção", "Urgente", "Aguardando", "Concluído"],
-            )
+
         if previsao_chegada_filter:
             if previsao_chegada_filter == "Hoje":
-                ordens_ativas = ordens_ativas.filter(previsao_chegada=date.today())
-            elif previsao_chegada_filter == "Ontem":
+                start_of_day = datetime.combine(date.today(), time.min)
+                end_of_day = datetime.combine(date.today(), time.max)
                 ordens_ativas = ordens_ativas.filter(
-                    previsao_chegada=date.today() - timedelta(days=1)
+                    previsao_chegada__range=(start_of_day, end_of_day)
+                )
+            elif previsao_chegada_filter == "Ontem":
+                start_of_day = datetime.combine(
+                    date.today() - timedelta(days=1), time.min
+                )
+                end_of_day = datetime.combine(
+                    date.today() - timedelta(days=1), time.max
+                )
+                ordens_ativas = ordens_ativas.filter(
+                    previsao_chegada__range=(start_of_day, end_of_day)
                 )
             elif previsao_chegada_filter == "Últimos 7 dias":
+                start_of_week = datetime.combine(
+                    date.today() - timedelta(days=6), time.min
+                )
+                end_of_day = datetime.combine(date.today(), time.max)
                 ordens_ativas = ordens_ativas.filter(
-                    previsao_chegada__date__gte=date.today() - timedelta(days=7)
+                    previsao_chegada__range=(start_of_week, end_of_day)
                 )
             elif previsao_chegada_filter == "Últimos 30 dias":
+                start_of_month = datetime.combine(
+                    date.today() - timedelta(days=29), time.min
+                )
+                end_of_day = datetime.combine(date.today(), time.max)
                 ordens_ativas = ordens_ativas.filter(
-                    previsao_chegada__date__gte=date.today() - timedelta(days=30)
+                    previsao_chegada__range=(start_of_month, end_of_day)
                 )
 
         return render(

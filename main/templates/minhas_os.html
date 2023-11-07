@@ -66,10 +66,11 @@
                     });
                   });
               </script>
-                <div class="tab-pane fade show active" id="pills-01" role="tabpanel" aria-labelledby="pills-home-tab" tabindex="0">
-                  <!-- OS Urgente -->
-                  {% for ordem in ordens_de_servico %}
-                  <div class="oc_lista_item">
+              <div class="tab-pane fade show active" id="pills-01" role="tabpanel" aria-labelledby="pills-home-tab" tabindex="0">
+                <!-- OS Urgente -->
+                <label class="mt-2 font-medium color04">Todas as suas OS:</label>
+                {% for ordem in ordens_de_servico %}
+                <div class="oc_lista_item">
                       <a href="{% url 'os_detail' ordem.id %}" class="a-whole"></a>
                       <div class="row">
                           <div class="col-2 col-md-1">
