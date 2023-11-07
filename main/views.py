@@ -208,7 +208,8 @@ def dashboard(request):
 
         user = request.user
 
-        # Obtém a data de hoje e as datas de ontem, antes de ontem, 3 dias atrás e 4 dias atrás
+        # Obtém a data de hoje e as datas de ontem, antes de ontem, 3 dias
+        # atrás e 4 dias atrás
         today = date.today()
         yesterday = today - timedelta(days=1)
         day_before_yesterday = today - timedelta(days=2)

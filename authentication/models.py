@@ -25,6 +25,7 @@ class CustomUser(AbstractUser):
     )
     foto = models.ImageField(upload_to="img/perfil_user/", null=True, blank=True)
 
+    # Função que gera um nome pro arquivo de imagem
     def cliente_profile_filename(instance, filename):
         ext = filename.split(".")[-1]
         return f"{instance.first_name}_{instance.last_name}_profile.{ext}"
