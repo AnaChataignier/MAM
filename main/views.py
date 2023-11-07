@@ -69,12 +69,7 @@ def minhas_os(request):
             request,
             "minhas_os.html",
             {
-                "ordens_de_servico": ordens_ativas,
-                "user": user,
-                "status_filter": status_filter,
-                "previsao_chegada_filter": previsao_chegada_filter,
-                "hoje": hoje,
-                "ontem": ontem,
+                "ordens_de_servico": ordens_ativas,          
             },
         )
     except Exception as e:
@@ -167,8 +162,7 @@ def finalizar_os(request, ordem_id):
             )
 
         elif request.method == "POST":
-            historico_form = HistoricoOsFinalizadaForm
-            (request.POST, request.FILES)
+            historico_form = HistoricoOsFinalizadaForm(request.POST, request.FILES)
             if historico_form.is_valid():
                 historico = historico_form.save(commit=False)
                 ordem = get_object_or_404(OrdemDeServico, id=ordem_id)
