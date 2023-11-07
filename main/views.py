@@ -1,15 +1,16 @@
 from django.shortcuts import render, redirect
-from staff.forms import *
+from staff.forms import HistoricoOsFinalizadaForm
 from django.contrib.auth.decorators import user_passes_test
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from config import CHAVE_API_GOOGLE
 from .helpers import is_tecnico, is_tecnico_and_owner
-from django.db.models import Q, Count, F, FloatField
+from django.db.models import Q, Count
 from datetime import date, timedelta
 from decimal import Decimal
 from staff.models import OrdemDeServico
 from authentication.forms import TelaUserForm
+from staff.models import HistoricoOsFinalizada
 
 
 @user_passes_test(is_tecnico)
