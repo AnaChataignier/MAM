@@ -25,13 +25,23 @@
                     </div>
                     <div class="col-9 col-md-11">
                         <div class="oc_l_data color04 font-light">{{ordem.previsao_chegada}}</div>
+                        <div class="oc_l_nome font-medium color04">#Ticket {{ordem.ticket}}</div>
                         <div class="oc_l_nome font-medium color04">Cliente: {{ordem.cliente.nome}}</div>
-                        <div class="oc_l_nome font-medium color04">{{ordem.ticket}}</div>
-                        <div class="oc_l_status font-medium color02">{{ordem.status}}</div>
+                        <div class="oc_l_status font-medium color07">{{ordem.status}}</div>
                     </div>
-                    <div class="status_icon bg02 text-light">
-                        <i class="bi bi-check-circle"></i>
+                    {% if ordem.status == "Urgente" %}
+                    <div class="status_icon bg05 text-light">
+                        <i class="bi bi-exclamation-triangle-fill"></i>
                     </div>
+                {% elif ordem.status == "Atenção" %}
+                    <div class="status_icon bg06 text-dark">
+                        <i class="bi bi-flag"></i>
+                    </div>
+                {% elif ordem.status == "Aguardando" %}
+                    <div class="status_icon bg01 text-light">
+                        <i class="bi bi-clock"></i>
+                    </div>
+                {% endif %}
                 </div>
               </div>
               {% endfor %}

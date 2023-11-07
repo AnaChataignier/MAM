@@ -1,133 +1,194 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Detalhes da Ordem de Serviço</title>
-    <style>
-      /* Estilize o corpo da página */
-      body {
-        font-family: Arial, sans-serif;
-        background-color: #f5f5f5;
-        margin: 0;
-        padding: 0;
-      }
-
-      /* Estilize o contêiner da ordem de serviço */
-      .ordem-de-servico {
-        max-width: 800px;
-        margin: 0 auto;
-        background-color: #fff;
-        padding: 20px;
-        border: 1px solid #ccc;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        border-radius: 5px;
-        text-align: center;
-      }
-
-      /* Estilize os cabeçalhos */
-      h1,
-      h2 {
-        color: #007bff;
-      }
-
-      /* Estilize as informações da ordem de serviço */
-      .info-label {
-        font-weight: bold;
-      }
-
-      /* Estilize o botão de voltar */
-      .btn-back {
-        display: inline-block;
-        margin-top: 20px;
-        text-align: center;
-        background-color: #007bff;
-        color: #fff;
-        padding: 10px 20px;
-        text-decoration: none;
-        border-radius: 5px;
-      }
-
-      /* Estilize o botão de voltar quando o cursor passa por cima */
-      .btn-back:hover {
-        background-color: #0056b3;
-      }
-
-      table a:hover {
-        text-decoration: underline;
-      }
-
-      .status-concluido {
-        background-color: green;
-        color: white;
-      }
-
-      .status-atendimento {
-        background-color: yellow;
-      }
-
-      .status-urgente {
-        background-color: red;
-        color: white;
-      }
-
-      .status-aguardando {
-        background-color: lightblue;
-      }
-      #map {
-        margin: 0 auto;
-      }
-      .btn-back1 {
-        display: inline-block;
-        margin-top: 20px;
-        text-align: center;
-        background-color: green;
-        color: #fff;
-        padding: 10px 20px;
-        text-decoration: none;
-        border-radius: 5px;
-      }
-    </style>
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-    />
-  </head>
-  <body>
- 
-    <div class="ordem-de-servico">
-      <h1>Detalhes da Ordem de Serviço</h1>
-
-      <h2>Ordem de Serviço #{{ ordem.id }}</h2>
-      <div
-        class="progress"
-        role="progressbar"
-        aria-label="Success example"
-        aria-valuenow="25"
-        aria-valuemin="0"
-        aria-valuemax="100"
-      >
-        <div class="progress-bar bg-success" style="width: 100%">100%</div>
+{% extends "base2.html" %} {%load static%} {% block style %} .wrapper {
+position: relative; width: 100%; height: 175px; -moz-user-select: none;
+-webkit-user-select: none; -ms-user-select: none; user-select: none; }
+.signature-pad { position: absolute; left: 0; top: 0; width:100%; height:175px;
+background: #dde4e8; border: 1px dotted #aaa; margin-bottom: 10px;
+border-radius: 8px; } {% endblock %} {% block rest %}
+<section id="detalhes_oc_scr">
+  <div class="container">
+    <div id="oc_detalhes">
+      <div class="oc_titulo mb-1 mb-md-3">
+        <div class="row">
+          <div class="col-3 col-md-1">
+            <div class="icon bg01">
+              <i class="bi bi-briefcase text-light"></i>
+            </div>
+          </div>
+          <div class="col-9 col-md-10">
+            <h4 class="font-bold">Nome da Ordem de Serviço</h4>
+            <div class="row">
+              <div class="col-8 col-md-10">
+                <p class="font-medium color04">
+                  CRIADA EM 01.09.2023, as 14:34
+                </p>
+              </div>
+              <div class="col-4 col-md-2">
+                <p class="font-medium color04">
+                  STATUS:
+                  <span class="icon_sm bg01"
+                    ><i class="bi bi-clock text-light"></i
+                  ></span>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-      <span class="info-label">Ticket:</span>
-      <span id="">{{ ordem.ticket }}</span>
-      <br />
-      <br />
 
-      <span class="info-label">Status Técnico:</span>
-      <span id="">{{ ordem.status_tecnico }}</span>
-      <br />
-      <br />
+      <div class="oc_ocorrencia">
+        <label class="mt-3 ms-2 font-medium color04 fs-6"
+          ><span class="font-bold">Hora:</span> 15:59 |
+          <span class="font-bold">Data:</span> 01.09.2023</label
+        >
 
-      <form
-        method="POST"
-        action="{% url 'finalizar_os' ordem.id %}"
-        enctype="multipart/form-data"
-      >
-        {% csrf_token %} {{historico_form.as_p}}
-        <button type="submit" class="btn-back1">Finalizar OS</button>
-      </form>
-
-      <!-- Botão para voltar para a lista de Ordens de Serviço -->
+        <div class="detalhes_ocorrencia">
+          <form
+            method="POST"
+            id="form_finalizar_os"
+            enctype="multipart/form-data"
+            class="row"
+            action="{% url 'finalizar_os' ordem.id %}"
+          >
+          {% csrf_token %}
+            {% comment %} <div class="col-12">
+              <div class="wrapper">
+                <canvas id="signature-pad" class="signature-pad"></canvas>
+                <label>Assinatura do Responsável </label>
+              </div>
+              <button class="btn bg01 text-light mt-2" id="save-png">
+                Salvar imagem
+              </button>
+              <button class="btn bg03 mt-2" id="clear">Apagar</button>
+              <hr />
+            </div> {% endcomment %}
+            <div class="col-6">
+              {{historico_form.nome_cliente}}
+              {% comment %} <input
+                type="text"
+                class="form-control"
+                name="form_finalizar_os_nome"
+                placeholder="Nome"
+              /> {% endcomment %}
+            </div>
+            <div class="col-6">
+              {{historico_form.rg_cliente}}
+              {% comment %} <input
+                type="text"
+                class="form-control"
+                name="form_finalizar_os_rg"
+                placeholder="RG"
+              /> {% endcomment %}
+            </div>
+            <div class="col-12 mt-3">
+              {{historico_form.observacoes}}
+              {% comment %} <textarea
+                class="form-control"
+                name="form_finalizar_os_obs"
+                placeholder="Observações..."
+              ></textarea> {% endcomment %}
+            </div>
+            <div class="col-6 col-md-2 mt-3">
+              <div class="btn_wrapper">
+                <img
+                  src="{% static 'assets/img/btn_add_picture.png' %}"
+                  class="w-100"
+                />
+                {{historico_form.foto}}
+                {% comment %} <input type="file" name="form_finalizar_os_foto" /> {% endcomment %}
+              </div>
+            </div>
+            <div class="col-6 col-md-2 mt-3">
+              <div class="btn_wrapper">
+                <img
+                  src="{% static 'assets/img/btn_add_video.png' %}"
+                  class="w-100"
+                />
+                <input type="file" name="form_finalizar_os_video" />
+              </div>
+            </div>
+            <div class="col-12">
+              <button
+                type="submit"
+                class="btn bg02 text-light w-100 box-shadow fs-6 font-bold mt-3"
+              >
+                Finalizar
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
-  </body>
-</html>
+  </div>
+</section>
+{% endblock %} {% block script %}
+<script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
+
+{% endblock %} {% block script2 %}
+<script>
+  var canvas = document.getElementById("signature-pad");
+
+  // Adjust canvas coordinate space taking into account pixel ratio,
+  // to make it look crisp on mobile devices.
+  // This also causes canvas to be cleared.
+  function resizeCanvas() {
+    // When zoomed out to less than 100%, for some very strange reason,
+    // some browsers report devicePixelRatio as less than 1
+    // and only part of the canvas is cleared then.
+    var ratio = Math.max(window.devicePixelRatio || 1, 1);
+    canvas.width = canvas.offsetWidth * ratio;
+    canvas.height = canvas.offsetHeight * ratio;
+    canvas.getContext("2d").scale(ratio, ratio);
+  }
+
+  window.onresize = resizeCanvas;
+  resizeCanvas();
+
+  var signaturePad = new SignaturePad(canvas, {
+    backgroundColor: "rgb(255, 255, 255)", // necessary for saving image as JPEG; can be removed is only saving as PNG or SVG
+  });
+
+  document.getElementById("save-png").addEventListener("click", function () {
+    if (signaturePad.isEmpty()) {
+      return alert("Please provide a signature first.");
+    }
+
+    var data = signaturePad.toDataURL("image/png");
+    console.log(data);
+    window.open(data);
+  });
+
+  document.getElementById("save-jpeg").addEventListener("click", function () {
+    if (signaturePad.isEmpty()) {
+      return alert("Please provide a signature first.");
+    }
+
+    var data = signaturePad.toDataURL("image/jpeg");
+    console.log(data);
+    window.open(data);
+  });
+
+  document.getElementById("save-svg").addEventListener("click", function () {
+    if (signaturePad.isEmpty()) {
+      return alert("Please provide a signature first.");
+    }
+
+    var data = signaturePad.toDataURL("image/svg+xml");
+    console.log(data);
+    console.log(atob(data.split(",")[1]));
+    window.open(data);
+  });
+
+  document.getElementById("clear").addEventListener("click", function () {
+    signaturePad.clear();
+  });
+
+  document.getElementById("undo").addEventListener("click", function () {
+    var data = signaturePad.toData();
+    if (data) {
+      data.pop(); // remove the last dot or line
+      signaturePad.fromData(data);
+    }
+  });
+</script>
+
+{% endblock %}

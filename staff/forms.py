@@ -1,6 +1,6 @@
 from django import forms
 from .models import OrdemDeServico, HistoricoOsFinalizada
-from .models import  Cliente
+from .models import Cliente
 from authentication.models import CustomUser
 import re
 
@@ -33,13 +33,24 @@ class OrdemDeServicoForm(forms.ModelForm):
         ]
 
 
-
-
-
 class HistoricoOsFinalizadaForm(forms.ModelForm):
     class Meta:
         model = HistoricoOsFinalizada
         exclude = ["ordem_de_servico"]
+
+    def __init__(self, *args, **kwargs):
+        super(HistoricoOsFinalizadaForm, self).__init__(*args, **kwargs)
+
+        # Adicione a classe 'form-control' a todos os campos do formulário
+        for field_name, field in self.fields.items():
+            if "class" in field.widget.attrs:
+                field.widget.attrs["class"] += " form-control"
+            else:
+                field.widget.attrs["class"] = "form-control"
+
+        self.fields["nome_cliente"].widget.attrs["placeholder"] = "Nome"
+        self.fields["rg_cliente"].widget.attrs["placeholder"] = "RG"
+        self.fields["observacoes"].widget.attrs["placeholder"] = "Observações..."
 
 
 class ClienteForm(forms.ModelForm):

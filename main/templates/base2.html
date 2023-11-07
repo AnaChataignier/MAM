@@ -24,20 +24,9 @@
     <link href="{% static 'assets/css/app_mamminfo.css' %}" rel="stylesheet" />
     <script src="https://maps.googleapis.com/maps/api/js?key={{api_google_maps_key}}"></script>
     <style>
-      /* Estilo para status Urgente (Vermelho) */
-      .color-red {
-        color: red;
-      }
+      {% block style %} {% endblock %}
 
-      /* Estilo para status Atenção (Amarelo) */
-      .color-yellow {
-        color: #ffae00;
-      }
-
-      /* Estilo para status Aguardando (Azul) */
-      .color-blue {
-        color: blue;
-      }
+   
     </style>
   </head>
 
@@ -166,5 +155,6 @@
     </footer>
     <script src="{% static 'assets/dist/js/bootstrap.bundle.min.js' %}"></script>
     {% block script %} {% endblock %}
+    {% block script2 %} {% endblock %}
   </body>
 </html>

@@ -4,12 +4,11 @@ from .models import CustomUser, Endereco
 import re
 from django.contrib.auth.forms import AuthenticationForm
 
+
 class CustomUserForm(UserCreationForm):
     GROUP_CHOICES = [
-        
         ("Técnico", "Técnico"),
         ("Staff", "Staff"),
-        
     ]
 
     group = forms.ChoiceField(choices=GROUP_CHOICES)
@@ -27,7 +26,7 @@ class CustomUserForm(UserCreationForm):
         super(CustomUserForm, self).__init__(*args, **kwargs)
         for field_name, field in self.fields.items():
             field.widget.attrs["class"] = "form-control"
-   
+
         self.fields["first_name"].widget.attrs["placeholder"] = "Nome"
         self.fields["last_name"].widget.attrs["placeholder"] = "Sobrenome"
         self.fields["telefone"].widget.attrs["placeholder"] = "Telefone"
@@ -35,8 +34,7 @@ class CustomUserForm(UserCreationForm):
         self.fields["password1"].widget.attrs["placeholder"] = "Senha"
         self.fields["password2"].widget.attrs["placeholder"] = "Confirmação de Senha"
         self.fields["username"].widget.attrs["placeholder"] = "Usuário"
-        
-        
+
 
 class EnderecoForm(forms.ModelForm):
     cep = forms.CharField(max_length=9, required=True)
@@ -50,14 +48,14 @@ class EnderecoForm(forms.ModelForm):
     class Meta:
         model = Endereco
         fields = "__all__"
-        
+
     def __init__(self, *args, **kwargs):
         super(EnderecoForm, self).__init__(*args, **kwargs)
         for field_name, field in self.fields.items():
             field.widget.attrs["class"] = "form-control"
-            
+
         self.fields["cep"].widget.attrs["placeholder"] = "CEP"
-        self.fields["bairro"].widget.attrs["placeholder" ] = "Bairro"
+        self.fields["bairro"].widget.attrs["placeholder"] = "Bairro"
         self.fields["rua"].widget.attrs["placeholder"] = "Rua"
         self.fields["cidade"].widget.attrs["placeholder"] = "Cidade"
         self.fields["estado"].widget.attrs["placeholder"] = "Estado"
@@ -68,23 +66,24 @@ class EnderecoForm(forms.ModelForm):
 class CustomAuthenticationForm(AuthenticationForm):
     def __init__(self, *args, **kwargs):
         super(CustomAuthenticationForm, self).__init__(*args, **kwargs)
-    
+
         self.fields["username"].widget.attrs["class"] = "form-control"
         self.fields["username"].widget.attrs["placeholder"] = "Usuário"
         self.fields["password"].widget.attrs["class"] = "form-control"
         self.fields["password"].widget.attrs["placeholder"] = "Senha"
-        
+
+
 class TelaUserForm(forms.ModelForm):
     class Meta:
         model = CustomUser
-        fields = ['telefone', 'email', 'first_name', 'last_name', 'foto']
+        fields = ["telefone", "email", "first_name", "last_name", "foto"]
 
     def __init__(self, *args, **kwargs):
         super(TelaUserForm, self).__init__(*args, **kwargs)
-        
+
         # Adicione a classe 'form-control' a todos os campos do formulário
         for field_name, field in self.fields.items():
-            if 'class' in field.widget.attrs:
-                field.widget.attrs['class'] += ' form-control'
+            if "class" in field.widget.attrs:
+                field.widget.attrs["class"] += " form-control"
             else:
-                field.widget.attrs['class'] = 'form-control'
+                field.widget.attrs["class"] = "form-control"
