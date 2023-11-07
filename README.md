@@ -13,3 +13,20 @@ pip install requirements
 ```
 
 
+Nao use os comandos abaixo muitas vezes.
+
+
+```
+python manage.py runscript scripts.users_script -v3
+```
+"Popula com 10 Usuarios(2 staff, 8 tecnicos)"
+
+```
+python manage.py runscript scripts.end_cli_os_script -v3
+```
+Popula com 200 clientes com endereço e uma os pra cada cliente
+
+```
+python manage.py test authentication.tests.test_model.CustomUserTestCase
+```
+"Testa a model do app de autenticação"

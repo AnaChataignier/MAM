@@ -54,7 +54,7 @@ def create_cliente_and_endereco():
 
 
 def run():
-    for _ in range(200):
+    for _ in range(100):
         create_cliente_and_endereco()
 
 
