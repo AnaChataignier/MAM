@@ -57,7 +57,7 @@ def lista_os(request):
         except ValueError:
             pass
 
-    items_per_page = 20
+    items_per_page = 8
     paginator = Paginator(ordens_de_servico, items_per_page)
     page = request.GET.get("page")
     try:
@@ -230,7 +230,7 @@ def gerente_lista_os(request):
         except ValueError:
             pass
 
-    items_per_page = 20
+    items_per_page = 5
     paginator = Paginator(ordens_de_servico, items_per_page)
     page = request.GET.get("page")
     try:

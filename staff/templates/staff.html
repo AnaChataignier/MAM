@@ -15,22 +15,25 @@
 /* Estilos para o corpo da página */
 body {
     font-family: Arial, sans-serif;
-    background-color: #f5f5f5;
+    background-color: #20c997;
     margin: 0;
     padding: 0;
     text-align: center;
+    color: #fff;
 }
 
 /* Estilos para o título */
 h1 {
     font-size: 24px;
     margin-top: 20px;
+    color: #fff;
 }
 
 /* Estilos para o parágrafo */
 p {
     font-size: 18px;
     margin: 20px 0;
+    color: #fff;
 }
 
 /* Estilos para o botão */
@@ -100,7 +103,7 @@ a.btn:hover {
     </nav>
     <br>
     <h1>Bem-vindo, {{ user.first_name }} {{ user.last_name }}</h1>
-    <p>Como membro da equipe (Staff), você pode acessar o formulário de ordem de serviço.</p>
+    <p>Como membro da equipe (Staff), você pode cadastrar clientes com um endereço e depois uma os com um cliente e um técnico responsável.</p>
     Essa área deve ser utilizada com extremo cuidado pois está ligada diretamente ao banco de dados.
     O usuário que adicionar a ordem de serviço ficará vinculado a ela no banco de dados.
     <br>    <br>    <br>
@@ -108,7 +111,7 @@ a.btn:hover {
     <br><br><br>
     <a href="{% url 'formulario_os' %}" class="btn">Cadastrar OS</a>
     <br><br><br>
-    <a href="{% url 'lista_os' %}" class="btn">Acessar todas as OS</a>
+    <a href="{% url 'lista_os' %}" class="btn">Acessar minhas OS</a>
     <br><br><br>
     
     {% comment %} <a href="{% url 'formulario' %}" class="btn">Acessar API 1</a>

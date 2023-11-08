@@ -1,4 +1,195 @@
-<!DOCTYPE html>
+
+{% extends "base_gerente.html" %}
+
+{%load static%}
+
+{% block style %}
+.color-red {
+  color: red;
+}
+
+
+.color-yellow {
+  color: #ffae00;
+}
+
+
+.color-blue {
+  color: blue;
+} 
+
+.color-green {
+  color: #1cbf71;
+}
+.navbar {
+    background-color: #333; /* Cor de fundo da barra de navegação */
+
+  }
+  
+
+  .navbar ul {
+    list-style-type: none;
+  }
+  
+
+  .navbar li {
+    float: left; /* Alinhar os itens horizontalmente */
+  }
+  
+
+  .navbar a {
+    display: block;
+    color: white; 
+    text-align: center; 
+    padding: 14px 16px; 
+    text-decoration: none; 
+  }
+
+  .navbar a:hover {
+    background-color: #555; 
+  }
+
+  .pagination {
+    text-align: center;
+    margin: 0 auto;
+}
+
+.pagination a {
+    color: green;
+    text-decoration: none;
+    margin: 0 10px;
+    text-weight: bold;
+    font-size: 10px;
+
+}
+
+.pagination a:hover {
+    text-decoration: underline;
+}
+
+/* Estilos para a página atual */
+.current-page {
+    font-weight: bold;
+    font-size: 12px;
+}      
+{% endblock %}
+{% block rest %}
+<nav class="navbar">
+    <ul>
+        <li><a href="{% url 'gerente' %}">Home</a></li>
+        <li><a href="{% url 'gerente_lista_os' %}">Todas OS</a></li>
+        <li><a href="{% url 'sair' %}">Logout</a></li>
+    </ul>
+</nav>
+      <section id="lista_oc_scr">
+        <div class="container">
+
+          
+
+            
+            <!-- Lista das OS -->
+            <div id="oc_lista">
+                <label class="mt-1 mb-2 ms-2 font-medium color04"><i class="bi bi-bi bi-card-heading"></i> Lista das Ordens de Serviço:</label>
+                
+                <form id="filter_oc" class="bg04 p-2">
+                 
+                    <div class="col-6">
+                      <div class="row">
+                        <div class="col-2 text-end">
+                          <i class="bi bi-bar-chart-fill color03 me-1"></i>
+                        </div>
+                        <div class="col-10 p-0">
+                          <select class="form-control ms-1" id='status-filter'>
+                            <option selected>Selecione</option>
+                            <option>Urgente</option>
+                            <option>Atenção</option>
+                            <option>Aguardando</option>
+                            <option>Concluído</option>
+                          </select>
+                        </div>
+                           
+                    </div>
+                  </div>
+                </form>
+                <script>
+                  document.addEventListener("DOMContentLoaded", function () {
+                      const selectStatus = document.querySelector('#status-filter');
+                      const selectDate = document.querySelector('#date-filter');
+ // Obtém o elemento select
+              
+                      selectStatus.addEventListener('change', function () {
+                          const selectedStatus = selectStatus.value; // Obtém o valor selecionado
+              
+                          window.location.href = window.location.pathname + '?status=' + selectedStatus; // Atualiza a URL para acionar a view com o filtro de status
+                      });
+                      selectDate.addEventListener('change', function () {
+                        const selectedDate = selectDate.value;
+                        window.location.href = window.location.pathname + '?previsao_chegada=' + selectedDate;
+                    });
+                  });
+              </script>
+              <div class="tab-pane fade show active" id="pills-01" role="tabpanel" aria-labelledby="pills-home-tab" tabindex="0">
+                <!-- OS Urgente -->
+                <label class="mt-2 font-medium color04">Todas as OS da empresa:</label>
+                {% for ordem in ordens_de_servico %}
+                <div class="oc_lista_item">
+                      <a href="{% url 'os_detail' ordem.id %}" class="a-whole"></a>
+                      <div class="row">
+                          <div class="col-2 col-md-1">
+                              <div class="icon bg-light"><i class="bi bi-briefcase text-dark"></i></div>
+                          </div>
+                          <div class="col-9 col-md-11">
+                              <div class="oc_l_nome font-medium color04">Ticket #{{ ordem.ticket }}</div>
+                              <div class="oc_l_data color04 font-light">Previsão de chegada - {{ ordem.previsao_chegada }}</div>
+                              <div class="oc_l_data color04 font-light">Técnico Responsável: {{ ordem.tecnico.first_name }} {{ ordem.tecnico.last_name }}</div>
+                              <div class="oc_l_data color04 font-light">Staff Responsável: {{ ordem.staff.first_name }} {{ ordem.staff.last_name }}</div>
+                              <div class="oc_l_status font-medium {% if ordem.status == 'Urgente' %}color-red{% elif ordem.status == 'Atenção' %}color-yellow{% elif ordem.status == 'Aguardando' %}color-blue{% elif ordem.status == 'Concluído' %}color-green{% endif %}">{{ ordem.status }}</div>
+                          </div>
+                          {% if ordem.status == "Urgente" %}
+                              <div class="status_icon bg05 text-light">
+                                  <i class="bi bi-exclamation-triangle-fill"></i>
+                              </div>
+                          {% elif ordem.status == "Atenção" %}
+                              <div class="status_icon bg06 text-dark">
+                                  <i class="bi bi-flag"></i>
+                              </div>
+                          {% elif ordem.status == "Aguardando" %}
+                              <div class="status_icon bg01 text-light">
+                                  <i class="bi bi-clock"></i>
+                              </div>
+                          {% elif ordem.status == "Concluído" %} 
+                              <div class="status_icon bg02 text-light">
+                                <i class="bi bi-check-circle"></i>
+                            </div>
+                          {% endif %}
+                      </div>
+                  </div>
+                  {% endfor %}
+                       
+              </div>
+            <!-- Lista das OS -->
+        </div>
+        <div class="pagination">
+            <span class="step-links">
+                {% if ordens_de_servico.has_previous %}
+                    <a href="?page=1">&laquo; primeira</a>
+                    <a href="?page={{ ordens_de_servico.previous_page_number }}">anterior</a>
+                {% endif %}
+    
+                <span class="current-page">
+                    Página {{ ordens_de_servico.number }} de {{ ordens_de_servico.paginator.num_pages }}.
+                </span>
+    
+                {% if ordens_de_servico.has_next %}
+                    <a href="?page={{ ordens_de_servico.next_page_number }}">próxima</a>
+                    <a href="?page={{ ordens_de_servico.paginator.num_pages }}">última &raquo;</a>
+                {% endif %}
+            </span>
+        </div>
+      </section>
+     
+  {% endblock %}
+{% comment %} <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -291,4 +482,4 @@
         </span>
     </div>
 </body>
-</html>
+</html> {% endcomment %}

@@ -1,0 +1,159 @@
+{%load static%}
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="auto">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="" />
+    <meta name="author" content="J.M.Campos" />
+    <meta name="generator" content="DGBZ" />
+    <title>App Maminfo</title>
+    <link rel="canonical" href="" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@docsearch/css@3"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"
+    />
+    <link
+      href="{% static 'assets/dist/css/bootstrap.min.css' %}"
+      rel="stylesheet"
+    />
+    <link href="{% static 'assets/css/app_mamminfo.css' %}" rel="stylesheet" />
+    <style>
+      {% block style %} {% endblock %}
+
+   
+    </style>
+  </head>
+
+  <body>
+    <main class="bg03">
+      {% comment %} <header>
+        <div class="container">
+          <div id="super_menu">
+            <div class="row">
+              <div class="col-3 text-start">
+                <i class="bi bi-justify i_main"></i>
+              </div>
+              <div class="col-9 text-end">
+                <p class="mt-2">
+                  Olá,<br />
+                  <strong>{{ user.first_name }} {{ user.last_name }}</strong>
+                </p>
+                <div class="photo_user mt-1">
+                  {% if request.user.foto %}
+                  <img src="{{ request.user.foto.url }}" alt="User Photo" />
+                  {% else %}
+                  <img
+                    src="https://cdn-icons-png.flaticon.com/512/3106/3106807.png?auto=format&fit=crop&q=80&w=1760&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                    alt=""
+                  />
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+            <button
+              class=""
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#col_menu_main"
+              aria-expanded="false"
+              aria-controls="collapseExample"
+            ></button>
+            <div class="collapse" id="col_menu_main">
+              <div class="card card-body box-shadow">
+                <ul> {% endcomment %}
+                  <!-- Botao caso app tenha fechado e user precisa voltar para OS que ja estava em andamento -->
+                  {% comment %}
+                  <li>
+                    <a
+                      href="tela_os-aguardando.html"
+                      class="font-medium text-light bg02 p-2"
+                      ><i class="bi bi-arrow-return-left"></i> Retomar atual
+                      Ocorrência</a
+                    >
+                  </li>
+                  {% endcomment %}
+                  <!-- Botao caso app tenha fechado e user precisa voltar para OS que ja estava em andamento -->
+                  {% comment %} <li>
+                    <a href="{% url 'dashboard'%}" class="font-medium color04"
+                      ><i class="bi bi-house"></i> Dashboard</a
+                    >
+                  </li>
+                  <li>
+                    <a href="{% url 'minhas_os'%}" class="font-medium color04"
+                      ><i class="bi bi-card-heading"></i> Lista de
+                      Ocorrências</a
+                    >
+                  </li> {% endcomment %}
+                  {% comment %}
+                  <li>
+                    <a
+                      href="tela_lista_ocs_urgentes.html"
+                      class="font-medium color04"
+                      ><i class="bi bi-exclamation-triangle-fill"></i>
+                      Ocorrências Urgentes</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="tela_lista_ocs_atencao.html"
+                      class="font-medium color04"
+                      ><i class="bi bi-flag-fill"></i> Ocorrências em Atenção</a
+                    >
+                  </li>
+                  {% endcomment %}
+
+                  {% comment %} <li>
+                    <a href="{% url 'tela_busca' %}" class="font-medium color04"
+                      ><i class="bi bi-search"></i> Busca</a
+                    >
+                  </li>
+                  <hr />
+                  <li>
+                    <a href="{% url 'tela_user' %}" class="font-medium color04"
+                      ><i class="bi bi-gear-fill"></i> Configurações</a
+                    >
+                  </li>
+                  <li>
+                    <a href="{% url 'sair'%}" class="font-medium color04"
+                      ><i class="bi bi-door-open"></i> Logout</a
+                    >
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header> {% endcomment %}
+
+      {% block rest %}{% endblock %}
+    </main>
+    {% comment %} <footer>
+      <ul class="row">
+        <li class="col-3 mt-1">
+          <a href="{% url 'dashboard' %}"><i class="bi bi-house"></i></a>
+        </li>
+        <li class="col-3 p-0 mt-1 text-start text-md-center">
+          <a href="{% url 'minhas_os' %}" class="text-start text-md-center"
+            ><i class="bi bi-card-text"></i
+          ></a>
+        </li>
+        <li class="col-3 p-0 mt-1 text-end text-md-center">
+          <a href="{% url 'tela_busca' %}" class="text-end text-md-center"
+            ><i class="bi bi-search"></i
+          ></a>
+        </li>
+        <li class="col-3 mt-1">
+          <a href="{% url 'tela_user' %}"><i class="bi bi-person-gear"></i></a>
+        </li>
+      </ul>
+    </footer> {% endcomment %}
+    <script src="{% static 'assets/dist/js/bootstrap.bundle.min.js' %}"></script>
+    {% block script %} {% endblock %}
+    {% block script2 %} {% endblock %}
+  </body>
+</html>
