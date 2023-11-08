@@ -1,7 +1,12 @@
 from django.db import models
 from authentication.models import CustomUser, Endereco
 from django.core.validators import MinLengthValidator
-from authentication.constants import STATUS_CHOICES, ACTIVITY_CHOICES, TECNICAL_CHOICES
+from authentication.constants import (
+    STATUS_CHOICES,
+    ACTIVITY_CHOICES,
+    TECNICAL_CHOICES,
+    ATRASO_CHOICES,
+)
 
 
 class Cliente(models.Model):
@@ -36,6 +41,8 @@ class OrdemDeServico(models.Model):
     status = models.CharField(
         max_length=10, choices=STATUS_CHOICES, default="Aguardando"
     )
+    atraso_em_minutos = models.CharField(max_length=50, null=True, blank=True, choices=ATRASO_CHOICES)
+    atraso_descricao = models.TextField(max_length=400, null=True, blank=True)
 
     def __str__(self):
         return f"Ordem de Serviço #{self.pk}"

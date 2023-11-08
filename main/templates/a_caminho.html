@@ -116,7 +116,9 @@
           class="btn bg02 text-light w-100 box-shadow fs-6 font-bold mt-3"
           >Cheguei</a
         >
-        <a class="btn bg04 text-light w-100 box-shadow fs-6 font-bold mt-3">
+        <a 
+        href="{% url 'atraso' ordem.id %}"
+        class="btn bg04 text-light w-100 box-shadow fs-6 font-bold mt-3">
           Reportar Atraso
         </a>
       </div>

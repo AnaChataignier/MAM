@@ -2,7 +2,8 @@ from django import forms
 from .models import OrdemDeServico, HistoricoOsFinalizada
 from .models import Cliente
 from authentication.models import CustomUser
-import re
+
+# import re
 
 
 class OrdemDeServicoForm(forms.ModelForm):
@@ -57,3 +58,14 @@ class ClienteForm(forms.ModelForm):
     class Meta:
         model = Cliente
         exclude = ["endereco"]
+
+
+class AtrasoForm(forms.ModelForm):
+    class Meta:
+        model = OrdemDeServico
+        fields = ["atraso_em_minutos", "atraso_descricao"]
+
+    def __init__(self, *args, **kwargs):
+        super(AtrasoForm, self).__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            field.widget.attrs["class"] = "form-control"

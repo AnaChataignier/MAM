@@ -1,0 +1,108 @@
+{% extends "base2.html" %}
+
+{%load static%}
+  
+
+  
+
+{% block rest %}
+
+      <section id="detalhes_oc_scr">
+        <div class="container">
+ 
+            <div id="oc_detalhes">
+
+              <div class="oc_titulo mb-1 mb-md-3">
+                <div class="row">
+                  <div class="col-3 col-md-1">
+                    <div class="icon bg01">
+                      <i class="bi bi-briefcase text-light"></i>
+                    </div>
+                  </div>
+                  <div class="col-9 col-md-10">
+                    <h4 class="font-bold">
+                      Nome da Ordem de Serviço
+                    </h4>
+                    <div class="row">
+                      <div class="col-8 col-md-10">
+                        <p class="font-medium color04">CRIADA EM 01.09.2023, as 14:34</p>
+                      </div>
+                      <div class="col-4 col-md-2">
+                        <p class="font-medium color04">STATUS: 
+                          <span class="icon_sm bg01"><i class="bi bi-clock text-light"></i></span>
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="oc_ocorrencia">
+                <label class="mt-4 font-medium color04">Detalhes do Atraso:</label>
+                
+               <div class="detalhes_ocorrencia">
+                <form id="form_reportar_ocorrencia" class="row"   method="POST"
+                >
+                    {% csrf_token %}
+                  <div class="oc_acoes mt-2 mb-2">
+                    <a class="btn bg04 w-100 collapsed" data-bs-toggle="collapse" href="#acoes_01" role="button" aria-expanded="false" aria-controls="acoes_01">
+                      <i class="bi bi-arrow-down-circle"></i> Previsão de Atraso:
+                    </a>
+                    <div class="collapse" id="acoes_01">
+                      <div class="card card-body mt-2">
+                        <div class="form-check">
+                          {% comment %} <input class="form-check-input" type="radio" name="opcao" id="opcao01" value="option01" checked> {% endcomment %}
+                          {{form.atraso_em_minutos}}
+                          {% comment %} <label class="form-check-label font-bold" for="opcao01">
+                            15 minutos
+                          </label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input" type="radio" name="opcao" id="opcao02" value="option02">
+                          <label class="form-check-label font-bold" for="opcao02">
+                            30 minutos
+                          </label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input" type="radio" name="opcao" id="opcao03" value="option03">
+                          <label class="form-check-label font-bold" for="opcao03">
+                            1 hora
+                          </label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input" type="radio" name="opcao" id="opcao04" value="option04">
+                          <label class="form-check-label font-bold" for="opcao04">
+                            2 horas
+                          </label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input" type="radio" name="opcao" id="opcao05" value="option05">
+                          <label class="form-check-label font-bold" for="opcao05">
+                            3 horas
+                          </label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input" type="radio" name="opcao" id="opcao06" value="option06">
+                          <label class="form-check-label font-bold" for="opcao06">
+                            Deixar para outro dia
+                          </label> {% endcomment %}
+                        </div>
+                        <div class="mb-3 mt-3">
+                          {{form.atraso_descricao}}
+                        </div>
+                    </div>
+                  </div>
+                  <button type="submit" class="btn bg01 text-light w-100 box-shadow fs-6 font-bold mt-3">Confirmar</button>
+                </form>
+
+               </div>
+
+              </div>
+                
+
+            </div>
+            
+        </div>
+      </section>
+      
+  {% endblock %}
