@@ -132,8 +132,8 @@
                 <!-- OS Urgente -->
                 <label class="mt-2 font-medium color04">Todas as OS que eu cadastrei:</label>
                 {% for ordem in ordens_de_servico %}
+                {% comment %}<a href="{% url 'os_detail2' ordem.id %}" class="a-whole"></a> {% endcomment %}
                 <div class="oc_lista_item">
-                      {% comment %} <a href="{% url 'os_detail' ordem.id %}" class="a-whole"></a> {% endcomment %}
                       <div class="row">
                           <div class="col-2 col-md-1">
                               <div class="icon bg-light"><i class="bi bi-briefcase text-dark"></i></div>
@@ -164,6 +164,7 @@
                           {% endif %}
                       </div>
                   </div>
+                
                   {% endfor %}
                        
               </div>

@@ -19,9 +19,6 @@ def minhas_os(request):
         status_filter = request.GET.get("status")
         previsao_chegada_filter = request.GET.get("previsao_chegada")
 
-        hoje = date.today().strftime("%d.%m")
-        ontem = (date.today() - timedelta(days=1)).strftime("%d.%m")
-
         user = request.user
         ordens_ativas = OrdemDeServico.objects.filter(
             tecnico=user, status__in=["Atenção", "Urgente", "Aguardando", "Concluído"]
@@ -420,7 +417,6 @@ def tela_busca_resultado(request):
 @user_passes_test(is_tecnico)
 def os_detail2(request, ordem_id):
     try:
-        api_google_maps_key = CHAVE_API_GOOGLE
         user = request.user
         ordem = get_object_or_404(OrdemDeServico, id=ordem_id, tecnico=user)
         return render(
@@ -429,7 +425,6 @@ def os_detail2(request, ordem_id):
             {
                 "ordem": ordem,
                 "user": user,
-                "api_google_maps_key": api_google_maps_key,
             },
         )
     except Exception as e:
