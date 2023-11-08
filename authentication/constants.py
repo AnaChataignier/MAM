@@ -48,3 +48,12 @@ TECNICAL_CHOICES = (
     ("No Local", "No local"),
     ("Finalizado", "Finalizado"),
 )
+
+ATRASO_CHOICES = (
+    ("", "Selecione"),
+    ("15", "15 minutos"),
+    ("30", "30 minutos"),
+    ("60", "1 hora"),
+    ("120", "2 horas"),
+    ("180", "3 horas"),
+)

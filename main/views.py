@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from staff.forms import HistoricoOsFinalizadaForm
+from staff.forms import HistoricoOsFinalizadaForm, AtrasoForm
 from django.contrib.auth.decorators import user_passes_test
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
@@ -7,11 +7,10 @@ from config import CHAVE_API_GOOGLE
 from .helpers import is_tecnico, is_tecnico_and_owner
 from django.db.models import Q, Count
 from decimal import Decimal
-from staff.models import OrdemDeServico
+from staff.models import OrdemDeServico, HistoricoOsFinalizada
 from authentication.forms import TelaUserForm
 from datetime import date, timedelta, datetime, time
-from staff.models import HistoricoOsFinalizada
-
+from django.urls import reverse
 
 @user_passes_test(is_tecnico)
 def minhas_os(request):
@@ -429,3 +428,17 @@ def os_detail2(request, ordem_id):
         )
     except Exception as e:
         return render(request, "error.html", {"error_message": str(e)})
+
+
+def atraso(request, ordem_id):
+    ordem = get_object_or_404(OrdemDeServico, id=ordem_id)
+    if request.method == "POST":
+        form = AtrasoForm(request.POST, instance=ordem)
+        if form.is_valid():
+            form.save()
+            redirect_url = reverse('a_caminho', args=[ordem.id])
+            return redirect(redirect_url)
+    else:
+        form = AtrasoForm(instance=ordem)
+
+    return render(request, "atraso.html", {"form": form, "ordem": ordem})

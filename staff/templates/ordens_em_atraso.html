@@ -1,0 +1,11 @@
+
+    <ul>
+        {% for ordem in ordens_em_atraso %}
+            <li>
+                {{ordem.staff.first_name}}
+                Ordem de Serviço #{{ ordem.ticket }} - {{ ordem.descricao }} ({{ ordem.atraso_em_minutos }} minutos de atraso)
+
+                Descrição: {{ ordem.atraso_descricao }}
+            </li>
+        {% endfor %}
+    </ul>

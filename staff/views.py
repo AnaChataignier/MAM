@@ -252,3 +252,15 @@ def gerente_lista_os(request):
             "data_chegada_max_filter": data_chegada_max_filter,
         },
     )
+
+
+def ordens_em_atraso(request):
+    # Recupere todas as ordens de serviço do usuário staff logado que tenham atraso
+    staff = request.user
+    ordens_em_atraso = OrdemDeServico.objects.filter(
+        staff=staff, atraso_em_minutos__isnull=False
+    )
+
+    return render(
+        request, "ordens_em_atraso.html", {"ordens_em_atraso": ordens_em_atraso, staff: "staff"}
+    )

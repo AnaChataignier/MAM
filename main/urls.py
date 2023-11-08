@@ -10,6 +10,7 @@ urlpatterns = [
         views.minhas_os,
         name="minhas_os",
     ),
+    path('atraso/<int:ordem_id>', views.atraso, name='atraso'),
     path("os_detail/<int:ordem_id>", views.os_detail, name="os_detail"),
     path("os_detail2/<int:ordem_id>", views.os_detail2, name="os_detail2"),
     path("a_caminho/<int:ordem_id>", views.a_caminho, name="a_caminho"),

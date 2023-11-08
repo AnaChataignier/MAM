@@ -10,4 +10,5 @@ urlpatterns = [
     path("lista_tecnicos/", views.lista_tecnicos, name="lista_tecnicos"),
     path("gerente/", views.gerente, name="gerente"),
     path("gerente_lista_os/", views.gerente_lista_os, name="gerente_lista_os"),
+    path('ordens_em_atraso/', views.ordens_em_atraso, name='ordens_em_atraso'),
 ]
