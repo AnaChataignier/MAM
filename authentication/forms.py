@@ -9,6 +9,7 @@ class CustomUserForm(UserCreationForm):
     GROUP_CHOICES = [
         ("Técnico", "Técnico"),
         ("Staff", "Staff"),
+        ("Gerente", "Gerente"),
     ]
 
     group = forms.ChoiceField(choices=GROUP_CHOICES)

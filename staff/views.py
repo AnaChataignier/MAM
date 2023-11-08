@@ -29,7 +29,7 @@ def lista_os(request):
 
     users = CustomUser.objects.filter(groups__name="Técnico")
 
-    ordens_de_servico = OrdemDeServico.objects.all()
+    ordens_de_servico = OrdemDeServico.objects.filter(staff=request.user)
 
     if status_filter:
         ordens_de_servico = ordens_de_servico.filter(status=status_filter)
@@ -184,3 +184,71 @@ def lista_clientes(request):
 
 def lista_tecnicos(request):
     pass
+
+
+def gerente(request):
+    try:
+        user = request.user
+        return render(request, "gerente.html", {"user": user})
+    except Exception as e:
+        return render(request, "error.html", {"error_message": str(e)})
+
+
+def gerente_lista_os(request):
+    status_filter = request.GET.get("status")
+    tecnico_filter = request.GET.get("tecnico")
+    data_chegada_min_filter = request.GET.get("data_chegada_min")
+    data_chegada_max_filter = request.GET.get("data_chegada_max")
+
+    users = CustomUser.objects.filter(groups__name="Técnico")
+
+    ordens_de_servico = OrdemDeServico.objects.all()
+
+    if status_filter:
+        ordens_de_servico = ordens_de_servico.filter(status=status_filter)
+    if tecnico_filter:
+        ordens_de_servico = ordens_de_servico.filter(tecnico_id=tecnico_filter)
+    if data_chegada_min_filter:
+        try:
+            data_chegada_min_filter = datetime.strptime(
+                data_chegada_min_filter, "%Y-%m-%d"
+            ).date()
+            ordens_de_servico = ordens_de_servico.filter(
+                previsao_chegada__gte=data_chegada_min_filter
+            )
+        except ValueError:
+            pass
+
+    if data_chegada_max_filter:
+        try:
+            data_chegada_max_filter = datetime.strptime(
+                data_chegada_max_filter, "%Y-%m-%d"
+            ).date()
+            ordens_de_servico = ordens_de_servico.filter(
+                previsao_chegada__lte=data_chegada_max_filter
+            )
+        except ValueError:
+            pass
+
+    items_per_page = 20
+    paginator = Paginator(ordens_de_servico, items_per_page)
+    page = request.GET.get("page")
+    try:
+        ordens_de_servico = paginator.page(page)
+    except PageNotAnInteger:
+        ordens_de_servico = paginator.page(1)
+    except EmptyPage:
+        ordens_de_servico = paginator.page(paginator.num_pages)
+
+    return render(
+        request,
+        "gerente_lista_os.html",
+        {
+            "ordens_de_servico": ordens_de_servico,
+            "users": users,
+            "status_filter": status_filter,
+            "tecnico_filter": tecnico_filter,
+            "data_chegada_min_filter": data_chegada_min_filter,
+            "data_chegada_max_filter": data_chegada_max_filter,
+        },
+    )

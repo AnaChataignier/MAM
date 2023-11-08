@@ -20,12 +20,16 @@ def register(request):
                 group = Group.objects.get(name="Staff")
             elif group_name == "Técnico":
                 group = Group.objects.get(name="Técnico")
+            elif group_name == "Gerente":
+                group = Group.objects.get(name="Gerente")
             user.groups.add(group)
             login(request, user)
             if user.groups.filter(name="Técnico").exists():
                 return redirect("dashboard")  # Redireciona para a página de Técnico
             elif user.groups.filter(name="Staff").exists():
                 return redirect("staff")  # Redireciona para a página de Staff
+            elif user.groups.filter(name="Gerente").exists():
+                return redirect("gerente")  # Redireciona para a página de Gerente
 
     else:
         form = CustomUserForm()
@@ -47,7 +51,9 @@ def user_login(request):
                 if user.groups.filter(name="Técnico").exists():
                     return redirect("dashboard")  # Redireciona para a página de Técnico
                 elif user.groups.filter(name="Staff").exists():
-                    return redirect("staff")  # Redireciona para a página de Staff
+                    return redirect("staff")
+                elif user.groups.filter(name="Gerente").exists():
+                    return redirect("gerente")  # Redireciona para a página de Staff
         else:
             messages.add_message(
                 request, constants.ERROR, "Senha ou usuário incorretos"

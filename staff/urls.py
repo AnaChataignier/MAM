@@ -1,11 +1,13 @@
 from django.urls import path
-from .views import *
+from . import views
 
 urlpatterns = [
-       path("staff/", staff, name="staff"),
-       path("lista_os/", lista_os, name="lista_os"),
-       path("formulario_os/", formulario_os,name="formulario_os"),
-       path("formulario_cliente/", formulario_cliente, name="formulario_cliente"),
-       path("lista_clientes/", lista_clientes, name="lista_clientes"),
-       path("lista_tecnicos/", lista_tecnicos, name="lista_tecnicos"),
+    path("staff/", views.staff, name="staff"),
+    path("lista_os/", views.lista_os, name="lista_os"),
+    path("formulario_os/", views.formulario_os, name="formulario_os"),
+    path("formulario_cliente/", views.formulario_cliente, name="formulario_cliente"),
+    path("lista_clientes/", views.lista_clientes, name="lista_clientes"),
+    path("lista_tecnicos/", views.lista_tecnicos, name="lista_tecnicos"),
+    path("gerente/", views.gerente, name="gerente"),
+    path("gerente_lista_os/", views.gerente_lista_os, name="gerente_lista_os"),
 ]
