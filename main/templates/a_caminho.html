@@ -140,7 +140,8 @@
       console.error("Geolocalização não é suportada pelo seu navegador.");
     }
   }
-
+  obterSuaLocalizacao();
+  setInterval(obterSuaLocalizacao, 15000)
   // Função para criar o mapa e exibir a rota
   function criarMapaESeguirRota(suaLocalizacao) {
     let enderecoDestino = document.getElementById("endereco").textContent;
@@ -179,7 +180,7 @@
     });
   }
 
-  obterSuaLocalizacao();
+
 
   document.addEventListener("DOMContentLoaded", function () {
     const instrucoesList = document.getElementById("instrucoes-list");

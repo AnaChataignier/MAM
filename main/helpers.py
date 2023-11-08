@@ -10,6 +10,10 @@ def is_staff(user):
 def is_tecnico(user):
     return user.groups.filter(name="Técnico").exists()
 
+def is_gerente(user):
+    return user.groups.filter(name="Gerente").exists()
+
+
 
 def is_tecnico_and_owner(view_func):
     @wraps(view_func)

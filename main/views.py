@@ -417,6 +417,7 @@ def tela_busca_resultado(request):
     return render(request, "tela_busca_resultado.html", {"ordens": ordens})
 
 
+@user_passes_test(is_tecnico)
 def os_detail2(request, ordem_id):
     try:
         api_google_maps_key = CHAVE_API_GOOGLE
