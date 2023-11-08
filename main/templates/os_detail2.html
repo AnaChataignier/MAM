@@ -1,0 +1,115 @@
+
+{% extends "base2.html" %}
+
+
+{% block rest %}
+      <section id="detalhes_oc_scr">
+        <div class="container">
+ 
+            <div id="oc_detalhes">
+
+              <div class="oc_titulo mb-1 mb-md-3">
+                <div class="row">
+                  <div class="col-3 col-md-1">
+                    <div class="{% if ordem.status == 'Aguardando' %}icon bg01{% elif ordem.status == 'Atenção' %}icon bg06{% elif ordem.status == 'Urgente' %}icon bg05{% else %}icon bg02{% endif %}">
+                        <i class="bi bi-briefcase text-light"></i>
+                      </div>
+                  </div>
+                  <div class="col-9 col-md-10">
+                    <h4 class="font-bold">
+                      Ticket OS - #{{ordem.ticket}}
+                    </h4>
+                    <div class="row">
+                      <div class="col-8 col-md-10">
+                        <p class="font-medium color04">Criada em {{ordem.data_criacao}}</p>
+                      </div>
+                      <div class="col-4 col-md-2">
+                        <p class="font-medium color04">STATUS: 
+                          <span class="{% if ordem.status == 'Aguardando' %}icon_sm bg01{% elif ordem.status == 'Atenção' %}icon_sm bg06{% elif ordem.status == 'Urgente' %}icon_sm bg05{% else %}icon_sm bg02{% endif %}">
+                            {% if ordem.status == 'Aguardando' %}
+                              <i class="bi bi-clock text-light"></i>
+                            {% elif ordem.status == 'Atenção' %}
+                              <i class="bi bi-flag text-light"></i>
+                            {% else %}
+                              <i class="bi bi-exclamation-triangle-fill text-light"></i>
+                            {% endif %}
+                          </span>
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="oc_espec box-shadow">
+                <a class="btn btn-primary" data-bs-toggle="collapse" href="#oc_espec" role="button" aria-expanded="false" aria-controls="oc_espec">
+                  Clique para expandir
+                </a>
+                <span class="icon"><i class="bi bi-arrow-down-circle"></i></span>
+                <div class="collapse" id="oc_espec">
+                  <div class="card card-body color04">
+                    <div class="row">
+                      <div class="col-12">
+                        <p><strong>Especificações da OS:</strong></p>
+                        <p>{{ordem.descricao}} </p>
+                      </div>
+                      <div class="col-12 mt-2">
+                        <p><strong>Endereço:</strong></p>
+                        <p id="endereco">{{ordem.cliente.endereco}}</p>
+                      </div>
+                      <div class="col-6 mt-2">
+                        <p><strong>Previsão de Chegada:</strong></p>
+                        <p>{{ordem.previsao_chegada}}</p>
+                      </div>
+                      <div class="col-6 mt-2">
+                        <p><strong>Previsão de Execução:</strong></p>
+                        <p>{{ordem.previsao_execucao}}</p>
+                      </div>
+                      <div class="col-12 mt-2">
+                        <p><strong>Nome Cliente:</strong></p>
+                        <p> {{ordem.cliente.nome}}</p>
+                      </div>
+                     
+                      <div class="col-12 mt-2">
+                        <p><strong>Contato:</strong></p>
+                        <p>{{ordem.cliente.telefone1}}</p>
+                      </div>
+                      <div class="col-12 mt-2">
+                        <p><strong>Material:</strong></p>
+                        <p>{{ordem.material}}</p>
+                      </div>
+                      <div class="col-12 mt-2">
+                        <p><strong>Equipamento:</strong></p>
+                        <p>{{ordem.equipamento}}</p>
+                      </div>
+                      <div class="col-12 mt-2">
+                    <div class="col-12 mt-2">
+                        <p><strong>Status Técnico</strong></p>
+                        <p>{{ ordem.status_tecnico }}</p>
+                    </div>
+        
+                     
+                        <br/>
+                        <br/>
+                        <ul id="instrucoes-list" style="display: none;"></ul>
+                     
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <br>
+                
+             
+            </div>
+            
+        </div>
+      </section>
+  
+{% endblock %}
+
+{% block script %}
+<script>
+
+</script>
+{% endblock %}

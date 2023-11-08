@@ -69,7 +69,7 @@ def minhas_os(request):
             request,
             "minhas_os.html",
             {
-                "ordens_de_servico": ordens_ativas,          
+                "ordens_de_servico": ordens_ativas,
             },
         )
     except Exception as e:
@@ -415,3 +415,21 @@ def tela_busca_resultado(request):
             )
 
     return render(request, "tela_busca_resultado.html", {"ordens": ordens})
+
+
+def os_detail2(request, ordem_id):
+    try:
+        api_google_maps_key = CHAVE_API_GOOGLE
+        user = request.user
+        ordem = get_object_or_404(OrdemDeServico, id=ordem_id, tecnico=user)
+        return render(
+            request,
+            "os_detail2.html",
+            {
+                "ordem": ordem,
+                "user": user,
+                "api_google_maps_key": api_google_maps_key,
+            },
+        )
+    except Exception as e:
+        return render(request, "error.html", {"error_message": str(e)})

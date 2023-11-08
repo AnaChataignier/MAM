@@ -11,6 +11,7 @@ urlpatterns = [
         name="minhas_os",
     ),
     path("os_detail/<int:ordem_id>", views.os_detail, name="os_detail"),
+    path("os_detail2/<int:ordem_id>", views.os_detail2, name="os_detail2"),
     path("a_caminho/<int:ordem_id>", views.a_caminho, name="a_caminho"),
     path("no_local/<int:ordem_id>", views.no_local, name="no_local"),
     path("finalizar_os/<int:ordem_id>", views.finalizar_os, name="finalizar_os"),
