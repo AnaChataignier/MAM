@@ -13,9 +13,13 @@ from authentication.forms import EnderecoForm
 
 @user_passes_test(is_staff)
 def staff(request):
+    staff = request.user
+    ordens_em_atraso = OrdemDeServico.objects.filter(
+        staff=staff, atraso_em_minutos__isnull=False, status__in=["Atenção", "Urgente", "Aguardando"]
+    )
+    atrasos = len(ordens_em_atraso.values())
     try:
-        user = request.user
-        return render(request, "staff.html", {"user": user})
+        return render(request, "staff.html", {"atrasos":atrasos})   
     except Exception as e:
         return render(request, "error.html", {"error_message": str(e)})
 
@@ -258,9 +262,9 @@ def ordens_em_atraso(request):
     # Recupere todas as ordens de serviço do usuário staff logado que tenham atraso
     staff = request.user
     ordens_em_atraso = OrdemDeServico.objects.filter(
-        staff=staff, atraso_em_minutos__isnull=False
+        staff=staff, atraso_em_minutos__isnull=False, status__in=["Atenção", "Urgente", "Aguardando"]
     )
 
     return render(
-        request, "ordens_em_atraso.html", {"ordens_em_atraso": ordens_em_atraso, staff: "staff"}
+        request, "ordens_em_atraso.html", {"ordens_em_atraso": ordens_em_atraso, 'staff': staff}
     )

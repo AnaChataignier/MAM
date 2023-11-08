@@ -75,11 +75,16 @@
 {% endblock %}
 {% block rest %}
 <nav class="navbar">
-    <ul>
-        <li><a href="{% url 'staff' %}">Home</a></li>
-        <li><a href="{% url 'lista_os' %}">Todas OS</a></li>
-        <li><a href="{% url 'sair' %}">Logout</a></li>
-    </ul>
+  <ul>
+      <li><a href="{% url 'staff' %}">Home</a></li>
+      <li><a href="{% url 'lista_clientes' %}">Lista Clientes</a></li>
+      <li><a href="{% url 'lista_os' %}">Lista OS</a></li>
+      <li><a href="{% url 'formulario_os' %}" >Cadastrar OS</a></li>
+      <li><a href="{% url 'formulario_cliente' %}">Cadastrar Cliente e Endereço</a></li>
+      <li><a href="{% url 'ordens_em_atraso' %}">Atrasadas</a></li>
+      <li><a href="{% url 'sair' %}">Logout</a></li>
+     
+  </ul>
 </nav>
       <section id="lista_oc_scr">
         <div class="container">

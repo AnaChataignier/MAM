@@ -90,6 +90,21 @@ a.btn:hover {
     background-color: #555; /* Cor de fundo quando passa o mouse por cima */
 }
 
+.fixed-card {
+    position: fixed;
+    top: 10%;
+    right: 10px;
+    transform: translateY(-50%);
+    width: 150px;
+    background-color: red;
+    color: white;
+}
+
+.fixed-card .card {
+    
+}
+
+
 </style>
 <body>
     <nav class="navbar">
@@ -97,6 +112,8 @@ a.btn:hover {
             <li><a href="{% url 'staff' %}">Home</a></li>
             <li><a href="{% url 'lista_clientes' %}">Lista Clientes</a></li>
             <li><a href="{% url 'lista_os' %}">Lista OS</a></li>
+            <li><a href="{% url 'formulario_os' %}" >Cadastrar OS</a></li>
+            <li><a href="{% url 'formulario_cliente' %}">Cadastrar Cliente e Endereço</a></li>
             <li><a href="{% url 'ordens_em_atraso' %}">Atrasadas</a></li>
             <li><a href="{% url 'sair' %}">Logout</a></li>
            
@@ -104,19 +121,19 @@ a.btn:hover {
     </nav>
     <br>
     <h1>Bem-vindo, {{ user.first_name }} {{ user.last_name }}</h1>
-    <p>Como membro da equipe (Staff), você pode cadastrar clientes com um endereço e depois uma os com um cliente e um técnico responsável.</p>
+    <p>Como membro da equipe (Staff), você pode cadastrar clientes e Ordens de serviço, direcionando as ordens para os técnicos cadstrados no app.</p>
+    <p>Você pode gerenciar apenas as ordens que foram criadas por você. Fique atento à atrasos e ocorrencias das ordens que forem de sua respoonsabilidade</p>
     Essa área deve ser utilizada com extremo cuidado pois está ligada diretamente ao banco de dados.
     O usuário que adicionar a ordem de serviço ficará vinculado a ela no banco de dados.
     <br>    <br>    <br>
-    <a href="{% url 'formulario_cliente' %}" class="btn">Cadastrar Cliente e Endereço</a>
-    <br><br><br>
-    <a href="{% url 'formulario_os' %}" class="btn">Cadastrar OS</a>
-    <br><br><br>
-    <a href="{% url 'lista_os' %}" class="btn">Acessar minhas OS</a>
-    <br><br><br>
-    
-    {% comment %} <a href="{% url 'formulario' %}" class="btn">Acessar API 1</a>
-    <br><br><br>
-    <a href="{% url 'formulario' %}" class="btn">Acessar API 2</a> {% endcomment %}
+   {% if atrasos != 0 %}
+    <div class="fixed-card">
+        <a href="{% url 'ordens_em_atraso' %}" target="_blank" class="card text-white">
+            <div class="card-body">
+                <h5 class="card-title">Urgente</h5>
+                <p class="card-text">{{atrasos}}  Ordens em atraso</p>
+            </div>
+        </a>
+  {% endif %}
 </body>
 </html>
