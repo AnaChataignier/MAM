@@ -75,6 +75,13 @@
     main{
       background-color: gray;
     }
+    .badge{
+      background-color: red;
+      color: white;
+      border-radius: 50%;
+      font-size: 14px;
+      position: relative;
+    }
     </style>
   </head>
   <nav class="navbar">
@@ -82,13 +89,7 @@
         <li>        <i class="bi bi-person-workspace logo"></i></i></li>
         <li><a href="{% url 'staff' %}">Home</a></li>
         <li><a href="{% url 'lista_os' %}">Lista OS</a></li>
-        <li><a href="{% url 'formulario_os' %}">Cadastrar OS</a></li>
-       
-        <li>
-          <a href="{% url 'formulario_cliente' %}"
-            >Cadastrar Cliente</a
-          >
-        </li>
+     
         <li>
           <a href="{% url 'ordens_em_atraso' %}"
             >Atrasadas {% if atrasos != 0 %}<span class="badge"
@@ -102,6 +103,16 @@
     <main class="">
       {% block rest %}{% endblock %}
       <br>      <br>
+      <div class="d-flex justify-content-center">
+      <a href="{% url 'formulario_os' %}" class="btn btn-success">Cadastrar OS</a>
+    </div>
+    <br>
+      <div class="d-flex justify-content-center">
+        <a href="{% url 'formulario_cliente' %}" class="btn btn-success"
+          >Cadastrar Cliente</a> 
+        </div>
+        <br>
+      
       <div class="d-flex justify-content-center">
           <a href="{% url 'sair' %}" class="btn btn-danger">Logout</a>
       </div>

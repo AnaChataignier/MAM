@@ -35,26 +35,12 @@
             
             <!-- Lista das OS -->
             <div id="oc_lista">
-                <form id="filter_oc" class="bg04 p-2">
-                 
-                    <div class="col-6">
-                      <div class="row">
-                        <div class="col-2 text-end">
-                          <i class="bi bi-bar-chart-fill color03 me-1"></i>
-                        </div>
-                        <div class="col-10 p-0">
-                          <select class="form-control ms-1" id='status-filter'>
-                            <option selected>Selecione</option>
-                            <option>Urgente</option>
-                            <option>Atenção</option>
-                            <option>Aguardando</option>
-                            <option>Concluído</option>
-                          </select>
-                        </div>
-                           
-                    </div>
-                  </div>
-                </form>
+              <h5>Busque por nome ou endereço do cliente</h5>
+              <form id="form_buscar" class="box-shadow mt-4" method='GET' action="{% url 'gerente_lista_clientes' %}">
+                <input type="text" class="form-control mt-3" name="buscar" placeholder="Busca...">
+                <button type="submit" class="btn bg01 text-light w-100 box-shadow fs-6 font-bold mt-4 mb-3">Buscar</button>
+            </form>
+             
              
               <div class="tab-pane fade show active" id="pills-01" role="tabpanel" aria-labelledby="pills-home-tab" tabindex="0">
                 <!-- OS Urgente -->

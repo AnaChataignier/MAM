@@ -10,6 +10,7 @@ from django.contrib import messages
 from django.contrib.messages import constants
 from django.shortcuts import get_object_or_404
 from authentication.forms import EnderecoForm
+from django.db.models import Q, Count
 
 
 @user_passes_test(is_staff)
@@ -29,61 +30,42 @@ def staff(request):
 
 @user_passes_test(is_staff)
 def lista_os(request):
-    status_filter = request.GET.get("status")
-    tecnico_filter = request.GET.get("tecnico")
-    data_chegada_min_filter = request.GET.get("data_chegada_min")
-    data_chegada_max_filter = request.GET.get("data_chegada_max")
-
-    users = CustomUser.objects.filter(groups__name="Técnico")
-
-    ordens_de_servico = OrdemDeServico.objects.filter(staff=request.user)
-
-    if status_filter:
-        ordens_de_servico = ordens_de_servico.filter(status=status_filter)
-    if tecnico_filter:
-        ordens_de_servico = ordens_de_servico.filter(tecnico_id=tecnico_filter)
-    if data_chegada_min_filter:
-        try:
-            data_chegada_min_filter = datetime.strptime(
-                data_chegada_min_filter, "%Y-%m-%d"
-            ).date()
-            ordens_de_servico = ordens_de_servico.filter(
-                previsao_chegada__gte=data_chegada_min_filter
+    staff = request.user
+    ordens_em_atraso = OrdemDeServico.objects.filter(
+        staff=staff,
+        atraso_em_minutos__isnull=False,
+        status__in=["Atenção", "Urgente", "Aguardando"],
+    )
+    atrasos = len(ordens_em_atraso.values())
+    ordens = OrdemDeServico.objects.filter(staff=request.user)
+    if "buscar" in request.GET:
+        filtros = request.GET["buscar"]
+        if filtros:
+            ordens = ordens.filter(
+                Q(ticket__icontains=filtros)
+                | Q(cliente__nome__icontains=filtros)
+                | Q(status__icontains=filtros)
+                | Q(cliente__endereco__cidade__icontains=filtros)
+                | Q(cliente__endereco__rua__icontains=filtros)
+                | Q(cliente__endereco__cep__icontains=filtros)
             )
-        except ValueError:
-            pass
-
-    if data_chegada_max_filter:
-        try:
-            data_chegada_max_filter = datetime.strptime(
-                data_chegada_max_filter, "%Y-%m-%d"
-            ).date()
-            ordens_de_servico = ordens_de_servico.filter(
-                previsao_chegada__lte=data_chegada_max_filter
-            )
-        except ValueError:
-            pass
 
     items_per_page = 8
-    paginator = Paginator(ordens_de_servico, items_per_page)
+    paginator = Paginator(ordens, items_per_page)
     page = request.GET.get("page")
     try:
-        ordens_de_servico = paginator.page(page)
+        ordens = paginator.page(page)
     except PageNotAnInteger:
-        ordens_de_servico = paginator.page(1)
+        ordens = paginator.page(1)
     except EmptyPage:
-        ordens_de_servico = paginator.page(paginator.num_pages)
+        ordens = paginator.page(paginator.num_pages)
 
     return render(
         request,
         "lista_os.html",
         {
-            "ordens_de_servico": ordens_de_servico,
-            "users": users,
-            "status_filter": status_filter,
-            "tecnico_filter": tecnico_filter,
-            "data_chegada_min_filter": data_chegada_min_filter,
-            "data_chegada_max_filter": data_chegada_max_filter,
+            "ordens": ordens,
+            'atrasos':atrasos
         },
     )
 
@@ -155,42 +137,24 @@ def formulario_cliente(request):
 
 
 def lista_clientes(request):
-    nome_filter = request.GET.get("nome")
-    telefone_filter = request.GET.get("telefone")
-    rg_filter = request.GET.get("rg")
-    estado_filter = request.GET.get("endereco")
-
     clientes = Cliente.objects.all()
-
-    if nome_filter:
-        clientes = clientes.filter(nome__icontains=nome_filter)
-
-    if telefone_filter:
-        clientes = clientes.filter(telefone1__icontains=telefone_filter)
-
-    if rg_filter:
-        clientes = clientes.filter(rg__icontains=rg_filter)
-
-    if estado_filter:
-        clientes = clientes.filter(
-            cliente__endereco__estado__icontains=estado_filter
-        )  # Substitua 'endereco_field' pelo campo correto no modelo de Endereço
+    if "buscar" in request.GET:
+        filtros = request.GET["buscar"]
+        if filtros:
+            clientes = clientes.filter(
+                Q(nome__icontains=filtros)
+                | Q(endereco__cidade__icontains=filtros)
+                | Q(endereco__rua__icontains=filtros)
+                | Q(endereco__cep__icontains=filtros)
+            )
 
     return render(
         request,
         "lista_clientes.html",
         {
             "clientes": clientes,
-            "nome_filter": nome_filter,
-            "telefone_filter": telefone_filter,
-            "rg_filter": rg_filter,
-            "estado_filter": estado_filter,
         },
     )
-
-
-def lista_tecnicos(request):
-    pass
 
 
 def gerente(request):
@@ -202,37 +166,38 @@ def gerente(request):
 
 
 def gerente_lista_os(request):
-    status_filter = request.GET.get("status")
-    tecnico_filter = request.GET.get("tecnico")
-    data_chegada_min_filter = request.GET.get("data_chegada_min")
-    data_chegada_max_filter = request.GET.get("data_chegada_max")
+    ordens = OrdemDeServico.objects.all()
+    if "buscar" in request.GET:
+        filtros = request.GET["buscar"]
+        if filtros:
+            ordens = ordens.filter(
+                Q(ticket__icontains=filtros)
+                | Q(cliente__nome__icontains=filtros)
+                | Q(status__icontains=filtros)
+                | Q(staff__first_name__icontains=filtros)
+                | Q(staff__last_name__icontains=filtros)
+                | Q(tecnico__first_name__icontains=filtros)
+                | Q(tecnico__last_name__icontains=filtros)
+                | Q(cliente__endereco__cidade__icontains=filtros)
+                | Q(cliente__endereco__rua__icontains=filtros)
+                | Q(cliente__endereco__cep__icontains=filtros)
+            )
 
-    users = CustomUser.objects.filter(groups__name="Técnico")
-
-    ordens_de_servico = OrdemDeServico.objects.all()
-
-    if status_filter:
-        ordens_de_servico = ordens_de_servico.filter(status=status_filter)
     items_per_page = 20
-    paginator = Paginator(ordens_de_servico, items_per_page)
+    paginator = Paginator(ordens, items_per_page)
     page = request.GET.get("page")
     try:
-        ordens_de_servico = paginator.page(page)
+        ordens = paginator.page(page)
     except PageNotAnInteger:
-        ordens_de_servico = paginator.page(1)
+        ordens = paginator.page(1)
     except EmptyPage:
-        ordens_de_servico = paginator.page(paginator.num_pages)
+        ordens = paginator.page(paginator.num_pages)
 
     return render(
         request,
         "gerente_lista_os.html",
         {
-            "ordens_de_servico": ordens_de_servico,
-            "users": users,
-            "status_filter": status_filter,
-            "tecnico_filter": tecnico_filter,
-            "data_chegada_min_filter": data_chegada_min_filter,
-            "data_chegada_max_filter": data_chegada_max_filter,
+            "ordens": ordens,
         },
     )
 
@@ -245,11 +210,12 @@ def ordens_em_atraso(request):
         atraso_em_minutos__isnull=False,
         status__in=["Atenção", "Urgente", "Aguardando"],
     )
+    atrasos = len(ordens_em_atraso.values())
 
     return render(
         request,
         "ordens_em_atraso.html",
-        {"ordens_em_atraso": ordens_em_atraso, "staff": staff},
+        {"ordens_em_atraso": ordens_em_atraso, "staff": staff, "atrasos": atrasos},
     )
 
 
@@ -271,6 +237,15 @@ def crud_gerente_os(request, ordem_id):
 
 def gerente_lista_clientes(request):
     clientes = Cliente.objects.all()
+    if "buscar" in request.GET:
+        filtros = request.GET["buscar"]
+        if filtros:
+            clientes = clientes.filter(
+                Q(nome__icontains=filtros)
+                | Q(endereco__cidade__icontains=filtros)
+                | Q(endereco__rua__icontains=filtros)
+                | Q(endereco__cep__icontains=filtros)
+            )
 
     return render(
         request,

@@ -201,20 +201,9 @@
 
     <!-- Formulários de filtro -->
   <!-- Formulário de filtro para clientes -->
-<form method="get">
-    <label for="nome_filter">Filtrar por Nome do Cliente:</label>
-    <input type="text" id="nome_filter" name="nome" />
-    
-    <label for="telefone_filter">Filtrar por Telefone:</label>
-    <input type="text" id="telefone_filter" name="telefone" />
-    
-    <label for="rg_filter">Filtrar por RG:</label>
-    <input type="text" id="rg_filter" name="rg" />
-    
-    <label for="estado_filter">Filtrar por Estado:</label>
-    <input type="text" id="estado_filter" name="Estado" />
-    
-    <input type="submit" value="Filtrar" />
+  <form id="form_buscar" class="box-shadow mt-4" method='GET' action="{% url 'lista_clientes' %}">
+    <input type="text" class="form-control mt-3" name="buscar" placeholder="Busca...">
+    <button type="submit" class="btn bg01 text-light w-100 box-shadow fs-6 font-bold mt-4 mb-3">Buscar</button>
 </form>
 
   
