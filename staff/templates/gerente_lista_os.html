@@ -22,6 +22,32 @@
   color: #1cbf71;
 }
 
+
+.pagination {
+  text-align: center;
+  margin: 0 auto;
+  color: #000;
+}
+
+.pagination a {
+text-align: center;
+  color: #000;
+  text-decoration: none;
+  margin: 0 10px;
+  text-weight: bold;
+  font-size: 14px;
+  color: lightgreen;
+  font-weight: bold;
+}
+h5{
+  text-align: center;
+  color: lightgreen;
+  font-size: 15px;
+}
+
+.btn2{
+  background-color: #1cbf71;
+}
 {% endblock %}
 
 {% block rest %}
@@ -39,7 +65,7 @@
                 Ticket OS, Status da OS, Nome do cliente, Nome do staff responsável, Nome do técnico responsável ou endereço do cliente</h5>
               <form id="form_buscar" class="box-shadow mt-4" method='GET' action="{% url 'gerente_lista_os' %}">
                 <input type="text" class="form-control mt-3" name="buscar" placeholder="Buscar...">
-                <button type="submit" class="btn bg01 text-light w-100 box-shadow fs-6 font-bold mt-4 mb-3">Buscar</button>
+                <button type="submit" class="btn btn2 text-light w-100 box-shadow fs-6 font-bold mt-4 mb-3">Buscar</button>
             </form>
              
               <div class="tab-pane fade show active" id="pills-01" role="tabpanel" aria-labelledby="pills-home-tab" tabindex="0">
@@ -87,18 +113,18 @@
         </div>
         <div class="pagination">
             <span class="step-links">
-                {% if ordens_de_servico.has_previous %}
+                {% if ordens.has_previous %}
                     <a href="?page=1">&laquo; primeira</a>
-                    <a href="?page={{ ordens_de_servico.previous_page_number }}">anterior</a>
+                    <a href="?page={{ ordens.previous_page_number }}">anterior</a>
                 {% endif %}
     
                 <span class="current-page">
-                    Página {{ ordens_de_servico.number }} de {{ ordens_de_servico.paginator.num_pages }}.
+                    Página {{ ordens.number }} de {{ ordens.paginator.num_pages }}.
                 </span>
     
-                {% if ordens_de_servico.has_next %}
-                    <a href="?page={{ ordens_de_servico.next_page_number }}">próxima</a>
-                    <a href="?page={{ ordens_de_servico.paginator.num_pages }}">última &raquo;</a>
+                {% if ordens.has_next %}
+                    <a href="?page={{ ordens.next_page_number }}">próxima</a>
+                    <a href="?page={{ ordens.paginator.num_pages }}">última &raquo;</a>
                 {% endif %}
             </span>
         </div>

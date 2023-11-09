@@ -82,6 +82,14 @@
       font-size: 14px;
       position: relative;
     }
+    .oi{
+      display: flex;
+      justify-content: center
+    }
+    .oi2{
+      margin:10px;
+
+    }
     </style>
   </head>
   <nav class="navbar">
@@ -103,20 +111,22 @@
     <main class="">
       {% block rest %}{% endblock %}
       <br>      <br>
-      <div class="d-flex justify-content-center">
-      <a href="{% url 'formulario_os' %}" class="btn btn-info">Cadastrar OS</a>
+      <div class="oi">
+      <div class="d-flex justify-content-center oi2">
+      <a href="{% url 'formulario_os' %}" class="btn btn-warning">Cadastrar OS</a>
     </div>
     <br>
-      <div class="d-flex justify-content-center">
-        <a href="{% url 'formulario_cliente' %}" class="btn btn-info"
+      <div class="d-flex justify-content-center oi2">
+        <a href="{% url 'formulario_cliente' %}" class="btn btn-warning"
           >Cadastrar Cliente</a> 
         </div>
         <br>
       
-      <div class="d-flex justify-content-center">
+      <div class="d-flex justify-content-center oi2">
           <a href="{% url 'sair' %}" class="btn btn-danger">Logout</a>
       </div>
-      <br><br><br><br>
+    </div>
+      <br><br>
   </main>
     <script src="{% static 'assets/dist/js/bootstrap.bundle.min.js' %}"></script>
 

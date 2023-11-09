@@ -1,8 +1,6 @@
 from django.shortcuts import render, redirect
 from main.helpers import is_staff
 from django.contrib.auth.decorators import user_passes_test
-from datetime import datetime
-from authentication.models import CustomUser
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .models import OrdemDeServico, Cliente
 from .forms import OrdemDeServicoForm, ClienteForm, GerenteClienteForm
@@ -10,7 +8,7 @@ from django.contrib import messages
 from django.contrib.messages import constants
 from django.shortcuts import get_object_or_404
 from authentication.forms import EnderecoForm
-from django.db.models import Q, Count
+from django.db.models import Q
 
 
 @user_passes_test(is_staff)
@@ -139,27 +137,6 @@ def formulario_cliente(request):
         return render(request, "error.html", {"error_message": str(e)})
 
 
-def lista_clientes(request):
-    clientes = Cliente.objects.all()
-    if "buscar" in request.GET:
-        filtros = request.GET["buscar"]
-        if filtros:
-            clientes = clientes.filter(
-                Q(nome__icontains=filtros)
-                | Q(endereco__cidade__icontains=filtros)
-                | Q(endereco__rua__icontains=filtros)
-                | Q(endereco__cep__icontains=filtros)
-            )
-
-    return render(
-        request,
-        "lista_clientes.html",
-        {
-            "clientes": clientes,
-        },
-    )
-
-
 def gerente(request):
     try:
         user = request.user
@@ -186,7 +163,7 @@ def gerente_lista_os(request):
                 | Q(cliente__endereco__cep__icontains=filtros)
             )
 
-    items_per_page = 20
+    items_per_page = 4
     paginator = Paginator(ordens, items_per_page)
     page = request.GET.get("page")
     try:
@@ -249,7 +226,15 @@ def gerente_lista_clientes(request):
                 | Q(endereco__rua__icontains=filtros)
                 | Q(endereco__cep__icontains=filtros)
             )
-
+    items_per_page = 4
+    paginator = Paginator(clientes, items_per_page)
+    page = request.GET.get("page")
+    try:
+        clientes = paginator.page(page)
+    except PageNotAnInteger:
+        clientes = paginator.page(1)
+    except EmptyPage:
+        clientes = paginator.page(paginator.num_pages)
     return render(
         request,
         "gerente_lista_clientes.html",

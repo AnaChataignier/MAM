@@ -62,7 +62,7 @@
     margin: 0 10px;
     text-weight: bold;
     font-size: 14px;
-    color: lightgreen;
+    color: orange;
     font-weight: bold;
 }
 
@@ -75,6 +75,12 @@
     font-weight: bold;
     font-size: 16px;
 }      
+
+h5, label{
+  text-align: center;
+  color: orange;
+  font-size: 15px;
+}
 {% endblock %}
 {% block rest %}
       <section id="lista_oc_scr">
@@ -86,13 +92,13 @@
             <!-- Lista das OS -->
 
             <div id="oc_lista">
-                <label class="mt-1 mb-2 ms-2 font-medium color04"><i class="bi bi-search"></i> Lista das Ordens de Serviço:</label>
+              <br>
                 <h5>Busque por: Ticket Os, Status OS, nome do cliente ou endereço do cliente</h5>
 
                 
                 <form id="form_buscar" class="box-shadow mt-4" method='GET' action="{% url 'lista_os' %}">
                   <input type="text" class="form-control mt-3" name="buscar" placeholder="Busca...">
-                  <button type="submit" class="btn bg01 text-light w-100 box-shadow fs-6 font-bold mt-4 mb-3">Buscar</button>
+                  <button type="submit" class="btn bg06 text-light w-100 box-shadow fs-6 font-bold mt-4 mb-3">Buscar</button>
               </form>
               <div class="tab-pane fade show active" id="pills-01" role="tabpanel" aria-labelledby="pills-home-tab" tabindex="0">
                 <!-- OS Urgente -->
