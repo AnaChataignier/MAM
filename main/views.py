@@ -24,7 +24,9 @@ def minhas_os(request):
         ordens_ativas = OrdemDeServico.objects.filter(
             tecnico=user, status__in=["Atenção", "Urgente", "Aguardando", "Concluído"]
         )
-
+        ordens_ativas_counter = OrdemDeServico.objects.filter(
+            tecnico=user, status__in=["Atenção", "Urgente", "Aguardando", "Concluído"]
+        )
         # Trate o filtro "Todas" separadamente
         if status_filter and status_filter != "Todas":
             ordens_ativas = ordens_ativas.filter(status=status_filter)
@@ -62,11 +64,14 @@ def minhas_os(request):
                 ordens_ativas = ordens_ativas.filter(
                     previsao_chegada__range=(start_of_month, end_of_day)
                 )
-        items_per_page = 10
+
+        items_per_page = 5
         paginator = Paginator(ordens_ativas, items_per_page)
         page = request.GET.get("page")
+
         try:
             ordens_ativas = paginator.page(page)
+     
         except PageNotAnInteger:
             ordens_ativas = paginator.page(1)
         except EmptyPage:
@@ -75,7 +80,7 @@ def minhas_os(request):
         return render(
             request,
             "minhas_os.html",
-            {"ordens_de_servico": ordens_ativas},
+            {"ordens_ativas": ordens_ativas, "qtdos": len(ordens_ativas_counter)},
         )
     except Exception as e:
         return render(request, "error.html", {"error_message": str(e)})
