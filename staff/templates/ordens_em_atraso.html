@@ -1,4 +1,4 @@
-{% extends "base_gerente.html" %}
+{% extends "base_staff.html" %}
 
 {%load static%}
 
@@ -35,21 +35,6 @@ p {
 }
 
 /* Estilos para o botão */
-a.btn {
-    display: inline-block;
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: #fff;
-    text-decoration: none;
-    border-radius: 5px;
-    font-weight: bold;
-    transition: background-color 0.3s;
-}
-
-/* Estilos para o botão quando o cursor passa por cima */
-a.btn:hover {
-    background-color: #0056b3;
-}
 
 /* Reset de margem e preenchimento */
 * {
@@ -100,23 +85,14 @@ a.btn:hover {
   .color-blue {
     color: blue;
   } 
-
+.card{
+    background-color: lightgray;
+}
 {% endblock %}
 {% block rest %}
 
 <body>
-    <nav class="navbar">
-        <ul>
-            <li><a href="{% url 'staff' %}">Home</a></li>
-            <li><a href="{% url 'lista_clientes' %}">Lista Clientes</a></li>
-            <li><a href="{% url 'lista_os' %}">Lista OS</a></li>
-            <li><a href="{% url 'formulario_os' %}" >Cadastrar OS</a></li>
-            <li><a href="{% url 'formulario_cliente' %}">Cadastrar Cliente e Endereço</a></li>
-            <li><a href="{% url 'ordens_em_atraso' %}">Atrasadas</a></li>
-            <li><a href="{% url 'sair' %}">Logout</a></li>
-           
-        </ul>
-    </nav>
+
     <br>
     <section id="lista_oc_scr">
         <div class="container">

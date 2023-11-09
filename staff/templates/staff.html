@@ -1,4 +1,88 @@
-<!DOCTYPE html>
+
+{% extends "base_staff.html" %}
+
+{%load static%}
+
+{% block style %}
+a{
+  text-decoration: none;
+}
+html{
+    background-color: gray;
+}
+main{
+    background-color: gray;
+}
+.check-icon {
+    display: flex;
+    justify-content: center; /* Centraliza horizontalmente */
+}
+.check-icon-green {
+    color: orange; /* Altere para a cor desejada, como "green", "red", "blue", etc. */
+    margin-right: 10px;
+}
+
+.work {
+    font-size: 100px;
+    text-align: center;
+    display: block; /* Certifique-se de que o ícone seja exibido como bloco para o alinhamento horizontal funcionar */
+    color: orange;
+}
+h4{
+    text-align: center;
+}
+h5{
+    text-align: center;
+}
+p{
+    font-size: 14px;
+}
+.check-icon-container{
+    text-align: center; 
+}
+{% endblock %}
+{% block rest %}
+    <br>
+    <h4>Bem-vindo {{ user.first_name }} {{ user.last_name }} !</h4>
+    <h5>Como Staff você pode: </h5>
+
+    <i class="bi bi-pc-display work"></i>
+    <br>
+    <div class="check-icon-container">
+    <div class="check-icon">       
+        <i class="bi bi-check-lg check-icon-green"></i>
+        <p>Visualizar suas OS's</p>        
+    </div>
+    <div class="check-icon">       
+        <i class="bi bi-check-lg check-icon-green"></i>
+        <p>Visualizar suas ordens em atraso</p>        
+    </div>
+    <div class="check-icon">       
+        <i class="bi bi-check-lg check-icon-green"></i>
+        <p>Cadastrar OS'S</p>        
+    </div>
+    <div class="check-icon">       
+        <i class="bi bi-check-lg check-icon-green"></i>
+        <p>Cadastrar clientes com endereço</p>        
+    </div>
+    <div class="check-icon">       
+        <i class="bi bi-check-lg check-icon-green"></i>
+        <p>Editar todas todos as os's</p>        
+    </div>
+    <div class="check-icon">       
+        <i class="bi bi-check-lg check-icon-green"></i>
+        <p>Editar todas todos os históricos</p>        
+    </div>
+    <div class="check-icon">       
+        <i class="bi bi-check-lg check-icon-green"></i>
+        <p>Visualizar e editar todas todos os clientes</p>        
+    </div>
+</div>
+    {% endblock %}
+
+
+
+{% comment %} <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -118,25 +202,7 @@
   <body>
     <nav class="navbar">
       <ul>
-        <i class="bi bi-arrow-down-circle"></i>
-        <li><a href="{% url 'staff' %}">Home</a></li>
-        <li><a href="{% url 'lista_clientes' %}">Lista Clientes</a></li>
-        <li><a href="{% url 'lista_os' %}">Lista OS</a></li>
-        <li><a href="{% url 'formulario_os' %}">Cadastrar OS</a></li>
-        <li>
-          <a href="{% url 'formulario_cliente' %}"
-            >Cadastrar Cliente e Endereço</a
-          >
-        </li>
-        <li>
-          <a href="{% url 'ordens_em_atraso' %}"
-            >Atrasadas {% if atrasos != 0 %}<span class="badge"
-              >{{ atrasos }}</span
-            >{% endif %}</a
-          >
-        </li>
-
-        <li><a href="{% url 'sair' %}">Logout</a></li>
+       
       </ul>
     </nav>
  {% if atrasos != 0 %}
@@ -168,6 +234,7 @@
           <p class="card-text">Você tem {{atrasos}} OS atrasadas</p>
         </div>
       </a>
-    </div> {% endcomment %}
+    </div> 
 </body>
-</html>
+</html> 
+{% endcomment %}

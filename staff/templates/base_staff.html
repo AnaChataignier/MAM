@@ -1,0 +1,111 @@
+{%load static%}
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="auto">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="" />
+    <meta name="author" content="J.M.Campos" />
+    <meta name="generator" content="DGBZ" />
+    <title>App Maminfo</title>
+    <link rel="canonical" href="" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@docsearch/css@3"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"
+    />
+    <link
+      href="{% static 'assets/dist/css/bootstrap.min.css' %}"
+      rel="stylesheet"
+    />
+    <link href="{% static 'assets/css/app_mamminfo.css' %}" rel="stylesheet" />
+    <style>
+      {% block style %} {% endblock %}
+
+      .logo {
+        font-size: 20px;
+        color: orange;
+        display: block; /* Transformar os links em blocos para ocupar toda a largura disponível */
+    
+        text-align: center; /* Alinhar texto ao centro */
+        padding: 14px 16px; /* Preenchimento interno dos links */
+        text-decoration: none; /* Remover sublinhado padrão dos links */
+    }
+    .navbar {
+      background-color: #333; /* Cor de fundo da barra de navegação */
+      overflow: hidden;
+      padding: 0;
+     
+    }
+    
+    .navbar ul {
+      list-style-type: none; /* Remover marcadores de lista */
+      margin: 0;
+      padding: 0;
+    }
+    
+    .navbar li {
+      float: left; /* Alinhar os itens horizontalmente */
+    }
+    
+    .navbar a{
+      display: block; /* Transformar os links em blocos para ocupar toda a largura disponível */
+      color: white; /* Cor do texto dos links */
+      text-align: center; /* Alinhar texto ao centro */
+      padding: 14px 16px; /* Preenchimento interno dos links */
+      text-decoration: none; /* Remover sublinhado padrão dos links */
+    }
+    
+    .navbar a:hover {
+      background-color: #555; /* Cor de fundo quando passa o mouse por cima */
+    }
+    a{
+      text-decoration: none;
+    }
+    .but{
+     margin:0 auto;
+    }
+    main{
+      background-color: gray;
+    }
+    </style>
+  </head>
+  <nav class="navbar">
+    <ul>
+        <li>        <i class="bi bi-person-workspace logo"></i></i></li>
+        <li><a href="{% url 'staff' %}">Home</a></li>
+        <li><a href="{% url 'lista_os' %}">Lista OS</a></li>
+        <li><a href="{% url 'formulario_os' %}">Cadastrar OS</a></li>
+       
+        <li>
+          <a href="{% url 'formulario_cliente' %}"
+            >Cadastrar Cliente</a
+          >
+        </li>
+        <li>
+          <a href="{% url 'ordens_em_atraso' %}"
+            >Atrasadas {% if atrasos != 0 %}<span class="badge"
+              >{{ atrasos }}</span
+            >{% endif %}</a
+          >
+        </li>
+    </ul>
+</nav>
+  <body>
+    <main class="">
+      {% block rest %}{% endblock %}
+      <br>      <br>
+      <div class="d-flex justify-content-center">
+          <a href="{% url 'sair' %}" class="btn btn-danger">Logout</a>
+      </div>
+  </main>
+    <script src="{% static 'assets/dist/js/bootstrap.bundle.min.js' %}"></script>
+    {% block script %} {% endblock %}
+    {% block script2 %} {% endblock %}
+
+ 
+  </body>
+</html>
