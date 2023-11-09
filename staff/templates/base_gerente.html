@@ -68,6 +68,9 @@
     .but{
      margin:0 auto;
     }
+    main{
+      background-color: gray;
+    }
     </style>
   </head>
   <nav class="navbar">
@@ -76,13 +79,13 @@
         <li><a href="{% url 'gerente' %}">Home</a></li>
         <li><a href="{% url 'gerente_lista_os' %}">OS'S</a></li>
         <li><a href="{% url 'gerente_lista_clientes' %}">Clientes</a></li>
-        <li><a href="{% url 'gerente_lista_clientes' %}">Históricos</a></li>
+        <li><a href="{% url 'gerente_lista_clientes' %}">Hist</a></li>
 
         
     </ul>
 </nav>
   <body>
-    <main class="bg03">
+    <main class="">
       {% block rest %}{% endblock %}
       <br>      <br>
       <div class="d-flex justify-content-center">
