@@ -55,13 +55,13 @@ class EnderecoForm(forms.ModelForm):
         for field_name, field in self.fields.items():
             field.widget.attrs["class"] = "form-control"
 
-        # self.fields["cep"].widget.attrs["placeholder"] = "11111-111"
-        # self.fields["bairro"].widget.attrs["placeholder"] = "Bairro"
-        # self.fields["rua"].widget.attrs["placeholder"] = "Rua"
-        # self.fields["cidade"].widget.attrs["placeholder"] = "Cidade"
-        # self.fields["estado"].widget.attrs["placeholder"] = "Estado"
-        # self.fields["numero"].widget.attrs["placeholder"] = "Numero"
-        # self.fields["complemento"].widget.attrs["placeholder"] = "Complemento"
+        self.fields["cep"].widget.attrs["placeholder"] = "CEP"
+        self.fields["bairro"].widget.attrs["placeholder"] = "Bairro"
+        self.fields["rua"].widget.attrs["placeholder"] = "Rua"
+        self.fields["cidade"].widget.attrs["placeholder"] = "Cidade"
+        self.fields["estado"].widget.attrs["placeholder"] = "Estado"
+        self.fields["numero"].widget.attrs["placeholder"] = "Numero"
+        self.fields["complemento"].widget.attrs["placeholder"] = "Complemento"
 
 
 class CustomAuthenticationForm(AuthenticationForm):

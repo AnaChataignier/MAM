@@ -8,6 +8,10 @@
     <meta name="author" content="J.M.Campos" />
     <meta name="generator" content="DGBZ" />
     <title>App Maminfo</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Adicione a biblioteca jQuery Mask Plugin -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
     <link rel="canonical" href="" />
     <link
       rel="stylesheet"
@@ -101,8 +105,10 @@
       <div class="d-flex justify-content-center">
           <a href="{% url 'sair' %}" class="btn btn-danger">Logout</a>
       </div>
+      <br><br><br><br>
   </main>
     <script src="{% static 'assets/dist/js/bootstrap.bundle.min.js' %}"></script>
+
     {% block script %} {% endblock %}
     {% block script2 %} {% endblock %}
 

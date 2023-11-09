@@ -1,4 +1,167 @@
-<!DOCTYPE html>
+{% extends "base_staff.html" %}
+
+{%load static%}
+
+{% block style %}
+.dentroform{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    
+}
+
+.inputs{
+    margin-bottom: 10px;
+}
+
+#id_nome,
+#id_rg,
+#id_telefone1,
+#id_telefone2,
+#id_cep,
+#id_rua,
+#id_bairro,
+#id_cidade,
+#id_estado,
+#id_numero,
+#id_complemento {
+  width: 400px;
+  padding: .375rem .75rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #495057;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid #ced4da;
+  border-radius: .25rem;
+  transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+  box-shadow: none;
+  outline: 0;
+  align-self: center; /* Isso centralizará os campos verticalmente */
+}
+
+{% endblock %}
+{% block rest %}
+
+
+
+    <br>
+    {% if messages %}
+    <br>
+    {% for message in messages %}
+        <div class="alert {{message.tags}}">
+            {{message}}
+        </div>
+    {% endfor %}
+    {% endif %}
+    <form method="post" action="{% url 'formulario_os' %}">
+      {% if messages %}
+      <br />
+      {% for message in messages %}
+      <div class="alert {{message.tags}}">{{message}}</div>
+      {% endfor %} {% endif %}
+  
+      <form method="post" action="{% url 'formulario_cliente' %}">
+        {% csrf_token %}
+        <div class="dentroform">
+        <h2>Dados do cliente</h2>
+        <div class="inputs">
+          {{ cliente_form.nome }}
+        </div>
+        <div class="inputs">
+          {{ cliente_form.rg }}
+        </div>
+        <div class="inputs">
+          {{ cliente_form.telefone1 }}
+        </div>
+        <div class="inputs">
+          {{ cliente_form.telefone2 }}
+        </div>
+  
+        <h2>Endereço do cliente</h2>
+   
+        <div class="inputs">
+          {{ endereco_form.cep }}
+        </div>
+        <div class="inputs">
+          {{ endereco_form.rua }}
+        </div>
+        <div class="inputs">
+          {{ endereco_form.bairro }}
+        </div>
+        <div class="inputs">
+          {{ endereco_form.cidade }}
+        </div>
+        <div class="inputs">
+          {{ endereco_form.estado }}
+        </div>
+        <div class="inputs">
+          {{ endereco_form.numero }}
+        </div>
+        <div class="inputs">
+          {{ endereco_form.complemento }}
+        </div>
+  
+
+        <input type="submit" value="Cadastrar" class="btn btn-success"/>
+      </div>
+      </form>
+
+
+      {% block script %} 
+      <script>
+        document.getElementById("id_cep").addEventListener("blur", function () {
+          var cep = this.value;
+          var url = `http://viacep.com.br/ws/${cep}/json/`;
+  
+          fetch(url)
+            .then((response) => response.json())
+            .then((data) => {
+              document.getElementById("id_rua").value = data.logradouro;
+              document.getElementById("id_bairro").value = data.bairro;
+              document.getElementById("id_cidade").value = data.localidade;
+              document.getElementById("id_estado").value = data.uf;
+            });
+        });
+        
+      </script>
+      
+      {% endblock %}
+
+      {% block script2 %}
+      <script>
+        $(document).ready(function () {
+          // Aplicar a máscara de CEP (#####-###) apenas ao campo CEP com o id 'id_cep'
+          $("#id_cep").mask("00000-000");
+        });
+        $(document).ready(function () {
+          $("#id_telefone1").mask("(00) 00000-0000");
+        });
+        $(document).ready(function () {
+          $("#id_telefone2").mask("(00) 00000-0000");
+        });
+        $(document).ready(function () {
+          $("#id_rg").mask("00.000.000-0");
+        });
+      </script>
+
+       {% endblock %}
+
+    
+    
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+{% comment %} <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -118,63 +281,8 @@
       </ul>
     </nav>
     <br />
-    {% if messages %}
-    <br />
-    {% for message in messages %}
-    <div class="alert {{message.tags}}">{{message}}</div>
-    {% endfor %} {% endif %}
+   
 
-    <h1>Cadastro de Cliente e Endereço</h1>
-    <form method="post" action="{% url 'formulario_cliente' %}">
-      {% csrf_token %}
-
-      <h2>Dados do cliente</h2>
-      {{ cliente_form.as_p }} {% for field in cliente_form %}
-      <div class="field-errors">
-        {% if field.errors %} {{ field.label_tag }}: {{ field.errors.0 }}
-         {% endif %}
-      </div>
-      {% endfor %}
-
-      <h2>Endereço do cliente</h2>
-      {{ endereco_form.as_p }} {% for field in endereco_form %}
-      <div class="field-errors">
-        {% if field.errors %} {{ field.label_tag }}: {{ field.errors.0 }}
-         {% endif %}
-      </div>
-      {% endfor %}
-      <input type="submit" value="Cadastrar" />
-    </form>
-
-    <script>
-      document.getElementById("id_cep").addEventListener("blur", function () {
-        var cep = this.value;
-        var url = `http://viacep.com.br/ws/${cep}/json/`;
-
-        fetch(url)
-          .then((response) => response.json())
-          .then((data) => {
-            document.getElementById("id_rua").value = data.logradouro;
-            document.getElementById("id_bairro").value = data.bairro;
-            document.getElementById("id_cidade").value = data.localidade;
-            document.getElementById("id_estado").value = data.uf;
-          });
-      });
-    </script>
-    <script>
-      $(document).ready(function () {
-        // Aplicar a máscara de CEP (#####-###) apenas ao campo CEP com o id 'id_cep'
-        $("#id_cep").mask("00000-000");
-      });
-      $(document).ready(function () {
-        $("#id_telefone1").mask("(00) 00000-0000");
-      });
-      $(document).ready(function () {
-        $("#id_telefone2").mask("(00) 00000-0000");
-      });
-      $(document).ready(function () {
-        $("#id_rg").mask("00.000.000-0");
-      });
-    </script>
+   
   </body>
-</html>
+</html> {% endcomment %}

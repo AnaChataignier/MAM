@@ -86,6 +86,20 @@ class ClienteForm(forms.ModelForm):
         model = Cliente
         exclude = ["endereco"]
 
+    def __init__(self, *args, **kwargs):
+        super(ClienteForm, self).__init__(*args, **kwargs)
+
+        for field_name, field in self.fields.items():
+            if "class" in field.widget.attrs:
+                field.widget.attrs["class"] += " form-control"
+            else:
+                field.widget.attrs["class"] = "form-control"
+
+        self.fields["nome"].widget.attrs["placeholder"] = "Nome"
+        self.fields["rg"].widget.attrs["placeholder"] = "RG"
+        self.fields["telefone1"].widget.attrs["placeholder"] = "Telefone 1"
+        self.fields["telefone2"].widget.attrs["placeholder"] = "Telefone 2"
+
 
 class GerenteClienteForm(forms.ModelForm):
     class Meta:
