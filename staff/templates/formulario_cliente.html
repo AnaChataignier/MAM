@@ -1,17 +1,15 @@
 {% extends "base_staff.html" %}
-
-{%load static%}
+{% load static %}
 
 {% block style %}
-.dentroform{
+.dentroform {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    
 }
 
-.inputs{
+.inputs {
     margin-bottom: 10px;
 }
 
@@ -26,263 +24,123 @@
 #id_estado,
 #id_numero,
 #id_complemento {
-  width: 400px;
-  padding: .375rem .75rem;
-  font-size: 1rem;
-  line-height: 1.5;
-  color: #495057;
-  background-color: #fff;
-  background-clip: padding-box;
-  border: 1px solid #ced4da;
-  border-radius: .25rem;
-  transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
-  box-shadow: none;
-  outline: 0;
-  align-self: center; /* Isso centralizará os campos verticalmente */
+    width: 400px;
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+    box-shadow: none;
+    outline: 0;
+    align-self: center;
 }
 
 {% endblock %}
+
 {% block rest %}
-
-
-
-    <br>
+<br>
+{% if messages %}
+<br>
+{% for message in messages %}
+<div class="alert {{ message.tags }}">
+    {{ message }}
+</div>
+{% endfor %}
+{% endif %}
+<form method="post" action="{% url 'formulario_cliente' %}">
     {% if messages %}
-    <br>
+    <br />
     {% for message in messages %}
-        <div class="alert {{message.tags}}">
-            {{message}}
-        </div>
+    <div class="alert {{ message.tags }}">{{ message }}</div>
     {% endfor %}
     {% endif %}
-    <form method="post" action="{% url 'formulario_os' %}">
-      {% if messages %}
-      <br />
-      {% for message in messages %}
-      <div class="alert {{message.tags}}">{{message}}</div>
-      {% endfor %} {% endif %}
-  
-      <form method="post" action="{% url 'formulario_cliente' %}">
+
+    <form method="post" action="{% url 'formulario_cliente' %}">
         {% csrf_token %}
         <div class="dentroform">
-        <h2>Dados do cliente</h2>
-        <div class="inputs">
-          {{ cliente_form.nome }}
-        </div>
-        <div class="inputs">
-          {{ cliente_form.rg }}
-        </div>
-        <div class="inputs">
-          {{ cliente_form.telefone1 }}
-        </div>
-        <div class="inputs">
-          {{ cliente_form.telefone2 }}
-        </div>
-  
-        <h2>Endereço do cliente</h2>
-   
-        <div class="inputs">
-          {{ endereco_form.cep }}
-        </div>
-        <div class="inputs">
-          {{ endereco_form.rua }}
-        </div>
-        <div class="inputs">
-          {{ endereco_form.bairro }}
-        </div>
-        <div class="inputs">
-          {{ endereco_form.cidade }}
-        </div>
-        <div class="inputs">
-          {{ endereco_form.estado }}
-        </div>
-        <div class="inputs">
-          {{ endereco_form.numero }}
-        </div>
-        <div class="inputs">
-          {{ endereco_form.complemento }}
-        </div>
-  
+            <h2>Dados do cliente</h2>
+            <div class="inputs">
+                {{ cliente_form.nome }}
+            </div>
+            <div class="inputs">
+                {{ cliente_form.rg }}
+            </div>
+            <div class="inputs">
+                {{ cliente_form.telefone1 }}
+            </div>
+            <div class="inputs">
+                {{ cliente_form.telefone2 }}
+            </div>
 
-        <input type="submit" value="Cadastrar" class="btn btn-success"/>
-      </div>
-      </form>
+            <h2>Endereço do cliente</h2>
 
+            <div class="inputs">
+                {{ endereco_form.cep }}
+            </div>
+            <div class="inputs">
+                {{ endereco_form.rua }}
+            </div>
+            <div class="inputs">
+                {{ endereco_form.bairro }}
+            </div>
+            <div class="inputs">
+                {{ endereco_form.cidade }}
+            </div>
+            <div class="inputs">
+                {{ endereco_form.estado }}
+            </div>
+            <div class="inputs">
+                {{ endereco_form.numero }}
+            </div>
+            <div class="inputs">
+                {{ endereco_form.complemento }}
+            </div>
 
-      {% block script %} 
-      <script>
+            
+
+            <input type="submit" value="Cadastrar" class="btn btn-success" />
+        </div>
+    </form>
+    <hr>
+
+    {% block script %}
+    <script>
         document.getElementById("id_cep").addEventListener("blur", function () {
-          var cep = this.value;
-          var url = `http://viacep.com.br/ws/${cep}/json/`;
-  
-          fetch(url)
-            .then((response) => response.json())
-            .then((data) => {
-              document.getElementById("id_rua").value = data.logradouro;
-              document.getElementById("id_bairro").value = data.bairro;
-              document.getElementById("id_cidade").value = data.localidade;
-              document.getElementById("id_estado").value = data.uf;
-            });
-        });
-        
-      </script>
-      
-      {% endblock %}
+            var cep = this.value;
+            var url = `http://viacep.com.br/ws/${cep}/json/`;
 
-      {% block script2 %}
-      <script>
+            fetch(url)
+                .then((response) => response.json())
+                .then((data) => {
+                    document.getElementById("id_rua").value = data.logradouro;
+                    document.getElementById("id_bairro").value = data.bairro;
+                    document.getElementById("id_cidade").value = data.localidade;
+                    document.getElementById("id_estado").value = data.uf;
+                });
+        });
+    </script>
+    {% endblock %}
+
+    {% block script2 %}
+    <script>
         $(document).ready(function () {
-          // Aplicar a máscara de CEP (#####-###) apenas ao campo CEP com o id 'id_cep'
-          $("#id_cep").mask("00000-000");
+            // Aplicar a máscara de CEP (#####-###) apenas ao campo CEP com o id 'id_cep'
+            $("#id_cep").mask("00000-000");
         });
         $(document).ready(function () {
-          $("#id_telefone1").mask("(00) 00000-0000");
+            $("#id_telefone1").mask("(00) 00000-0000");
         });
         $(document).ready(function () {
-          $("#id_telefone2").mask("(00) 00000-0000");
+            $("#id_telefone2").mask("(00) 00000-0000");
         });
         $(document).ready(function () {
-          $("#id_rg").mask("00.000.000-0");
+            $("#id_rg").mask("00.000.000-0");
         });
-      </script>
-
-       {% endblock %}
-
-    
-    
-
+    </script>
+    {% endblock %}
+</div>
 {% endblock %}
-
-
-
-
-
-
-
-
-
-{% comment %} <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Cadastro de Ordem de Serviço e Endereço</title>
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        background-color: #f5f5f5;
-        margin: 0;
-        padding: 0;
-        text-align: center;
-      }
-
-      h1 {
-        text-align: center;
-        margin-top: 20px;
-      }
-
-      form {
-        max-width: 800px;
-        margin: 0 auto;
-        background-color: #fff;
-        padding: 20px;
-        border-radius: 5px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        align-items: center;
-      }
-
-      h2 {
-        margin-top: 20px;
-        border-bottom: 1px solid #ccc;
-        padding-bottom: 10px;
-        margin-bottom: 30px;
-      }
-
-      table {
-        width: 100%;
-        border-collapse: collapse;
-      }
-
-      table td,
-      table th {
-        padding: 10px;
-        border: 1px solid #ccc;
-        text-align: left;
-      }
-
-      input[type="submit"] {
-        background-color: #007bff;
-        color: #fff;
-        padding: 10px 20px;
-        border: none;
-        cursor: pointer;
-        margin-top: 10px;
-      }
-
-      input[type="submit"]:hover {
-        background-color: #0056b3;
-      }
-
-      /* Reset de margem e preenchimento */
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
-
-      /* Estilo da barra de navegação */
-      .navbar {
-        background-color: #333; /* Cor de fundo da barra de navegação */
-        overflow: hidden;
-      }
-
-      /* Estilo da lista de links na barra de navegação */
-      .navbar ul {
-        list-style-type: none; /* Remover marcadores de lista */
-      }
-
-      /* Estilo dos itens da lista (links) na barra de navegação */
-      .navbar li {
-        float: left; /* Alinhar os itens horizontalmente */
-      }
-
-      /* Estilo dos links na barra de navegação */
-      .navbar a {
-        display: block; /* Transformar os links em blocos para ocupar toda a largura disponível */
-        color: white; /* Cor do texto dos links */
-        text-align: center; /* Alinhar texto ao centro */
-        padding: 14px 16px; /* Preenchimento interno dos links */
-        text-decoration: none; /* Remover sublinhado padrão dos links */
-      }
-
-      /* Efeito de destaque quando o mouse passa por cima dos links */
-      .navbar a:hover {
-        background-color: #555; /* Cor de fundo quando passa o mouse por cima */
-      }
-    </style>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-    <!-- Adicione a biblioteca jQuery Mask Plugin -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
-  </head>
-  <body>
-    <nav class="navbar">
-      <ul>
-        <li><a href="{% url 'staff' %}">Home</a></li>
-        <li><a href="{% url 'lista_clientes' %}">Lista Clientes</a></li>
-        <li><a href="{% url 'lista_os' %}">Lista OS</a></li>
-        <li><a href="{% url 'formulario_os' %}">Cadastrar OS</a></li>
-        <li>
-          <a href="{% url 'formulario_cliente' %}"
-            >Cadastrar Cliente e Endereço</a
-          >
-        </li>
-        <li><a href="{% url 'ordens_em_atraso' %}">Atrasadas</a></li>
-        <li><a href="{% url 'sair' %}">Logout</a></li>
-      </ul>
-    </nav>
-    <br />
-   
-
-   
-  </body>
-</html> {% endcomment %}

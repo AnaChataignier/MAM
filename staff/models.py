@@ -13,8 +13,8 @@ class Cliente(models.Model):
     nome = models.CharField(max_length=50, validators=[MinLengthValidator(3)])
     rg = models.CharField(max_length=12, validators=[MinLengthValidator(3)])
     endereco = models.ForeignKey(Endereco, on_delete=models.CASCADE)
-    telefone1 = models.CharField(max_length=14, validators=[MinLengthValidator(3)])
-    telefone2 = models.CharField(max_length=14, validators=[MinLengthValidator(3)])
+    telefone1 = models.CharField(max_length=15, validators=[MinLengthValidator(3)])
+    telefone2 = models.CharField(max_length=15, validators=[MinLengthValidator(3)])
 
     def __str__(self):
         return self.nome

@@ -38,21 +38,24 @@ def lista_os(request):
     )
     atrasos = len(ordens_em_atraso.values())
     ordens = OrdemDeServico.objects.filter(staff=request.user)
-    if "buscar" in request.GET:
-        filtros = request.GET["buscar"]
-        if filtros:
-            ordens = ordens.filter(
-                Q(ticket__icontains=filtros)
-                | Q(cliente__nome__icontains=filtros)
-                | Q(status__icontains=filtros)
-                | Q(cliente__endereco__cidade__icontains=filtros)
-                | Q(cliente__endereco__rua__icontains=filtros)
-                | Q(cliente__endereco__cep__icontains=filtros)
-            )
 
-    items_per_page = 8
+    # Verifique se o parâmetro de pesquisa "buscar" está presente na solicitação GET
+    filtros = request.GET.get("buscar")
+
+    if filtros:
+        ordens = ordens.filter(
+            Q(ticket__icontains=filtros)
+            | Q(cliente__nome__icontains=filtros)
+            | Q(status__icontains=filtros)
+            | Q(cliente__endereco__cidade__icontains=filtros)
+            | Q(cliente__endereco__rua__icontains=filtros)
+            | Q(cliente__endereco__cep__icontains=filtros)
+        )
+
+    items_per_page = 4
     paginator = Paginator(ordens, items_per_page)
     page = request.GET.get("page")
+
     try:
         ordens = paginator.page(page)
     except PageNotAnInteger:
@@ -65,7 +68,7 @@ def lista_os(request):
         "lista_os.html",
         {
             "ordens": ordens,
-            'atrasos':atrasos
+            "atrasos": atrasos,
         },
     )
 

@@ -52,15 +52,18 @@
   .pagination {
     text-align: center;
     margin: 0 auto;
+    color: #000;
 }
 
 .pagination a {
-    color: green;
+  text-align: center;
+    color: #000;
     text-decoration: none;
     margin: 0 10px;
     text-weight: bold;
-    font-size: 10px;
-
+    font-size: 14px;
+    color: lightgreen;
+    font-weight: bold;
 }
 
 .pagination a:hover {
@@ -70,7 +73,7 @@
 /* Estilos para a página atual */
 .current-page {
     font-weight: bold;
-    font-size: 12px;
+    font-size: 16px;
 }      
 {% endblock %}
 {% block rest %}
@@ -103,9 +106,12 @@
                           </div>
                           <div class="col-9 col-md-11">
                               <div class="oc_l_nome font-medium color04">Ticket #{{ ordem.ticket }}</div>
-                              <div class="oc_l_data color04 font-light">Previsão de chegada: {{ ordem.previsao_chegada }}</div>
-                              <div class="oc_l_data color04 font-light">Técnico Responsável: {{ ordem.tecnico.first_name }} {{ ordem.tecnico.last_name }}</div>
-                              <div class="oc_l_data color04 font-light">Staff Responsável: {{ ordem.staff.first_name }} {{ ordem.staff.last_name }}</div>
+                              <div class="oc_l_data color04 font-dark">Descrição: {{ ordem.descricao }}</div>
+                              <div class="oc_l_data color04 font-dark">Previsão de chegada: {{ ordem.previsao_chegada }}</div>
+                              <div class="oc_l_data color04 font-dark">Técnico Responsável: {{ ordem.tecnico.first_name }} {{ ordem.tecnico.last_name }}</div>
+                              <div class="oc_l_data color04 font-dark">Staff Responsável: {{ ordem.staff.first_name }} {{ ordem.staff.last_name }}</div>
+                              <div class="oc_l_data color04 font-dark">Cliente: {{ ordem.cliente.nome }} - {{ ordem.cliente.endereco }}</div>
+                              <div class="oc_l_data color04 font-dark">Detalhes: Material - {{ ordem.material}} Equipamentos - {{ordem.equipamento}}</div>                           
                               <div class="oc_l_status font-medium {% if ordem.status == 'Urgente' %}color-red{% elif ordem.status == 'Atenção' %}color-yellow{% elif ordem.status == 'Aguardando' %}color-blue{% elif ordem.status == 'Concluído' %}color-green{% endif %}">{{ ordem.status }}</div>
                           </div>
                           {% if ordem.status == "Urgente" %}
@@ -135,18 +141,18 @@
         </div>
         <div class="pagination">
             <span class="step-links">
-                {% if ordens_de_servico.has_previous %}
+                {% if ordens.has_previous %}
                     <a href="?page=1">&laquo; primeira</a>
-                    <a href="?page={{ ordens_de_servico.previous_page_number }}">anterior</a>
+                    <a href="?page={{ ordens.previous_page_number }}">anterior</a>
                 {% endif %}
     
                 <span class="current-page">
-                    Página {{ ordens_de_servico.number }} de {{ ordens_de_servico.paginator.num_pages }}.
+                    Página {{ ordens.number }} de {{ ordens.paginator.num_pages }}.
                 </span>
     
-                {% if ordens_de_servico.has_next %}
-                    <a href="?page={{ ordens_de_servico.next_page_number }}">próxima</a>
-                    <a href="?page={{ ordens_de_servico.paginator.num_pages }}">última &raquo;</a>
+                {% if ordens.has_next %}
+                    <a href="?page={{ ordens.next_page_number }}">próxima</a>
+                    <a href="?page={{ ordens.paginator.num_pages }}">última &raquo;</a>
                 {% endif %}
             </span>
         </div>
