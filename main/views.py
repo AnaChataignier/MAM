@@ -11,6 +11,8 @@ from staff.models import OrdemDeServico, HistoricoOsFinalizada
 from authentication.forms import TelaUserForm
 from datetime import date, timedelta, datetime, time
 from django.urls import reverse
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
 
 @user_passes_test(is_tecnico)
 def minhas_os(request):
@@ -60,13 +62,20 @@ def minhas_os(request):
                 ordens_ativas = ordens_ativas.filter(
                     previsao_chegada__range=(start_of_month, end_of_day)
                 )
+        items_per_page = 10
+        paginator = Paginator(ordens_ativas, items_per_page)
+        page = request.GET.get("page")
+        try:
+            ordens_ativas = paginator.page(page)
+        except PageNotAnInteger:
+            ordens_ativas = paginator.page(1)
+        except EmptyPage:
+            ordens_ativas = paginator.page(paginator.num_pages)
 
         return render(
             request,
             "minhas_os.html",
-            {
-                "ordens_de_servico": ordens_ativas,
-            },
+            {"ordens_de_servico": ordens_ativas},
         )
     except Exception as e:
         return render(request, "error.html", {"error_message": str(e)})
@@ -436,7 +445,7 @@ def atraso(request, ordem_id):
         form = AtrasoForm(request.POST, instance=ordem)
         if form.is_valid():
             form.save()
-            redirect_url = reverse('a_caminho', args=[ordem.id])
+            redirect_url = reverse("a_caminho", args=[ordem.id])
             return redirect(redirect_url)
     else:
         form = AtrasoForm(instance=ordem)

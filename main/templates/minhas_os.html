@@ -20,6 +20,32 @@
 .color-green {
   color: #1cbf71;
 } 
+.pagination {
+  text-align: center;
+  margin: 0 auto;
+  color: #000;
+}
+
+.pagination a {
+text-align: center;
+  color: #000;
+  text-decoration: none;
+  margin: 0 10px;
+  text-weight: bold;
+  font-size: 14px;
+  color: orange;
+  font-weight: bold;
+}
+
+.pagination a:hover {
+  text-decoration: underline;
+}
+
+/* Estilos para a página atual */
+.current-page {
+  font-weight: bold;
+  font-size: 16px;
+}
 {% endblock %}
 {% block rest %}
       <section id="lista_oc_scr">
@@ -125,5 +151,22 @@
               </div>
             <!-- Lista das OS -->
         </div>
+        <div class="pagination">
+          <span class="step-links">
+              {% if ordens_ativas.has_previous %}
+                  <a href="?page=1">&laquo; primeira</a>
+                  <a href="?page={{ ordens_ativas.previous_page_number }}">anterior</a>
+              {% endif %}
+  
+              <span class="current-page">
+                  Página {{ ordens_ativas.number }} de {{ ordens_ativas.paginator.num_pages }}.
+              </span>
+  
+              {% if ordens_ativas.has_next %}
+                  <a href="?page={{ ordens_ativas.next_page_number }}">próxima</a>
+                  <a href="?page={{ ordens_ativas.paginator.num_pages }}">última &raquo;</a>
+              {% endif %}
+          </span>
+      </div>
       </section>
   {% endblock %}
