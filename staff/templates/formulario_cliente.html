@@ -96,38 +96,53 @@
         background-color: #555; /* Cor de fundo quando passa o mouse por cima */
       }
     </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Adicione a biblioteca jQuery Mask Plugin -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
   </head>
   <body>
     <nav class="navbar">
       <ul>
-          <li><a href="{% url 'staff' %}">Home</a></li>
-          <li><a href="{% url 'lista_clientes' %}">Lista Clientes</a></li>
-          <li><a href="{% url 'lista_os' %}">Lista OS</a></li>
-          <li><a href="{% url 'formulario_os' %}" >Cadastrar OS</a></li>
-          <li><a href="{% url 'formulario_cliente' %}">Cadastrar Cliente e Endereço</a></li>
-          <li><a href="{% url 'ordens_em_atraso' %}">Atrasadas</a></li>
-          <li><a href="{% url 'sair' %}">Logout</a></li>
-         
+        <li><a href="{% url 'staff' %}">Home</a></li>
+        <li><a href="{% url 'lista_clientes' %}">Lista Clientes</a></li>
+        <li><a href="{% url 'lista_os' %}">Lista OS</a></li>
+        <li><a href="{% url 'formulario_os' %}">Cadastrar OS</a></li>
+        <li>
+          <a href="{% url 'formulario_cliente' %}"
+            >Cadastrar Cliente e Endereço</a
+          >
+        </li>
+        <li><a href="{% url 'ordens_em_atraso' %}">Atrasadas</a></li>
+        <li><a href="{% url 'sair' %}">Logout</a></li>
       </ul>
-  </nav>
+    </nav>
     <br />
     {% if messages %}
-    <br>
-      {% for message in messages %}
-        <div class="alert {{message.tags}}">
-            {{message}}
-        </div>
-      {% endfor %}
-    {% endif %}
+    <br />
+    {% for message in messages %}
+    <div class="alert {{message.tags}}">{{message}}</div>
+    {% endfor %} {% endif %}
+
     <h1>Cadastro de Cliente e Endereço</h1>
     <form method="post" action="{% url 'formulario_cliente' %}">
       {% csrf_token %}
 
       <h2>Dados do cliente</h2>
-      {{ cliente_form.as_p }}
+      {{ cliente_form.as_p }} {% for field in cliente_form %}
+      <div class="field-errors">
+        {% if field.errors %} {{ field.label_tag }}: {{ field.errors.0 }} {%
+        endif %}
+      </div>
+      {% endfor %}
 
       <h2>Endereço do cliente</h2>
-      {{ endereco_form.as_p}}
+      {{ endereco_form.as_p }} {% for field in endereco_form %}
+      <div class="field-errors">
+        {% if field.errors %} {{ field.label_tag }}: {{ field.errors.0 }} {%
+        endif %}
+      </div>
+      {% endfor %}
       <input type="submit" value="Cadastrar" />
     </form>
 
@@ -144,6 +159,21 @@
             document.getElementById("id_cidade").value = data.localidade;
             document.getElementById("id_estado").value = data.uf;
           });
+      });
+    </script>
+    <script>
+      $(document).ready(function () {
+        // Aplicar a máscara de CEP (#####-###) apenas ao campo CEP com o id 'id_cep'
+        $("#id_cep").mask("00000-000");
+      });
+      $(document).ready(function () {
+        $("#id_telefone1").mask("(00) 00000-0000");
+      });
+      $(document).ready(function () {
+        $("#id_telefone2").mask("(00) 00000-0000");
+      });
+      $(document).ready(function () {
+        $("#id_rg").mask("00.000.000-0");
       });
     </script>
   </body>

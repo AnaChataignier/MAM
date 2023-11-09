@@ -3,7 +3,20 @@ position: relative; width: 100%; height: 175px; -moz-user-select: none;
 -webkit-user-select: none; -ms-user-select: none; user-select: none; }
 .signature-pad { position: absolute; left: 0; top: 0; width:100%; height:175px;
 background: #dde4e8; border: 1px dotted #aaa; margin-bottom: 10px;
-border-radius: 8px; } {% endblock %} {% block rest %}
+border-radius: 8px; } {% endblock %} 
+
+
+{% block cdn %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Adicione a biblioteca jQuery Mask Plugin -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+
+{% endblock %} 
+
+{% block rest %}
+
+
 <section id="detalhes_oc_scr">
   <div class="container">
     <div id="oc_detalhes">
@@ -62,7 +75,7 @@ border-radius: 8px; } {% endblock %} {% block rest %}
               <hr />
             </div>  {% endcomment %}
             <div class="col-6">
-              {{historico_form.nome_cliente}}
+              {{historico_form.nome_responsavel}}
               {% comment %} <input
                 type="text"
                 class="form-control"
@@ -71,7 +84,7 @@ border-radius: 8px; } {% endblock %} {% block rest %}
               /> {% endcomment %}
             </div>
             <div class="col-6">
-              {{historico_form.rg_cliente}}
+              {{historico_form.rg_responsavel}}
               {% comment %} <input
                 type="text"
                 class="form-control"
@@ -189,6 +202,12 @@ border-radius: 8px; } {% endblock %} {% block rest %}
       signaturePad.fromData(data);
     }
   });
+</script>
+<script>
+  $(document).ready(function () {
+    $('#id_rg_responsavel').mask('00.000.000-0');
+  });
+ 
 </script>
 
 {% endblock %}

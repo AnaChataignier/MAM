@@ -21,7 +21,13 @@ class OrdemDeServicoForm(forms.ModelForm):
 
     class Meta:
         model = OrdemDeServico
-        exclude = ["endereco", "staff", "status_tecnico"]
+        exclude = [
+            "endereco",
+            "staff",
+            "status_tecnico",
+            "atraso_em_minutos",
+            "atraso_descricao",
+        ]
 
     def __init__(self, *args, **kwargs):
         super(OrdemDeServicoForm, self).__init__(*args, **kwargs)
@@ -49,8 +55,10 @@ class HistoricoOsFinalizadaForm(forms.ModelForm):
             else:
                 field.widget.attrs["class"] = "form-control"
 
-        self.fields["nome_cliente"].widget.attrs["placeholder"] = "Nome"
-        self.fields["rg_cliente"].widget.attrs["placeholder"] = "RG"
+        self.fields["nome_responsavel"].widget.attrs[
+            "placeholder"
+        ] = "Nome do Responsável"
+        self.fields["rg_responsavel"].widget.attrs["placeholder"] = "RG"
         self.fields["observacoes"].widget.attrs["placeholder"] = "Observações..."
 
 

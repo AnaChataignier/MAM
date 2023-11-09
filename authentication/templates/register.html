@@ -14,6 +14,12 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3">
     <link href="{% static 'assets/dist/css/bootstrap.min.css' %}" rel="stylesheet">
     <link href="{% static 'assets/css/app_mamminfo.css' %}" rel="stylesheet">
+    <!-- Adicione o jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Adicione a biblioteca jQuery Mask Plugin -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+
   </head>
 
   <body>
@@ -125,7 +131,18 @@
       
     </main>
 
-    <script src="{% static 'assets/dist/js/bootstrap.bundle.min.js' %"></script>
-  </body>
+    <script src="{% static 'assets/dist/js/bootstrap.bundle.min.js' %}">
+     
+      
 
-  </html>
+    </script>
+    <script>
+      $(document).ready(function () {
+        // Aplicar a máscara de CEP (#####-###) apenas ao campo CEP com o id 'id_cep'
+        $('#id_cep').mask('00000-000');
+      });
+      $(document).ready(function () {
+        // Aplicar a máscara de CEP (#####-###) apenas ao campo CEP com o id 'id_cep'
+        $('#id_telefone').mask('(00) 00000-0000');
+      });
+    </script>

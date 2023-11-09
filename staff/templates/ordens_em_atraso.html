@@ -87,6 +87,19 @@ a.btn:hover {
 .navbar a:hover {
     background-color: #555; /* Cor de fundo quando passa o mouse por cima */
 }
+.color-red {
+    color: red;
+  }
+
+
+  .color-yellow {
+    color: #ffae00;
+  }
+
+
+  .color-blue {
+    color: blue;
+  } 
 
 {% endblock %}
 {% block rest %}
@@ -154,9 +167,9 @@ a.btn:hover {
                                 </div>
                             </div>
                             <div class="col-9 col-md-11">
-                                <div class="oc_l_nome font-medium color04">Ticket #{{ ordem.ticket }}</div>
-                                <div class="oc_l_data color04 font-light">Previsão de chegada: {{ ordem.previsao_chegada }}</div>
-                                <div class="oc_l_data color04 font-light">Técnico Responsável: {{ ordem.tecnico.first_name }} {{ ordem.tecnico.last_name }}</div>
+                                <div class="oc_l_nome font-medium color04"><b>Ticket</b> #{{ ordem.ticket }}</div>
+                                <div class="oc_l_data color04 font-light"><b>Previsão de chegada: </b>{{ ordem.previsao_chegada }}</div>
+                                <div class="oc_l_data color04 font-light"><b>Técnico Responsável: </b>{{ ordem.tecnico.first_name }} {{ ordem.tecnico.last_name }} Tel - {{ordem.tecnico.telefone}}</div>
                                 <div class="oc_l_data color04 font-light">Staff Responsável: {{ ordem.staff.first_name }} {{ ordem.staff.last_name }}</div>
                                 <div class="oc_l_data color04 font-light">Status Técnico: {{ ordem.status_tecnico }}</div>
                                 <div class="oc_l_data color04 font-light">Atraso: {{ ordem.atraso_em_minutos }} minutos</div>
@@ -168,6 +181,7 @@ a.btn:hover {
                         </div>
                     </div>
                 </div>
+                <br>
             {% endfor %}
             {% endif %}           
               </div>

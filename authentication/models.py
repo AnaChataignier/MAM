@@ -24,6 +24,7 @@ class CustomUser(AbstractUser):
         Endereco, on_delete=models.CASCADE, null=True, default=None
     )
     foto = models.ImageField(upload_to="img/perfil_user/", null=True, blank=True)
+    email = models.EmailField(unique=True)
 
     # Função que gera um nome pro arquivo de imagem
     def cliente_profile_filename(instance, filename):

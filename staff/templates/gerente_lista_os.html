@@ -111,23 +111,7 @@
                     </div>
                   </div>
                 </form>
-                <script>
-                  document.addEventListener("DOMContentLoaded", function () {
-                      const selectStatus = document.querySelector('#status-filter');
-                      const selectDate = document.querySelector('#date-filter');
- // Obtém o elemento select
-              
-                      selectStatus.addEventListener('change', function () {
-                          const selectedStatus = selectStatus.value; // Obtém o valor selecionado
-              
-                          window.location.href = window.location.pathname + '?status=' + selectedStatus; // Atualiza a URL para acionar a view com o filtro de status
-                      });
-                      selectDate.addEventListener('change', function () {
-                        const selectedDate = selectDate.value;
-                        window.location.href = window.location.pathname + '?previsao_chegada=' + selectedDate;
-                    });
-                  });
-              </script>
+             
               <div class="tab-pane fade show active" id="pills-01" role="tabpanel" aria-labelledby="pills-home-tab" tabindex="0">
                 <!-- OS Urgente -->
                 <label class="mt-2 font-medium color04">Todas as OS da empresa:</label>
@@ -187,7 +171,18 @@
             </span>
         </div>
       </section>
-     
+      <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const selectStatus = document.querySelector('#status-filter');
+// Obtém o elemento select
+    
+            selectStatus.addEventListener('change', function () {
+                const selectedStatus = selectStatus.value; // Obtém o valor selecionado
+    
+                window.location.href = window.location.pathname + '?status=' + selectedStatus; // Atualiza a URL para acionar a view com o filtro de status
+            });
+        });
+    </script>
   {% endblock %}
 {% comment %} <!DOCTYPE html>
 <html lang="en">

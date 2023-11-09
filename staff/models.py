@@ -11,17 +11,17 @@ from authentication.constants import (
 
 class Cliente(models.Model):
     nome = models.CharField(max_length=50, validators=[MinLengthValidator(3)])
-    rg = models.CharField(max_length=11, validators=[MinLengthValidator(3)])
+    rg = models.CharField(max_length=12, validators=[MinLengthValidator(3)])
     endereco = models.ForeignKey(Endereco, on_delete=models.CASCADE)
-    telefone1 = models.CharField(max_length=11, validators=[MinLengthValidator(3)])
-    telefone2 = models.CharField(max_length=11, validators=[MinLengthValidator(3)])
+    telefone1 = models.CharField(max_length=14, validators=[MinLengthValidator(3)])
+    telefone2 = models.CharField(max_length=14, validators=[MinLengthValidator(3)])
 
     def __str__(self):
         return self.nome
 
 
 class OrdemDeServico(models.Model):
-    ticket = models.CharField(max_length=200)
+    ticket = models.CharField(max_length=200, unique=True)
     tecnico = models.ForeignKey(
         CustomUser, on_delete=models.CASCADE, related_name="ordens_técnico"
     )
@@ -53,14 +53,14 @@ class HistoricoOsFinalizada(models.Model):
         OrdemDeServico, on_delete=models.CASCADE, related_name="historico_os"
     )
     data_finalizada = models.DateTimeField(auto_now_add=True)
-    nome_cliente = models.CharField(max_length=30, null=False)
-    rg_cliente = models.CharField(max_length=11, null=False)
+    nome_responsavel = models.CharField(max_length=30, null=False)
+    rg_responsavel = models.CharField(max_length=12, null=False)
     observacoes = models.TextField(max_length=400)
     foto = models.ImageField(upload_to="img/historico_os_finalizada/")
 
     def cliente_ticket_filename(instance, filename):
         ext = filename.split(".")[-1]
-        return f"{instance.nome_cliente}_{instance.ordem_de_servico.ticket}.{ext}"
+        return f"{instance.nome_responsavel}_{instance.ordem_de_servico.ticket}.{ext}"
 
     def save(self, *args, **kwargs):
         # Chama a função que define o caminho da imagem
