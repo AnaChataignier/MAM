@@ -40,6 +40,14 @@ p{
 .check-icon-container{
     text-align: center; 
 }
+.badge{
+  background-color: red;
+  color: white;
+  border-radius: 50%;
+  font-size: 14px;
+  position: relative;
+}
+
 {% endblock %}
 {% block rest %}
     <br>
@@ -79,162 +87,3 @@ p{
     </div>
 </div>
     {% endblock %}
-
-
-
-{% comment %} <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Bem-vindo, {{ user.first_name }} {{ user.last_name }}</title>
-  </head>
-  <style>
-    /* Reset de estilos padrão do navegador */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    /* Estilos para o corpo da página */
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #20c997;
-      margin: 0;
-      padding: 0;
-      text-align: center;
-      color: #fff;
-    }
-
-    /* Estilos para o título */
-    h1 {
-      font-size: 24px;
-      margin-top: 20px;
-      color: #fff;
-    }
-
-    /* Estilos para o parágrafo */
-    p {
-      font-size: 18px;
-      margin: 20px 0;
-      color: #fff;
-    }
-
-    /* Estilos para o botão */
-    a.btn {
-      display: inline-block;
-      padding: 10px 20px;
-      background-color: #007bff;
-      color: #fff;
-      text-decoration: none;
-      border-radius: 5px;
-      font-weight: bold;
-      transition: background-color 0.3s;
-    }
-
-    /* Estilos para o botão quando o cursor passa por cima */
-    a.btn:hover {
-      background-color: #0056b3;
-    }
-
-    /* Reset de margem e preenchimento */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    /* Estilo da barra de navegação */
-    .navbar {
-      background-color: #333; /* Cor de fundo da barra de navegação */
-      overflow: hidden;
-    }
-
-    /* Estilo da lista de links na barra de navegação */
-    .navbar ul {
-      list-style-type: none; /* Remover marcadores de lista */
-    }
-
-    /* Estilo dos itens da lista (links) na barra de navegação */
-    .navbar li {
-      float: left; /* Alinhar os itens horizontalmente */
-    }
-
-    /* Estilo dos links na barra de navegação */
-    .navbar a {
-      display: block; /* Transformar os links em blocos para ocupar toda a largura disponível */
-      color: white; /* Cor do texto dos links */
-      text-align: center; /* Alinhar texto ao centro */
-      padding: 14px 16px; /* Preenchimento interno dos links */
-      text-decoration: none; /* Remover sublinhado padrão dos links */
-    }
-
-    /* Efeito de destaque quando o mouse passa por cima dos links */
-    .navbar a:hover {
-      background-color: #555; /* Cor de fundo quando passa o mouse por cima */
-    }
-
-    .fixed-card {
-      width: fit-content;
-      background-color: red;
-      color: white;
-      margin: 0 auto;
-    }
-
-    .fixed-card a {
-      text-decoration: none;
-    }
-    .card-title {
-      font-size: 20px;
-      font-weight: bold;
-      color: white;
-    }
-    /* Style for the badge */
-    .badge {
-      background-color: red;
-      color: white;
-      border-radius: 50%;
-      padding: 2px 6px;
-      font-size: 14px;
-      position: relative;
-    }
-  </style>
-  <body>
-    <nav class="navbar">
-      <ul>
-       
-      </ul>
-    </nav>
- {% if atrasos != 0 %}
-</div>
-{% endif %} 
-    <br />
-    <h1>Bem-vindo, {{ user.first_name }} {{ user.last_name }}</h1>
-    <p>
-        Como membro da equipe (Staff), você pode cadastrar clientes e Ordens de
-        serviço, direcionando as ordens para os técnicos cadstrados no app.
-    </p>
-    <p>
-      Você pode gerenciar apenas as ordens que foram criadas por você. Fique
-      atento à atrasos e ocorrencias das ordens que forem de sua
-      respoonsabilidade
-    </p>
-    Essa área deve ser utilizada com extremo cuidado pois está ligada
-    diretamente ao banco de dados. O usuário que adicionar a ordem de serviço
-    ficará vinculado a ela no banco de dados.
-    <br />
-    <br />
-    {% comment %} <div class="fixed-card">
-      <a
-        href="{% url 'ordens_em_atraso' %}"
-        target="_blank"
-        class="card text-white"
-      >
-        <div class="card-body">
-          <p class="card-text">Você tem {{atrasos}} OS atrasadas</p>
-        </div>
-      </a>
-    </div> 
-</body>
-</html> 
-{% endcomment %}

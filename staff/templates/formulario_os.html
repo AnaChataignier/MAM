@@ -1,115 +1,51 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Cadastro de Ordem de Serviço e Endereço</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f5f5f5;
-            margin: 0;
-            padding: 0;
-            text-align: center;
-        }
+{% extends "base_staff.html" %}
 
-        h1 {
-            text-align: center;
-            margin-top: 20px;
-        }
+{%load static%}
 
-        form {
-            max-width: 800px;
-            margin: 0 auto;
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            align-items: center;
-        }
-
-        h2 {
-            margin-top: 20px;
-            border-bottom: 1px solid #ccc;
-            padding-bottom: 10px;
-            margin-bottom: 30px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        table td, table th {
-            padding: 10px;
-            border: 1px solid #ccc;
-            text-align: left;
-        }
-
-        input[type="submit"] {
-            background-color: #007bff;
-            color: #fff;
-            padding: 10px 20px;
-            border: none;
-            cursor: pointer;
-            margin-top: 10px;
-        }
-
-        input[type="submit"]:hover {
-            background-color: #0056b3;
-        }
-
-        /* Reset de margem e preenchimento */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+{% block style %}
+.dentroform{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    
 }
 
-/* Estilo da barra de navegação */
-.navbar {
-    background-color: #333; /* Cor de fundo da barra de navegação */
-    overflow: hidden;
+.inputs{
+    margin-bottom: 10px;
 }
 
-/* Estilo da lista de links na barra de navegação */
-.navbar ul {
-    list-style-type: none; /* Remover marcadores de lista */
+#id_ticket,
+#id_tecnico,
+#id_descricao,
+#id_previsao_chegada,
+#id_previsao_execucao,
+#id_material,
+#id_equipamento,
+#id_cliente,
+#id_contrato,
+#id_atividade,
+#id_status {
+  width: 400px;
+  padding: .375rem .75rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #495057;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid #ced4da;
+  border-radius: .25rem;
+  transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+  box-shadow: none;
+  outline: 0;
+  align-self: center; /* Isso centralizará os campos verticalmente */
 }
 
-/* Estilo dos itens da lista (links) na barra de navegação */
-.navbar li {
-    float: left; /* Alinhar os itens horizontalmente */
-}
+{% endblock %}
+{% block rest %}
 
-/* Estilo dos links na barra de navegação */
-.navbar a {
-    display: block; /* Transformar os links em blocos para ocupar toda a largura disponível */
-    color: white; /* Cor do texto dos links */
-    text-align: center; /* Alinhar texto ao centro */
-    padding: 14px 16px; /* Preenchimento interno dos links */
-    text-decoration: none; /* Remover sublinhado padrão dos links */
-}
 
-/* Efeito de destaque quando o mouse passa por cima dos links */
-.navbar a:hover {
-    background-color: #555; /* Cor de fundo quando passa o mouse por cima */
-}
 
-    </style>
-</head>
-<body>
-    <nav class="navbar">
-        <ul>
-            <li><a href="{% url 'staff' %}">Home</a></li>
-            <li><a href="{% url 'lista_clientes' %}">Lista Clientes</a></li>
-            <li><a href="{% url 'lista_os' %}">Lista OS</a></li>
-            <li><a href="{% url 'formulario_os' %}" >Cadastrar OS</a></li>
-            <li><a href="{% url 'formulario_cliente' %}">Cadastrar Cliente e Endereço</a></li>
-            <li><a href="{% url 'ordens_em_atraso' %}">Atrasadas</a></li>
-            <li><a href="{% url 'sair' %}">Logout</a></li>
-           
-        </ul>
-    </nav>
     <br>
     {% if messages %}
     <br>
@@ -119,17 +55,49 @@
         </div>
     {% endfor %}
     {% endif %}
-    <h1>Cadastro de OS</h1>
     <form method="post" action="{% url 'formulario_os' %}">
         {% csrf_token %}
-
+        <div class="dentroform">
         <h2>Dados da OS </h2>
-        {{ os_form.as_p }}
-        
-    
+        <div class="inputs">
+        {{ os_form.ticket }}
+        </div>
+        <div class="inputs">
+        {{ os_form.tecnico }}
+        </div>
+        <div class="inputs">
+        {{ os_form.descricao }}
+        </div>
+        <div class="inputs">
+        {{ os_form.previsao_chegada }}
+        </div>
+        <div class="inputs">
+        {{ os_form.previsao_execucao }}
+        </div>
+        <div class="inputs">
+        {{ os_form.material }}
+        </div>
+        <div class="inputs">
+        {{ os_form.equipamento }}
+        </div>
+        <div class="inputs">
+        {{ os_form.cliente }}
+        </div>
+        <div class="inputs">
+        {{ os_form.contrato }}
+        </div>
+        <div class="inputs">
+        {{ os_form.atividade }}
+        </div>
+        <div class="inputs">
+        {{ os_form.status }}
+        </div>
+              
 
 
-        <input type="submit" value="Cadastrar">
+        <input type="submit" value="Cadastrar" class="btn btn-success">
+        <div>
     </form>
-</body>
-</html>
+
+
+{% endblock %}

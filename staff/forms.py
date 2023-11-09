@@ -16,7 +16,13 @@ class OrdemDeServicoForm(forms.ModelForm):
         input_formats=["%Y-%mT%H:%M"],
     )
     tecnico = forms.ModelChoiceField(
-        queryset=CustomUser.objects.filter(groups__name="Técnico")
+        queryset=CustomUser.objects.filter(groups__name="Técnico"),
+        empty_label="Selecione um técnico",
+    )
+    cliente = forms.ModelChoiceField(
+        queryset=Cliente.objects.all(),
+        widget=forms.Select(attrs={"placeholder": "Selecione um cliente"}),
+        empty_label="Selecione um cliente",
     )
 
     class Meta:
@@ -38,6 +44,19 @@ class OrdemDeServicoForm(forms.ModelForm):
             for choice in self.fields["status"].choices
             if choice[0] != "Concluído"
         ]
+
+        for field_name, field in self.fields.items():
+            if "class" in field.widget.attrs:
+                field.widget.attrs["class"] += " form-control"
+            else:
+                field.widget.attrs["class"] = "form-control"
+
+        self.fields["ticket"].widget.attrs["placeholder"] = "Número ticket"
+        self.fields["tecnico"].widget.attrs["placeholder"] = "Técnico"
+        self.fields["descricao"].widget.attrs["placeholder"] = "Descrição..."
+        self.fields["material"].widget.attrs["placeholder"] = "Material"
+        self.fields["equipamento"].widget.attrs["placeholder"] = "Equipamento"
+        self.fields["contrato"].widget.attrs["placeholder"] = "Contrato"
 
 
 class HistoricoOsFinalizadaForm(forms.ModelForm):
