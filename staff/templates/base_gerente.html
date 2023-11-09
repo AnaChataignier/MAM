@@ -38,6 +38,8 @@
       background-color: #333; /* Cor de fundo da barra de navegação */
       overflow: hidden;
       padding: 0;
+      display: flex;
+  
      
     }
     
@@ -45,10 +47,12 @@
       list-style-type: none; /* Remover marcadores de lista */
       margin: 0;
       padding: 0;
+      display: flex;
+      justify-content: center;
     }
     
     .navbar li {
-      float: left; /* Alinhar os itens horizontalmente */
+      align-items: center;
     }
     
     .navbar a{
@@ -59,11 +63,12 @@
       text-decoration: none; /* Remover sublinhado padrão dos links */
     }
     
-    .navbar a:hover {
-      background-color: #555; /* Cor de fundo quando passa o mouse por cima */
-    }
+  
     a{
       text-decoration: none;
+    }
+    a:hover{
+      text-decoration: underline;
     }
     .but{
      margin:0 auto;
@@ -74,23 +79,30 @@
     </style>
   </head>
   <nav class="navbar">
-    <ul>
-        <li>        <i class="bi bi-person-workspace logo"></i></i></li>
-        <li><a href="{% url 'gerente' %}">Home</a></li>
-        <li><a href="{% url 'gerente_lista_os' %}">OS'S</a></li>
-        <li><a href="{% url 'gerente_lista_clientes' %}">Clientes</a></li>
-        <li><a href="{% url 'gerente_lista_clientes' %}">Hist</a></li>
-
-        
-    </ul>
+  <ul>
+    <li class="d-flex justify-content-center oi2">
+      <a href="{% url 'gerente' %}">
+        <i class="bi bi-person-workspace logo"></i>
+      </a>
+    </li>
+    <li class="d-flex justify-content-center oi2">
+      <a href="{% url 'gerente_lista_os' %}">OS'S</a>
+    </li>
+    <li class="d-flex justify-content-center oi2">
+      <a href="{% url 'gerente_lista_clientes' %}">Clientes</a>
+    </li>
+    <li class="d-flex justify-content-center oi2">
+      <a href="{% url 'gerente_lista_clientes' %}">Hist</a>
+    </li>
+    <li class="d-flex justify-content-center oi2">
+      <a href="{% url 'sair' %}">Sair</a>
+    </li>
+  </ul>
 </nav>
   <body>
     <main class="">
       {% block rest %}{% endblock %}
       <br>      <br>
-      <div class="d-flex justify-content-center">
-          <a href="{% url 'sair' %}" class="btn btn-danger">Logout</a>
-      </div>
   </main>
     <script src="{% static 'assets/dist/js/bootstrap.bundle.min.js' %}"></script>
     {% block script %} {% endblock %}

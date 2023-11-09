@@ -42,6 +42,8 @@
       background-color: #333; /* Cor de fundo da barra de navegação */
       overflow: hidden;
       padding: 0;
+      display: flex;
+  
      
     }
     
@@ -49,10 +51,12 @@
       list-style-type: none; /* Remover marcadores de lista */
       margin: 0;
       padding: 0;
+      display: flex;
+      justify-content: center;
     }
     
     .navbar li {
-      float: left; /* Alinhar os itens horizontalmente */
+      align-items: center;
     }
     
     .navbar a{
@@ -63,11 +67,12 @@
       text-decoration: none; /* Remover sublinhado padrão dos links */
     }
     
-    .navbar a:hover {
-      background-color: #555; /* Cor de fundo quando passa o mouse por cima */
-    }
+  
     a{
       text-decoration: none;
+    }
+    a:hover{
+      text-decoration: underline;
     }
     .but{
      margin:0 auto;
@@ -88,24 +93,29 @@
     }
     .oi2{
       margin:10px;
-
     }
+ 
     </style>
   </head>
-  <nav class="navbar">
-    <ul>
-        <li>        <i class="bi bi-person-workspace logo"></i></i></li>
-        <li><a href="{% url 'staff' %}">Home</a></li>
-        <li><a href="{% url 'lista_os' %}">Lista OS</a></li>
-     
-        <li>
-          <a href="{% url 'ordens_em_atraso' %}"
-            >Atrasadas {% if atrasos != 0 %}<span class="badge"
-              >{{ atrasos }}</span
-            >{% endif %}</a
-          >
-        </li>
-    </ul>
+ <nav class="navbar">
+  <ul>
+    <li class="d-flex justify-content-center">
+      <a href="{% url 'staff' %}">
+        <i class="bi bi-person-workspace logo"></i>
+      </a>
+    </li>
+    <li class="d-flex justify-content-center">
+      <a href="{% url 'lista_os' %}">Lista OS's</a>
+    </li>
+    <li class="d-flex justify-content-center">
+      <a href="{% url 'ordens_em_atraso' %}">
+        Atrasadas {% if atrasos != 0 %}<span class="badge">{{ atrasos }}</span>{% endif %}
+      </a>
+    </li>
+    <li class="d-flex justify-content-center">
+      <a href="{% url 'sair' %}">Sair</a>
+    </li>
+  </ul>
 </nav>
   <body>
     <main class="">
@@ -122,9 +132,7 @@
         </div>
         <br>
       
-      <div class="d-flex justify-content-center oi2">
-          <a href="{% url 'sair' %}" class="btn btn-danger">Logout</a>
-      </div>
+      
     </div>
       <br><br>
   </main>
