@@ -25,135 +25,74 @@
     <style>
       {% block style %} {% endblock %}
 
-   
+      .logo {
+        font-size: 20px;
+        color: lightgreen;
+        display: block; /* Transformar os links em blocos para ocupar toda a largura disponível */
+    
+        text-align: center; /* Alinhar texto ao centro */
+        padding: 14px 16px; /* Preenchimento interno dos links */
+        text-decoration: none; /* Remover sublinhado padrão dos links */
+    }
+    .navbar {
+      background-color: #333; /* Cor de fundo da barra de navegação */
+      overflow: hidden;
+      padding: 0;
+     
+    }
+    
+    .navbar ul {
+      list-style-type: none; /* Remover marcadores de lista */
+      margin: 0;
+      padding: 0;
+    }
+    
+    .navbar li {
+      float: left; /* Alinhar os itens horizontalmente */
+    }
+    
+    .navbar a{
+      display: block; /* Transformar os links em blocos para ocupar toda a largura disponível */
+      color: white; /* Cor do texto dos links */
+      text-align: center; /* Alinhar texto ao centro */
+      padding: 14px 16px; /* Preenchimento interno dos links */
+      text-decoration: none; /* Remover sublinhado padrão dos links */
+    }
+    
+    .navbar a:hover {
+      background-color: #555; /* Cor de fundo quando passa o mouse por cima */
+    }
+    a{
+      text-decoration: none;
+    }
+    .but{
+     margin:0 auto;
+    }
     </style>
   </head>
+  <nav class="navbar">
+    <ul>
+        <li>        <i class="bi bi-person-workspace logo"></i></i></li>
+        <li><a href="{% url 'gerente' %}">Home</a></li>
+        <li><a href="{% url 'gerente_lista_os' %}">OS'S</a></li>
+        <li><a href="{% url 'gerente_lista_clientes' %}">Clientes</a></li>
+        <li><a href="{% url 'gerente_lista_clientes' %}">Históricos</a></li>
 
+        
+    </ul>
+</nav>
   <body>
     <main class="bg03">
-      {% comment %} <header>
-        <div class="container">
-          <div id="super_menu">
-            <div class="row">
-              <div class="col-3 text-start">
-                <i class="bi bi-justify i_main"></i>
-              </div>
-              <div class="col-9 text-end">
-                <p class="mt-2">
-                  Olá,<br />
-                  <strong>{{ user.first_name }} {{ user.last_name }}</strong>
-                </p>
-                <div class="photo_user mt-1">
-                  {% if request.user.foto %}
-                  <img src="{{ request.user.foto.url }}" alt="User Photo" />
-                  {% else %}
-                  <img
-                    src="https://cdn-icons-png.flaticon.com/512/3106/3106807.png?auto=format&fit=crop&q=80&w=1760&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                    alt=""
-                  />
-                  {% endif %}
-                </div>
-              </div>
-            </div>
-            <button
-              class=""
-              type="button"
-              data-bs-toggle="collapse"
-              data-bs-target="#col_menu_main"
-              aria-expanded="false"
-              aria-controls="collapseExample"
-            ></button>
-            <div class="collapse" id="col_menu_main">
-              <div class="card card-body box-shadow">
-                <ul> {% endcomment %}
-                  <!-- Botao caso app tenha fechado e user precisa voltar para OS que ja estava em andamento -->
-                  {% comment %}
-                  <li>
-                    <a
-                      href="tela_os-aguardando.html"
-                      class="font-medium text-light bg02 p-2"
-                      ><i class="bi bi-arrow-return-left"></i> Retomar atual
-                      Ocorrência</a
-                    >
-                  </li>
-                  {% endcomment %}
-                  <!-- Botao caso app tenha fechado e user precisa voltar para OS que ja estava em andamento -->
-                  {% comment %} <li>
-                    <a href="{% url 'dashboard'%}" class="font-medium color04"
-                      ><i class="bi bi-house"></i> Dashboard</a
-                    >
-                  </li>
-                  <li>
-                    <a href="{% url 'minhas_os'%}" class="font-medium color04"
-                      ><i class="bi bi-card-heading"></i> Lista de
-                      Ocorrências</a
-                    >
-                  </li> {% endcomment %}
-                  {% comment %}
-                  <li>
-                    <a
-                      href="tela_lista_ocs_urgentes.html"
-                      class="font-medium color04"
-                      ><i class="bi bi-exclamation-triangle-fill"></i>
-                      Ocorrências Urgentes</a
-                    >
-                  </li>
-                  <li>
-                    <a
-                      href="tela_lista_ocs_atencao.html"
-                      class="font-medium color04"
-                      ><i class="bi bi-flag-fill"></i> Ocorrências em Atenção</a
-                    >
-                  </li>
-                  {% endcomment %}
-
-                  {% comment %} <li>
-                    <a href="{% url 'tela_busca' %}" class="font-medium color04"
-                      ><i class="bi bi-search"></i> Busca</a
-                    >
-                  </li>
-                  <hr />
-                  <li>
-                    <a href="{% url 'tela_user' %}" class="font-medium color04"
-                      ><i class="bi bi-gear-fill"></i> Configurações</a
-                    >
-                  </li>
-                  <li>
-                    <a href="{% url 'sair'%}" class="font-medium color04"
-                      ><i class="bi bi-door-open"></i> Logout</a
-                    >
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-      </header> {% endcomment %}
-
       {% block rest %}{% endblock %}
-    </main>
-    {% comment %} <footer>
-      <ul class="row">
-        <li class="col-3 mt-1">
-          <a href="{% url 'dashboard' %}"><i class="bi bi-house"></i></a>
-        </li>
-        <li class="col-3 p-0 mt-1 text-start text-md-center">
-          <a href="{% url 'minhas_os' %}" class="text-start text-md-center"
-            ><i class="bi bi-card-text"></i
-          ></a>
-        </li>
-        <li class="col-3 p-0 mt-1 text-end text-md-center">
-          <a href="{% url 'tela_busca' %}" class="text-end text-md-center"
-            ><i class="bi bi-search"></i
-          ></a>
-        </li>
-        <li class="col-3 mt-1">
-          <a href="{% url 'tela_user' %}"><i class="bi bi-person-gear"></i></a>
-        </li>
-      </ul>
-    </footer> {% endcomment %}
+      <br>      <br>
+      <div class="d-flex justify-content-center">
+          <a href="{% url 'sair' %}" class="btn btn-danger">Logout</a>
+      </div>
+  </main>
     <script src="{% static 'assets/dist/js/bootstrap.bundle.min.js' %}"></script>
     {% block script %} {% endblock %}
     {% block script2 %} {% endblock %}
+
+ 
   </body>
 </html>

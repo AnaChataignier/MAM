@@ -1,114 +1,78 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Bem-vindo, {{ user.first_name }} {{ user.last_name }}</title>
-</head>
-<style>
-    /* Reset de estilos padrão do navegador */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+
+{% extends "base_gerente.html" %}
+
+{%load static%}
+
+{% block style %}
+a{
+  text-decoration: none;
+}
+html{
+    background-color: #b7baca;
+}
+.check-icon {
+    display: flex;
+    justify-content: center; /* Centraliza horizontalmente */
+}
+.check-icon-green {
+    color: lightgreen; /* Altere para a cor desejada, como "green", "red", "blue", etc. */
+    margin-right: 10px;
 }
 
-/* Estilos para o corpo da página */
-body {
-    font-family: Arial, sans-serif;
-    background-color: #20c997;
-    margin: 0;
-    padding: 0;
+.work {
+    font-size: 100px;
     text-align: center;
-    color: white;
+    display: block; /* Certifique-se de que o ícone seja exibido como bloco para o alinhamento horizontal funcionar */
+    color: lightgreen;
 }
-
-/* Estilos para o título */
-h1 {
-    font-size: 24px;
-    margin-top: 20px;
-    color: white;
+h4{
+    text-align: center;
 }
-
-/* Estilos para o parágrafo */
-p {
-    font-size: 18px;
-    margin: 20px 0;
-    color: white;
+h5{
+    text-align: center;
 }
-
-/* Estilos para o botão */
-a.btn {
-    display: inline-block;
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: #fff;
-    text-decoration: none;
-    border-radius: 5px;
-    font-weight: bold;
-    transition: background-color 0.3s;
+p{
+    font-size: 14px;
 }
-
-/* Estilos para o botão quando o cursor passa por cima */
-a.btn:hover {
-    background-color: #0056b3;
+.check-icon-container{
+    text-align: center; 
 }
-
-/* Reset de margem e preenchimento */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-/* Estilo da barra de navegação */
-.navbar {
-    background-color: #333; /* Cor de fundo da barra de navegação */
-    overflow: hidden;
-}
-
-/* Estilo da lista de links na barra de navegação */
-.navbar ul {
-    list-style-type: none; /* Remover marcadores de lista */
-}
-
-/* Estilo dos itens da lista (links) na barra de navegação */
-.navbar li {
-    float: left; /* Alinhar os itens horizontalmente */
-}
-
-/* Estilo dos links na barra de navegação */
-.navbar a {
-    display: block; /* Transformar os links em blocos para ocupar toda a largura disponível */
-    color: white; /* Cor do texto dos links */
-    text-align: center; /* Alinhar texto ao centro */
-    padding: 14px 16px; /* Preenchimento interno dos links */
-    text-decoration: none; /* Remover sublinhado padrão dos links */
-}
-
-/* Efeito de destaque quando o mouse passa por cima dos links */
-.navbar a:hover {
-    background-color: #555; /* Cor de fundo quando passa o mouse por cima */
-}
-
-</style>
-<body>
-    <nav class="navbar">
-        <ul>
-            <li><a href="{% url 'gerente' %}">Home</a></li>
-            <li><a href="{% url 'gerente_lista_os' %}">Todas OS</a></li>
-            <li><a href="{% url 'sair' %}">Logout</a></li>
-        </ul>
-    </nav>
+{% endblock %}
+{% block rest %}
     <br>
-    <h1>Bem-vindo, Gerente {{ user.first_name }} {{ user.last_name }}</h1>
-    <p>Como Gerente você pode visualizar todas as os's
-    <br>    <br>    <br>
-    {% comment %} <a href="{% url 'formulario_cliente' %}" class="btn">Cadastrar Cliente e Endereço</a>
-    <br><br><br>
-    <a href="{% url 'formulario_os' %}" class="btn">Cadastrar OS</a>
-    <br><br><br> {% endcomment %}
-    {% comment %} <a href="{% url 'formulario' %}" class="btn">Acessar API 1</a>
-    <br><br><br>
-    <a href="{% url 'formulario' %}" class="btn">Acessar API 2</a> {% endcomment %}
-</body>
-</html>
+    <h4>Bem-vindo {{ user.first_name }} {{ user.last_name }} !</h4>
+    <h5>Como Gerente você pode: </h5>
+
+    <i class="bi bi-pc-display work"></i>
+    <br>
+    <div class="check-icon-container">
+    <div class="check-icon">       
+        <i class="bi bi-check-lg check-icon-green"></i>
+        <p>Visualizar todas todas as OS's</p>        
+    </div>
+    <div class="check-icon">       
+        <i class="bi bi-check-lg check-icon-green"></i>
+        <p>Visualizar todas todos os clientes</p>        
+    </div>
+    <div class="check-icon">       
+        <i class="bi bi-check-lg check-icon-green"></i>
+        <p>Visualizar todas todos os históricos</p>        
+    </div>
+    <div class="check-icon">       
+        <i class="bi bi-check-lg check-icon-green"></i>
+        <p>Editar todas todos os clientes</p>        
+    </div>
+    <div class="check-icon">       
+        <i class="bi bi-check-lg check-icon-green"></i>
+        <p>Editar todas todos as os's</p>        
+    </div>
+    <div class="check-icon">       
+        <i class="bi bi-check-lg check-icon-green"></i>
+        <p>Editar todas todos os históricos</p>        
+    </div>
+    <div class="check-icon">       
+        <i class="bi bi-check-lg check-icon-green"></i>
+        <p>Visualizar e editar todas todos os clientes</p>        
+    </div>
+</div>
+    {% endblock %}

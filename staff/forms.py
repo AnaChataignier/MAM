@@ -68,6 +68,12 @@ class ClienteForm(forms.ModelForm):
         exclude = ["endereco"]
 
 
+class GerenteClienteForm(forms.ModelForm):
+    class Meta:
+        model = Cliente
+        fields = "__all__"
+
+
 class AtrasoForm(forms.ModelForm):
     class Meta:
         model = OrdemDeServico

@@ -5,9 +5,10 @@ from datetime import datetime
 from authentication.models import CustomUser
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .models import OrdemDeServico, Cliente
-from .forms import OrdemDeServicoForm, ClienteForm
+from .forms import OrdemDeServicoForm, ClienteForm, GerenteClienteForm
 from django.contrib import messages
 from django.contrib.messages import constants
+from django.shortcuts import get_object_or_404
 from authentication.forms import EnderecoForm
 
 
@@ -136,7 +137,7 @@ def formulario_cliente(request):
                 return redirect("formulario_cliente")
             else:
                 messages.add_message(request, constants.ERROR, "Formulário inválido")
-                
+
         else:
             cliente_form = ClienteForm()
             endereco_form = EnderecoForm()
@@ -212,31 +213,7 @@ def gerente_lista_os(request):
 
     if status_filter:
         ordens_de_servico = ordens_de_servico.filter(status=status_filter)
-    if tecnico_filter:
-        ordens_de_servico = ordens_de_servico.filter(tecnico_id=tecnico_filter)
-    if data_chegada_min_filter:
-        try:
-            data_chegada_min_filter = datetime.strptime(
-                data_chegada_min_filter, "%Y-%m-%d"
-            ).date()
-            ordens_de_servico = ordens_de_servico.filter(
-                previsao_chegada__gte=data_chegada_min_filter
-            )
-        except ValueError:
-            pass
-
-    if data_chegada_max_filter:
-        try:
-            data_chegada_max_filter = datetime.strptime(
-                data_chegada_max_filter, "%Y-%m-%d"
-            ).date()
-            ordens_de_servico = ordens_de_servico.filter(
-                previsao_chegada__lte=data_chegada_max_filter
-            )
-        except ValueError:
-            pass
-
-    items_per_page = 5
+    items_per_page = 20
     paginator = Paginator(ordens_de_servico, items_per_page)
     page = request.GET.get("page")
     try:
@@ -274,3 +251,47 @@ def ordens_em_atraso(request):
         "ordens_em_atraso.html",
         {"ordens_em_atraso": ordens_em_atraso, "staff": staff},
     )
+
+
+def crud_gerente_os(request, ordem_id):
+    ordem = get_object_or_404(OrdemDeServico, id=ordem_id)
+
+    if request.method == "POST":
+        form = OrdemDeServicoForm(request.POST, instance=ordem)
+        if form.is_valid():
+            form.save()
+            return redirect(
+                "gerente_lista_os"
+            )  # Redireciona para a lista de ordens de serviço
+    else:
+        form = OrdemDeServicoForm(instance=ordem)
+
+    return render(request, "crud_gerente_os.html", {"form": form})
+
+
+def gerente_lista_clientes(request):
+    clientes = Cliente.objects.all()
+
+    return render(
+        request,
+        "gerente_lista_clientes.html",
+        {
+            "clientes": clientes,
+        },
+    )
+
+
+def crud_gerente_clientes(request, ordem_id):
+    ordem = get_object_or_404(Cliente, id=ordem_id)
+
+    if request.method == "POST":
+        form = GerenteClienteForm(request.POST, instance=ordem)
+        if form.is_valid():
+            form.save()
+            return redirect(
+                "gerente_lista_clientes"
+            )  # Redireciona para a lista de ordens de serviço
+    else:
+        form = GerenteClienteForm(instance=ordem)
+
+    return render(request, "crud_gerente_clientes.html", {"form": form})

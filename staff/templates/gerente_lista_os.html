@@ -21,67 +21,13 @@
 .color-green {
   color: #1cbf71;
 }
-.navbar {
-    background-color: #333; /* Cor de fundo da barra de navegação */
 
-  }
-  
-
-  .navbar ul {
-    list-style-type: none;
-  }
-  
-
-  .navbar li {
-    float: left; /* Alinhar os itens horizontalmente */
-  }
-  
-
-  .navbar a {
-    display: block;
-    color: white; 
-    text-align: center; 
-    padding: 14px 16px; 
-    text-decoration: none; 
-  }
-
-  .navbar a:hover {
-    background-color: #555; 
-  }
-
-  .pagination {
-    text-align: center;
-    margin: 0 auto;
-}
-
-.pagination a {
-    color: green;
-    text-decoration: none;
-    margin: 0 10px;
-    text-weight: bold;
-    font-size: 10px;
-
-}
-
-.pagination a:hover {
-    text-decoration: underline;
-}
-
-/* Estilos para a página atual */
-.current-page {
-    font-weight: bold;
-    font-size: 12px;
-}      
 {% endblock %}
+
 {% block rest %}
-<nav class="navbar">
-    <ul>
-        <li><a href="{% url 'gerente' %}">Home</a></li>
-        <li><a href="{% url 'gerente_lista_os' %}">Todas OS</a></li>
-        <li><a href="{% url 'sair' %}">Logout</a></li>
-    </ul>
-</nav>
+
       <section id="lista_oc_scr">
+        <br>
         <div class="container">
 
           
@@ -89,8 +35,6 @@
             
             <!-- Lista das OS -->
             <div id="oc_lista">
-                <label class="mt-1 mb-2 ms-2 font-medium color04"><i class="bi bi-bi bi-card-heading"></i> Lista das Ordens de Serviço:</label>
-                
                 <form id="filter_oc" class="bg04 p-2">
                  
                     <div class="col-6">
@@ -116,6 +60,7 @@
                 <!-- OS Urgente -->
                 <label class="mt-2 font-medium color04">Todas as OS da empresa:</label>
                 {% for ordem in ordens_de_servico %}
+                <a href="{% url 'crud_gerente_os' ordem.id %}">
                 <div class="oc_lista_item">
                       {% comment %} <a href="{% url 'os_detail2' ordem.id %}" class="a-whole"></a> {% endcomment %}
                       <div class="row">
@@ -148,6 +93,7 @@
                           {% endif %}
                       </div>
                   </div>
+                </a>
                   {% endfor %}
                        
               </div>

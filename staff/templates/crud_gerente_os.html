@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Atualizar Ordem de Serviço</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #20c997;
+            margin: 0;
+            padding: 0;
+        }
+
+        .navbar {
+            background-color: #333; /* Cor de fundo da barra de navegação */
+            overflow: hidden;
+        }
+
+        .navbar ul {
+            list-style-type: none; /* Remover marcadores de lista */
+            margin: 0;
+            padding: 0;
+        }
+
+        .navbar li {
+            float: left; /* Alinhar os itens horizontalmente */
+        }
+
+        .navbar a {
+            display: block; /* Transformar os links em blocos para ocupar toda a largura disponível */
+            color: white; /* Cor do texto dos links */
+            text-align: center; /* Alinhar texto ao centro */
+            padding: 14px 16px; /* Preenchimento interno dos links */
+            text-decoration: none; /* Remover sublinhado padrão dos links */
+        }
+
+        .navbar a:hover {
+            background-color: #555; /* Cor de fundo quando passa o mouse por cima */
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        form {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        form input[type="submit"] {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        form input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+        form label {
+            display: block;
+            margin-top: 10px;
+        }
+
+        form input[type="text"],
+        form select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <ul>
+            <li><a href="{% url 'gerente' %}">Home</a></li>
+            <li><a href="{% url 'gerente_lista_os' %}">Todas OS</a></li>
+            <li><a href="{% url 'sair' %}">Logout</a></li>
+        </ul>
+    </nav>
+    <form method="post">
+        <h1>Atualizar Ordem de Serviço</h1>
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <input type="submit" value="Atualizar Ordem de Serviço">
+    </form>
+</body>
+</html>
