@@ -35,7 +35,7 @@
             <label class="mt-2 font-medium color04">Datas:</label>
             <div class="boxes">
               <div class="box">
-                <a href={% url 'tela_busca' %}></a>
+                <a href="{% url 'tela_busca' %}"></a>
                 <div class="box_upper">
                   <div class="icon bg01"><i class="bi bi-calendar-week text-light"></i></div>
                   <div class="data color01"><small>HOJE</small></div>
@@ -48,14 +48,14 @@
                   <hr>
                   <div class="box_below">
                       <ul>
-                        <li class="color04"><i class="bi bi-circle-fill color02"></i> <strong>12</strong> Realizadas</li>
-                        <li class="color04"><i class="bi bi-circle-fill color05"></i> <strong>02</strong> Atrasadas</li>
-                        <li class="color04"><i class="bi bi-circle-fill color01"></i> <strong>06</strong> Aguardando</li>
+                        <li class="color04"><i class="bi bi-circle-fill color02"></i> <strong>{{card_realizadas_hoje}}</strong> Realizadas</li>
+                        <li class="color04"><i class="bi bi-circle-fill color06"></i> <strong>{{card_atencao_hoje}}</strong> Atenção</li>
+                        <li class="color04"><i class="bi bi-circle-fill color01"></i> <strong>{{card_aguardando_hoje}}</strong> Aguardando</li>
                       </ul>
                   </div>
               </div>
               <div class="box box_past">
-                <a href={% url 'tela_busca' %}></a>
+                <a href="{% url 'tela_busca' %}"></a>
                 <div class="box_upper">
                   <div class="icon bg03"><i class="bi bi-calendar-week text-light"></i></div>
                   <div class="data color04"><small>ONTEM</small></div>
@@ -68,13 +68,13 @@
                   <hr>
                   <div class="box_below">
                       <ul>
-                        <li class="color04"><i class="bi bi-circle-fill color02"></i> <strong>13</strong> Realizadas</li>
+                        <li class="color04"><i class="bi bi-circle-fill color02"></i> <strong>{{card_realizadas_ontem}}</strong> Realizadas</li>
                         <li class="color04"><i class="bi bi-circle-fill color03"></i> <strong>02</strong> Não realizadas</li>
                       </ul>
                   </div>
               </div>
               <div class="box box_past">
-                <a href={% url 'tela_busca' %}></a>
+                <a href="{% url 'tela_busca' %}"></a>
                 <div class="box_upper">
                   <div class="icon bg03"><i class="bi bi-calendar-week text-light"></i></div>
                   <div class="data color04"><small>{{day_before_yesterday}}</small></div>
@@ -93,7 +93,7 @@
                   </div>
               </div>
              <div class="box box_past">
-              <a href={% url 'tela_busca' %}></a>
+              <a href="{% url 'tela_busca' %}"></a>
                 <div class="box_upper">
                   <div class="icon bg03"><i class="bi bi-calendar-week text-light"></i></div>
                   <div class="data color04"><small>{{three_days_ago}}</small></div>
@@ -112,7 +112,7 @@
                   </div>
               </div>
               <div class="box box_past">
-                <a href={% url 'tela_busca' %}></a>
+                <a href="{% url 'tela_busca' %}"></a>
                 <div class="box_upper">
                   <div class="icon bg03"><i class="bi bi-calendar-week text-light"></i></div>
                   <div class="data color04"><small>{{four_days_ago}}</small></div>

@@ -23,4 +23,6 @@ urlpatterns = [
     path("gerente/", views.gerente, name="gerente"),
     path("gerente_lista_os/", views.gerente_lista_os, name="gerente_lista_os"),
     path("ordens_em_atraso/", views.ordens_em_atraso, name="ordens_em_atraso"),
+    path('deletar_os/<int:ordem_id>/', views.deletar_os, name='deletar_os'),
+    path('deletar_cliente/<int:cliente_id>/', views.deletar_cliente, name='deletar_cliente'),
 ]

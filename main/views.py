@@ -71,7 +71,7 @@ def minhas_os(request):
 
         try:
             ordens_ativas = paginator.page(page)
-     
+
         except PageNotAnInteger:
             ordens_ativas = paginator.page(1)
         except EmptyPage:
@@ -242,6 +242,20 @@ def dashboard(request):
         three_days_ago_str = three_days_ago.strftime("%d/%m/%Y")
         four_days_ago_str = four_days_ago.strftime("%d/%m/%Y")
 
+        card_realizadas_hoje = OrdemDeServico.objects.filter(
+            previsao_chegada__date=today, status__in=["Concluído"], tecnico=user
+        )
+        card_aguardando_hoje = OrdemDeServico.objects.filter(
+            previsao_chegada__date=today, status__in=["Aguardando"], tecnico=user
+        )
+        card_atencao_hoje = OrdemDeServico.objects.filter(
+            previsao_chegada__date=today, status__in=["Atenção"], tecnico=user
+        )
+
+        card_realizadas_ontem = OrdemDeServico.objects.filter(
+            previsao_chegada__date=yesterday, status__in=["Concluído"], tecnico=user
+        )
+
         # Filtra todas as ordens ativas
         ordens_ativas = OrdemDeServico.objects.filter(
             tecnico=user, status__in=["Atenção", "Urgente", "Aguardando"]
@@ -383,6 +397,10 @@ def dashboard(request):
                 "percent_aguardando": percent_aguardando,
                 "ordens_ativas_hoje": ordens_ativas_hoje,
                 "ordens_finalizadas_hoje": ordens_finalizadas_hoje,
+                "card_realizadas_hoje": len(card_realizadas_hoje),
+                "card_aguardando_hoje": len(card_aguardando_hoje),
+                "card_atencao_hoje": len(card_atencao_hoje),
+                "card_realizadas_ontem": len(card_realizadas_ontem),
             },
         )
     except Exception as e:

@@ -41,6 +41,18 @@
 h2{
   color:lightgreen;
 }
+
+.deletar{
+    margin:0 auto;
+    text-align:center;
+    
+}
+
+hr{
+    width:400px;
+    text-align:center;
+    margin:0 auto;
+}
 {% endblock %}
 
 {% block rest %}
@@ -105,10 +117,22 @@ h2{
             
 
             <input type="submit" value="Atualizar" class="btn btn-success" />
-            <br>        <br>        <br>
+            <br>        
         </div>
     </form>
     <hr>
+    <br>
+    <div class="deletar">
+        <a href="{% url 'deletar_cliente' cliente.id %}" class="btn btn-danger">Deletar</a>
+    </div>
+      
+    <br><br>
+    <br><br>
+    <br><br>   <br><br>    <br><br>
+
+
+
+
 
     {% block script %}
     <script>

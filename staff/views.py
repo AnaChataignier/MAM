@@ -213,7 +213,16 @@ def crud_gerente_os(request, ordem_id):
     else:
         form = GerenteOrdemDeServicoForm(instance=ordem)
 
-    return render(request, "crud_gerente_os.html", {"form": form})
+    return render(request, "crud_gerente_os.html", {"form": form, "ordem": ordem})
+
+
+def deletar_os(request, ordem_id):
+    ordem = get_object_or_404(OrdemDeServico, id=ordem_id)
+    ordem.delete()
+    messages.add_message(
+        request, constants.SUCCESS, "Ordem de Serviço deletada com sucesso"
+    )
+    return redirect("gerente_lista_os")
 
 
 def gerente_lista_clientes(request):
@@ -272,10 +281,18 @@ def crud_gerente_clientes(request, cliente_id):
             {
                 "cliente_form": cliente_form,
                 "endereco_form": endereco_form,
+                "cliente": cliente,
             },
         )
     except Exception as e:
         return render(request, "error.html", {"error_message": str(e)})
+
+
+def deletar_cliente(request, cliente_id):
+    cliente = get_object_or_404(Cliente, id=cliente_id)
+    cliente.delete()
+    messages.add_message(request, constants.SUCCESS, "Cliente deletado com sucesso")
+    return redirect("gerente_lista_clientes")
 
 
 def gerente_lista_historico(request):
