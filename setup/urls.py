@@ -8,6 +8,7 @@ urlpatterns = [
     path("", include("authentication.urls")),
     path("main/", include("main.urls")),
     path("staff/", include("staff.urls")),
+    path("gerente/", include("gerente.urls")),
 ]
 
 if settings.DEBUG:
