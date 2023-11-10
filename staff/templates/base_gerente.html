@@ -8,6 +8,10 @@
     <meta name="author" content="J.M.Campos" />
     <meta name="generator" content="DGBZ" />
     <title>App Maminfo</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Adicione a biblioteca jQuery Mask Plugin -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
     <link rel="canonical" href="" />
     <link
       rel="stylesheet"
@@ -26,12 +30,12 @@
       {% block style %} {% endblock %}
 
       .logo {
-        font-size: 20px;
+        font-size: 40px;
         color: lightgreen;
         display: block; /* Transformar os links em blocos para ocupar toda a largura disponível */
     
         text-align: center; /* Alinhar texto ao centro */
-        padding: 14px 16px; /* Preenchimento interno dos links */
+        padding: 1px 1px; /* Preenchimento interno dos links */
         text-decoration: none; /* Remover sublinhado padrão dos links */
     }
     .navbar {
@@ -42,7 +46,9 @@
   
      
     }
-    
+    i:hover{
+      color: lightgreen;
+    }
     .navbar ul {
       list-style-type: none; /* Remover marcadores de lista */
       margin: 0;
@@ -86,16 +92,19 @@
       </a>
     </li>
     <li class="d-flex justify-content-center oi2">
-      <a href="{% url 'gerente_lista_os' %}">OS'S</a>
+      <a href="{% url 'gerente_lista_os' %}">
+
+        <i class="bi bi-briefcase"></i>
+      </a>
     </li>
     <li class="d-flex justify-content-center oi2">
-      <a href="{% url 'gerente_lista_clientes' %}">Clientes</a>
+      <a href="{% url 'gerente_lista_clientes' %}"><i class="bi bi-file-person-fill"></i></a>
     </li>
     <li class="d-flex justify-content-center oi2">
-      <a href="{% url 'gerente_lista_clientes' %}">Hist</a>
+      <a href="{% url 'gerente_lista_historico' %}"><i class="bi bi-clock-history"></i></a>
     </li>
     <li class="d-flex justify-content-center oi2">
-      <a href="{% url 'sair' %}">Sair</a>
+      <a href="{% url 'sair' %}"><i class="bi bi-door-open"></i> Sair</a>
     </li>
   </ul>
 </nav>

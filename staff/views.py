@@ -2,13 +2,14 @@ from django.shortcuts import render, redirect
 from main.helpers import is_staff
 from django.contrib.auth.decorators import user_passes_test
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from .models import OrdemDeServico, Cliente
-from .forms import OrdemDeServicoForm, ClienteForm, GerenteClienteForm
+from .models import OrdemDeServico, Cliente, HistoricoOsFinalizada
+from .forms import OrdemDeServicoForm, ClienteForm
 from django.contrib import messages
 from django.contrib.messages import constants
 from django.shortcuts import get_object_or_404
 from authentication.forms import EnderecoForm
 from django.db.models import Q
+from django.http import HttpResponse
 
 
 @user_passes_test(is_staff)
@@ -163,7 +164,7 @@ def gerente_lista_os(request):
                 | Q(cliente__endereco__cep__icontains=filtros)
             )
 
-    items_per_page = 4
+    items_per_page = 15
     paginator = Paginator(ordens, items_per_page)
     page = request.GET.get("page")
     try:
@@ -226,7 +227,7 @@ def gerente_lista_clientes(request):
                 | Q(endereco__rua__icontains=filtros)
                 | Q(endereco__cep__icontains=filtros)
             )
-    items_per_page = 4
+    items_per_page = 15
     paginator = Paginator(clientes, items_per_page)
     page = request.GET.get("page")
     try:
@@ -244,17 +245,45 @@ def gerente_lista_clientes(request):
     )
 
 
-def crud_gerente_clientes(request, ordem_id):
-    ordem = get_object_or_404(Cliente, id=ordem_id)
+def crud_gerente_clientes(request, cliente_id):
+    try:
+        cliente = get_object_or_404(Cliente, id=cliente_id)
+        if request.method == "POST":
+            cliente_form = ClienteForm(request.POST, instance=cliente)
+            endereco_form = EnderecoForm(request.POST, instance=cliente.endereco)
 
-    if request.method == "POST":
-        form = GerenteClienteForm(request.POST, instance=ordem)
-        if form.is_valid():
-            form.save()
-            return redirect(
-                "gerente_lista_clientes"
-            )  # Redireciona para a lista de ordens de serviço
-    else:
-        form = GerenteClienteForm(instance=ordem)
+            if cliente_form.is_valid() and endereco_form.is_valid():
+                cliente = cliente_form.save(commit=False)
+                endereco = endereco_form.save()
+                cliente.endereco = endereco
+                cliente.save()
 
-    return render(request, "crud_gerente_clientes.html", {"form": form})
+                return redirect("gerente_lista_clientes")
+            else:
+                return render(HttpResponse("Formulário inválido"))
+
+        else:
+            cliente_form = ClienteForm(instance=cliente)
+            endereco_form = EnderecoForm(instance=cliente.endereco)
+
+        return render(
+            request,
+            "crud_gerente_clientes.html",
+            {
+                "cliente_form": cliente_form,
+                "endereco_form": endereco_form,
+            },
+        )
+    except Exception as e:
+        return render(request, "error.html", {"error_message": str(e)})
+
+
+def gerente_lista_historico(request):
+    historicos = HistoricoOsFinalizada.objects.all()
+    return render(
+        request,
+        "gerente_lista_historico.html",
+        {
+            "historicos": historicos,
+        },
+    )

@@ -12,11 +12,12 @@ urlpatterns = [
         name="gerente_lista_clientes",
     ),
     path(
-        "crud_gerente_clientes/<int:ordem_id>",
+        "crud_gerente_clientes/<int:cliente_id>",
         views.crud_gerente_clientes,
         name="crud_gerente_clientes",
     ),
     path("lista_os/", views.lista_os, name="lista_os"),
+    path("gerente_lista_historico/", views.gerente_lista_historico, name="gerente_lista_historico"),
     path("formulario_os/", views.formulario_os, name="formulario_os"),
     path("formulario_cliente/", views.formulario_cliente, name="formulario_cliente"),
     path("gerente/", views.gerente, name="gerente"),

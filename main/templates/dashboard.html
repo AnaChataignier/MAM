@@ -35,7 +35,7 @@
             <label class="mt-2 font-medium color04">Datas:</label>
             <div class="boxes">
               <div class="box">
-                <a href="tela_lista_ocs_dia.html"></a>
+                <a href={% url 'tela_busca' %}></a>
                 <div class="box_upper">
                   <div class="icon bg01"><i class="bi bi-calendar-week text-light"></i></div>
                   <div class="data color01"><small>HOJE</small></div>
@@ -55,7 +55,7 @@
                   </div>
               </div>
               <div class="box box_past">
-                <a href="tela_lista_ocs_dia.html"></a>
+                <a href={% url 'tela_busca' %}></a>
                 <div class="box_upper">
                   <div class="icon bg03"><i class="bi bi-calendar-week text-light"></i></div>
                   <div class="data color04"><small>ONTEM</small></div>
@@ -74,7 +74,7 @@
                   </div>
               </div>
               <div class="box box_past">
-                <a href="tela_lista_ocs_dia.html"></a>
+                <a href={% url 'tela_busca' %}></a>
                 <div class="box_upper">
                   <div class="icon bg03"><i class="bi bi-calendar-week text-light"></i></div>
                   <div class="data color04"><small>{{day_before_yesterday}}</small></div>
@@ -93,7 +93,7 @@
                   </div>
               </div>
              <div class="box box_past">
-                <a href="tela_lista_ocs_dia.html"></a>
+              <a href={% url 'tela_busca' %}></a>
                 <div class="box_upper">
                   <div class="icon bg03"><i class="bi bi-calendar-week text-light"></i></div>
                   <div class="data color04"><small>{{three_days_ago}}</small></div>
@@ -112,7 +112,7 @@
                   </div>
               </div>
               <div class="box box_past">
-                <a href="tela_lista_ocs_dia.html"></a>
+                <a href={% url 'tela_busca' %}></a>
                 <div class="box_upper">
                   <div class="icon bg03"><i class="bi bi-calendar-week text-light"></i></div>
                   <div class="data color04"><small>{{four_days_ago}}</small></div>

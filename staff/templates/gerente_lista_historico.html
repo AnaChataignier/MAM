@@ -1,0 +1,112 @@
+{% extends "base_gerente.html" %}
+
+{%load static%}
+
+{% block style %}
+.color-red {
+color: red;
+}
+
+
+.color-yellow {
+color: #ffae00;
+}
+
+
+.color-blue {
+color: blue;
+}
+
+.color-green {
+color: #1cbf71;
+}
+
+.pagination {
+text-align: center;
+margin: 0 auto;
+color: #000;
+}
+
+.pagination a {
+text-align: center;
+color: #000;
+text-decoration: none;
+margin: 0 10px;
+text-weight: bold;
+font-size: 14px;
+color: lightgreen;
+font-weight: bold;
+}
+h5{
+text-align: center;
+color: lightgreen;
+font-size: 15px;
+}
+.btn2{
+background-color: #1cbf71;
+}
+
+.imagem{
+    width: 200px;
+}
+{% endblock %}
+
+{% block rest %}
+
+<section id="lista_oc_scr">
+    <br>
+    <div class="container">
+
+
+
+
+        <!-- Lista das OS -->
+        <div id="oc_lista">
+            <h5>Busque por nome ou endereço do cliente</h5>
+            <form id="form_buscar" class="box-shadow mt-4" method='GET' action="{% url 'gerente_lista_clientes' %}">
+                <input type="text" class="form-control mt-3" name="buscar" placeholder="Busca...">
+                <button type="submit"
+                    class="btn btn2 text-light w-100 box-shadow fs-6 font-bold mt-4 mb-3">Buscar</button>
+            </form>
+
+
+            <div class="tab-pane fade show active" id="pills-01" role="tabpanel" aria-labelledby="pills-home-tab"
+                tabindex="0">
+                <!-- OS Urgente -->
+                <label class="mt-2 font-medium color04">Todas as OS da empresa:</label>
+                {% for historico in historicos %}
+                {% comment %} <a href="{% url 'crud_gerente_clientes' cliente.id %}"> {% endcomment %}
+                    <div class="oc_lista_item">
+                        <div class="row">
+                            <div class="col-2 col-md-1">
+                                <div class="icon bg-light"><i class="bi bi-clock-history"></i></div>
+                            </div>
+                            <div class="col-9 col-md-11">
+                                <div class="oc_l_nome font-medium color04">Ticket: {{ historico.ordem_de_servico.ticket }}</div>
+                                <hr>
+                                <div class="oc_l_data color04 font-dark">Finalizada: {{ historico.data_finalizada }}</div>
+                                <div class="oc_l_data color04 font-dark">Responsável: {{ historico.nome_responsavel }}</div>
+                                <div class="oc_l_data color04 font-dark">Cliente: {{ historico.ordem_de_servico.cliente.nome }}</div>
+                                <div class="oc_l_data color04 font-dark">Técnico: {{ historico.ordem_de_servico.tecnico.first_name }}
+                                    {{ historico.ordem_de_servico.tecnico.last_name }}
+
+                                </div>
+                                <div class="oc_l_data color04 font-dark">Observações: {{ historico.observacoes }}</div>
+                                <div
+                                    class="oc_l_status font-medium {% if ordem.status == 'Urgente' %}color-red{% elif ordem.status == 'Atenção' %}color-yellow{% elif ordem.status == 'Aguardando' %}color-blue{% elif ordem.status == 'Concluído' %}color-green{% endif %}">
+                                    {{ ordem.status }}</div>
+                                    <hr>
+                                    <img class="imagem" src="{{historico.foto.url}}">
+                            </div>
+
+                        </div>
+                    </div>
+                </a>
+                {% endfor %}
+
+            </div>
+            <!-- Lista das OS -->
+        </div>
+</section>
+
+{% endblock %}
