@@ -223,8 +223,6 @@ def os_finalizadas(request):
 @user_passes_test(is_tecnico)
 def dashboard(request):
     try:
-        status_filter = request.GET.get("status")
-
         user = request.user
 
         # Obtém a data de hoje e as datas de ontem, antes de ontem, 3 dias
@@ -236,11 +234,14 @@ def dashboard(request):
         four_days_ago = today - timedelta(days=4)
 
         # Formate as datas no formato "DD/MM/YYYY"
-        today_str = today.strftime("%d/%m/%Y")
-        yesterday_str = yesterday.strftime("%d/%m/%Y")
         day_before_yesterday_str = day_before_yesterday.strftime("%d/%m/%Y")
         three_days_ago_str = three_days_ago.strftime("%d/%m/%Y")
         four_days_ago_str = four_days_ago.strftime("%d/%m/%Y")
+
+        # cards hoje
+        card_total_realizadas_hoje = OrdemDeServico.objects.filter(
+            previsao_chegada__date=today, tecnico=user
+        )
 
         card_realizadas_hoje = OrdemDeServico.objects.filter(
             previsao_chegada__date=today, status__in=["Concluído"], tecnico=user
@@ -251,90 +252,66 @@ def dashboard(request):
         card_atencao_hoje = OrdemDeServico.objects.filter(
             previsao_chegada__date=today, status__in=["Atenção"], tecnico=user
         )
+        # card ontem
+        card_total_realizadas_ontem = OrdemDeServico.objects.filter(
+            previsao_chegada__date=yesterday, tecnico=user
+        )
 
         card_realizadas_ontem = OrdemDeServico.objects.filter(
             previsao_chegada__date=yesterday, status__in=["Concluído"], tecnico=user
         )
 
-        # Filtra todas as ordens ativas
-        ordens_ativas = OrdemDeServico.objects.filter(
-            tecnico=user, status__in=["Atenção", "Urgente", "Aguardando"]
+        # card 2d
+        card_total_realizadas_2d = OrdemDeServico.objects.filter(
+            previsao_chegada__date=day_before_yesterday, tecnico=user
         )
-        ordens_ativas_hoje = OrdemDeServico.objects.filter(
+
+        card_realizadas_2d = OrdemDeServico.objects.filter(
+            previsao_chegada__date=day_before_yesterday,
+            status__in=["Concluído"],
             tecnico=user,
+        )
+
+        # card 3d
+        card_total_realizadas_3d = OrdemDeServico.objects.filter(
+            previsao_chegada__date=three_days_ago, tecnico=user
+        )
+
+        card_realizadas_3d = OrdemDeServico.objects.filter(
+            previsao_chegada__date=three_days_ago,
+            status__in=["Concluído"],
+            tecnico=user,
+        )
+
+        # card 4d
+        card_total_realizadas_4d = OrdemDeServico.objects.filter(
+            previsao_chegada__date=four_days_ago, tecnico=user
+        )
+
+        card_realizadas_4d = OrdemDeServico.objects.filter(
+            previsao_chegada__date=four_days_ago,
+            status__in=["Concluído"],
+            tecnico=user,
+        )
+
+        # Proximas hoje
+        proximas_hoje = OrdemDeServico.objects.filter(
             previsao_chegada__date=today,
+            tecnico=user,
             status__in=["Atenção", "Urgente", "Aguardando"],
         )
-        # Filtra todas as ordens finalizadas
-        ordens_finalizadas = OrdemDeServico.objects.filter(
-            tecnico=user, status__in=["Concluído"]
+
+        # Realizadas hoje
+        realizadas_hoje = OrdemDeServico.objects.filter(
+            previsao_chegada__date=today,
+            tecnico=user,
+            status__in=["Concluído"],
         )
 
-        ordens_finalizadas_hoje = OrdemDeServico.objects.filter(
-            tecnico=user, status__in=["Concluído"], previsao_chegada__date=today
+        # Filtra todas as ordens de serviço de hoje
+        all_ordens = OrdemDeServico.objects.filter(
+            tecnico=user, previsao_chegada__date=today
         )
-
-        # Filtra as ordens ativas com base nas datas de previsão de chegada
-        ordens_ativas_today = ordens_ativas.filter(previsao_chegada__date=today)
-        ordens_ativas_yesterday = ordens_ativas.filter(previsao_chegada__date=yesterday)
-        ordens_ativas_day_before_yesterday = ordens_ativas.filter(
-            previsao_chegada__date=day_before_yesterday
-        )
-        ordens_ativas_three_days_ago = ordens_ativas.filter(
-            previsao_chegada__date=three_days_ago
-        )
-        ordens_ativas_four_days_ago = ordens_ativas.filter(
-            previsao_chegada__date=four_days_ago
-        )
-
-        # Use a função annotate para contar a quantidade de ordens com cada status
-        ordens_ativas_today = ordens_ativas_today.values("status").annotate(
-            total=Count("status")
-        )
-        ordens_ativas_yesterday = ordens_ativas_yesterday.values("status").annotate(
-            total=Count("status")
-        )
-        ordens_ativas_day_before_yesterday = ordens_ativas_day_before_yesterday.values(
-            "status"
-        ).annotate(total=Count("status"))
-        ordens_ativas_three_days_ago = ordens_ativas_three_days_ago.values(
-            "status"
-        ).annotate(total=Count("status"))
-        ordens_ativas_four_days_ago = ordens_ativas_four_days_ago.values(
-            "status"
-        ).annotate(total=Count("status"))
-
-        if status_filter:
-            # Se você ainda quiser filtrar por um status específico
-            ordens_ativas_today = ordens_ativas_today.filter(status=status_filter)
-            ordens_ativas_yesterday = ordens_ativas_yesterday.filter(
-                status=status_filter
-            )
-            ordens_ativas_day_before_yesterday = (
-                ordens_ativas_day_before_yesterday.filter(status=status_filter)
-            )
-            ordens_ativas_three_days_ago = ordens_ativas_three_days_ago.filter(
-                status=status_filter
-            )
-            ordens_ativas_four_days_ago = ordens_ativas_four_days_ago.filter(
-                status=status_filter
-            )
-
-        # Obtém o número total de ordens para cada dia
-        total_ordens_today = ordens_ativas_today.aggregate(total=Count("id"))
-        total_ordens_yesterday = ordens_ativas_yesterday.aggregate(total=Count("id"))
-        total_ordens_day_before_yesterday = (
-            ordens_ativas_day_before_yesterday.aggregate(total=Count("id"))
-        )
-        total_ordens_three_days_ago = ordens_ativas_three_days_ago.aggregate(
-            total=Count("id")
-        )
-        total_ordens_four_days_ago = ordens_ativas_four_days_ago.aggregate(
-            total=Count("id")
-        )
-
-        # Filtra todas as ordens de serviço sem filtro de status
-        all_ordens = OrdemDeServico.objects.filter(tecnico=user)
 
         # Calcula o número de ordens de serviço para cada status
         counts = all_ordens.values("status").annotate(total=Count("status"))
@@ -371,36 +348,28 @@ def dashboard(request):
             request,
             "dashboard.html",
             {
-                "ordens_ativas": ordens_ativas,
-                "today": today_str,
-                "yesterday": yesterday_str,
                 "day_before_yesterday": day_before_yesterday_str,
                 "three_days_ago": three_days_ago_str,
                 "four_days_ago": four_days_ago_str,
-                "ordens_ativas_today": ordens_ativas_today,
-                "ordens_ativas_yesterday": ordens_ativas_yesterday,
-                "ordens_ativas_day_before_yesterday": ordens_ativas_day_before_yesterday,
-                "ordens_ativas_three_days_ago": ordens_ativas_three_days_ago,
-                "ordens_ativas_four_days_ago": ordens_ativas_four_days_ago,
-                "total_ordens_today": total_ordens_today["total"],
-                "total_ordens_yesterday": total_ordens_yesterday["total"],
-                "total_ordens_day_before_yesterday": total_ordens_day_before_yesterday[
-                    "total"
-                ],
-                "total_ordens_three_days_ago": total_ordens_three_days_ago["total"],
-                "total_ordens_four_days_ago": total_ordens_four_days_ago["total"],
                 "user": user,
-                "ordens_finalizadas": ordens_finalizadas,
                 "percent_concluido": percent_concluido,
                 "percent_atencao": percent_atencao,
                 "percent_urgente": percent_urgente,
                 "percent_aguardando": percent_aguardando,
-                "ordens_ativas_hoje": ordens_ativas_hoje,
-                "ordens_finalizadas_hoje": ordens_finalizadas_hoje,
+                "card_total_realizadas_hoje": len(card_total_realizadas_hoje),
                 "card_realizadas_hoje": len(card_realizadas_hoje),
                 "card_aguardando_hoje": len(card_aguardando_hoje),
                 "card_atencao_hoje": len(card_atencao_hoje),
+                "card_total_realizadas_ontem": len(card_total_realizadas_ontem),
                 "card_realizadas_ontem": len(card_realizadas_ontem),
+                "card_total_realizadas_2d": len(card_total_realizadas_2d),
+                "card_realizadas_2d": len(card_realizadas_2d),
+                "card_total_realizadas_3d": len(card_total_realizadas_3d),
+                "card_realizadas_3d": len(card_realizadas_3d),
+                "card_total_realizadas_4d": len(card_total_realizadas_4d),
+                "card_realizadas_4d": len(card_realizadas_4d),
+                "proximas_hoje": proximas_hoje,
+                "realizadas_hoje": realizadas_hoje,
             },
         )
     except Exception as e:

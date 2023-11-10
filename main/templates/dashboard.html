@@ -42,7 +42,7 @@
                 </div>
                 <div class="box_mid">
                   <i class="bi bi-briefcase"></i>
-                  <div class="qtd font-bold color04">{{total_ordens_today}}</div>
+                  <div class="qtd font-bold color04">{{card_total_realizadas_hoje}}</div>
                   <p>Ordens<br>de Serviço</p>
                 </div>
                   <hr>
@@ -62,14 +62,14 @@
                 </div>
                 <div class="box_mid">
                   <i class="bi bi-briefcase"></i>
-                  <div class="qtd font-bold color04">{{total_ordens_yesterday}}</div>
+                  <div class="qtd font-bold color04">{{card_total_realizadas_ontem}}</div>
                   <p>Ordens<br>de Serviço</p>
                 </div>
                   <hr>
                   <div class="box_below">
                       <ul>
                         <li class="color04"><i class="bi bi-circle-fill color02"></i> <strong>{{card_realizadas_ontem}}</strong> Realizadas</li>
-                        <li class="color04"><i class="bi bi-circle-fill color03"></i> <strong>02</strong> Não realizadas</li>
+                        {% comment %} <li class="color04"><i class="bi bi-circle-fill color03"></i> <strong>02</strong> Não realizadas</li> {% endcomment %}
                       </ul>
                   </div>
               </div>
@@ -82,13 +82,13 @@
                 
                 <div class="box_mid">
                   <i class="bi bi-briefcase"></i>
-                  <div class="qtd font-bold color04">{{total_ordens_day_before_yesterday}}</div>
+                  <div class="qtd font-bold color04">{{card_total_realizadas_2d}}</div>
                   <p>Ordens<br>de Serviço</p>
                 </div>
                   <hr>
                   <div class="box_below">
                       <ul>
-                        <li class="color04"><i class="bi bi-circle-fill color02"></i> <strong>18</strong> Realizadas</li>
+                        <li class="color04"><i class="bi bi-circle-fill color02"></i> <strong>{{card_realizadas_2d}}</strong> Realizadas</li>
                       </ul>
                   </div>
               </div>
@@ -100,14 +100,14 @@
                 </div>
                 <div class="box_mid">
                   <i class="bi bi-briefcase"></i>
-                  <div class="qtd font-bold color04">{{total_ordens_three_days_ago}}</div>
+                  <div class="qtd font-bold color04">{{card_total_realizadas_3d}}</div>
                   <p>Ordens<br>de Serviço</p>
                 </div>
                   <hr>
                   <div class="box_below">
                       <ul>
-                        <li class="color04"><i class="bi bi-circle-fill color02"></i> <strong>11</strong> Realizadas</li>
-                        <li class="color04"><i class="bi bi-circle-fill color03"></i> <strong>01</strong> Não realizadas</li>
+                        <li class="color04"><i class="bi bi-circle-fill color02"></i> <strong>{{card_realizadas_3d}}</strong> Realizadas</li>
+                        {% comment %} <li class="color04"><i class="bi bi-circle-fill color03"></i> <strong>01</strong> Não realizadas</li> {% endcomment %}
                       </ul>
                   </div>
               </div>
@@ -119,14 +119,14 @@
                 </div>
                 <div class="box_mid">
                   <i class="bi bi-briefcase"></i>
-                  <div class="qtd font-bold color04">{{total_ordens_four_days_ago}}</div>
+                  <div class="qtd font-bold color04">{{card_total_realizadas_4d}}</div>
                   <p>Ordens<br>de Serviço</p>
                 </div>
                   <hr>
                   <div class="box_below">
                       <ul>
-                        <li class="color04"><i class="bi bi-circle-fill color02"></i> <strong>13</strong> Realizadas</li>
-                        <li class="color04"><i class="bi bi-circle-fill color03"></i> <strong>02</strong> Não realizadas</li>
+                        <li class="color04"><i class="bi bi-circle-fill color02"></i> <strong>{{card_realizadas_4d}}</strong> Realizadas</li>
+                        {% comment %} <li class="color04"><i class="bi bi-circle-fill color03"></i> <strong>02</strong> Não realizadas</li> {% endcomment %}
                       </ul>
                   </div>
               </div>
@@ -180,7 +180,7 @@
                     <div class="tab-content" id="pills-tabContent">
                         <div class="tab-pane fade show active" id="pills-01" role="tabpanel" aria-labelledby="pills-home-tab" tabindex="0">
                             <!-- OS Urgente -->
-                            {% for ordem in ordens_ativas_hoje %}
+                            {% for ordem in proximas_hoje %}
                             <div class="oc_lista_item">
                                 <a href="{% url 'os_detail' ordem.id %}" class="a-whole"></a>
                                 <div class="row">
@@ -212,7 +212,7 @@
                         </div>
 
                         <div class="tab-pane fade" id="pills-02" role="tabpanel" aria-labelledby="pills-02-tab" tabindex="0">
-                          {% for ordem in ordens_finalizadas_hoje %}
+                          {% for ordem in realizadas_hoje %}
                           <!-- OS Realizada -->
                           <div class="oc_lista_item">
                               <a href="{% url 'os_detail2' ordem.id %}" class="a-whole"></a>
