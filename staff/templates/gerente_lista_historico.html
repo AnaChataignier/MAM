@@ -49,6 +49,13 @@ background-color: #1cbf71;
 .imagem{
     width: 200px;
 }
+i{
+    color: lightgreen;
+  
+  }
+  .bg{
+    background-color: gray;
+  }
 {% endblock %}
 
 {% block rest %}
@@ -62,7 +69,7 @@ background-color: #1cbf71;
 
         <!-- Lista das OS -->
         <div id="oc_lista">
-            <h5>Busque por nome ou endereço do cliente</h5>
+            <h5>Busque por nome do cliente, técnico, staff ou data de finalização</h5>
             <form id="form_buscar" class="box-shadow mt-4" method='GET' action="{% url 'gerente_lista_clientes' %}">
                 <input type="text" class="form-control mt-3" name="buscar" placeholder="Busca...">
                 <button type="submit"
@@ -73,19 +80,19 @@ background-color: #1cbf71;
             <div class="tab-pane fade show active" id="pills-01" role="tabpanel" aria-labelledby="pills-home-tab"
                 tabindex="0">
                 <!-- OS Urgente -->
-                <label class="mt-2 font-medium color04">Todas as OS da empresa:</label>
+                <label class="mt-2 font-medium color04">Todos Históricos de Ordens Finalizadas:</label>
                 {% for historico in historicos %}
                 {% comment %} <a href="{% url 'crud_gerente_clientes' cliente.id %}"> {% endcomment %}
                     <div class="oc_lista_item">
                         <div class="row">
                             <div class="col-2 col-md-1">
-                                <div class="icon bg-light"><i class="bi bi-clock-history"></i></div>
+                                <div class="icon bg"><i class="bi bi-clock-history"></i></div>
                             </div>
                             <div class="col-9 col-md-11">
                                 <div class="oc_l_nome font-medium color04">Ticket: {{ historico.ordem_de_servico.ticket }}</div>
                                 <hr>
                                 <div class="oc_l_data color04 font-dark">Finalizada: {{ historico.data_finalizada }}</div>
-                                <div class="oc_l_data color04 font-dark">Responsável: {{ historico.nome_responsavel }}</div>
+                                <div class="oc_l_data color04 font-dark">Responsável no local: {{ historico.nome_responsavel }}</div>
                                 <div class="oc_l_data color04 font-dark">Cliente: {{ historico.ordem_de_servico.cliente.nome }}</div>
                                 <div class="oc_l_data color04 font-dark">Técnico: {{ historico.ordem_de_servico.tecnico.first_name }}
                                     {{ historico.ordem_de_servico.tecnico.last_name }}

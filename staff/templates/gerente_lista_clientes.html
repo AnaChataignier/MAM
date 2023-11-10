@@ -46,6 +46,13 @@ h5{
 .btn2{
   background-color: #1cbf71;
 }
+i{
+  color: lightgreen;
+
+}
+.bg{
+  background-color: gray;
+}
 {% endblock %}
 
 {% block rest %}
@@ -75,7 +82,7 @@ h5{
                       {% comment %} <a href="{% url 'os_detail2' ordem.id %}" class="a-whole"></a> {% endcomment %}
                       <div class="row">
                           <div class="col-2 col-md-1">
-                              <div class="icon bg-light"><i class="bi bi-file-person-fill"></i></div>
+                              <div class="icon bg"><i class="bi bi-file-person"></i></div>
                           </div>
                           <div class="col-9 col-md-11">
                               <div class="oc_l_nome font-medium color04">Nome: {{ cliente.nome }}</div>
