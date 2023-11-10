@@ -13,7 +13,7 @@ class OrdemDeServicoForm(forms.ModelForm):
     )
     previsao_execucao = forms.DateTimeField(
         widget=forms.DateTimeInput(attrs={"type": "datetime-local"}),
-        input_formats=["%Y-%mT%H:%M"],
+        input_formats=["%Y-%m-%dT%H:%M"],
     )
     tecnico = forms.ModelChoiceField(
         queryset=CustomUser.objects.filter(groups__name="Técnico"),
@@ -116,3 +116,48 @@ class AtrasoForm(forms.ModelForm):
         super(AtrasoForm, self).__init__(*args, **kwargs)
         for field_name, field in self.fields.items():
             field.widget.attrs["class"] = "form-control"
+
+
+class GerenteOrdemDeServicoForm(forms.ModelForm):
+    tecnico = forms.ModelChoiceField(
+        queryset=CustomUser.objects.filter(groups__name="Técnico"),
+        empty_label="Selecione um técnico",
+    )
+    cliente = forms.ModelChoiceField(
+        queryset=Cliente.objects.all(),
+        widget=forms.Select(attrs={"placeholder": "Selecione um cliente"}),
+        empty_label="Selecione um cliente",
+    )
+
+    class Meta:
+        model = OrdemDeServico
+        exclude = [
+            "endereco",
+            "staff",
+            "status_tecnico",
+            "atraso_em_minutos",
+            "atraso_descricao",
+        ]
+
+    def __init__(self, *args, **kwargs):
+        super(GerenteOrdemDeServicoForm, self).__init__(*args, **kwargs)
+
+        # Remova a opção "Concluído" do campo de seleção status_tecnico
+        self.fields["status"].choices = [
+            choice
+            for choice in self.fields["status"].choices
+            if choice[0] != "Concluído"
+        ]
+
+        for field_name, field in self.fields.items():
+            if "class" in field.widget.attrs:
+                field.widget.attrs["class"] += " form-control"
+            else:
+                field.widget.attrs["class"] = "form-control"
+
+        self.fields["ticket"].widget.attrs["placeholder"] = "Número ticket"
+        self.fields["tecnico"].widget.attrs["placeholder"] = "Técnico"
+        self.fields["descricao"].widget.attrs["placeholder"] = "Descrição..."
+        self.fields["material"].widget.attrs["placeholder"] = "Material"
+        self.fields["equipamento"].widget.attrs["placeholder"] = "Equipamento"
+        self.fields["contrato"].widget.attrs["placeholder"] = "Contrato"

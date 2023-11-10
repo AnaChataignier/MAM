@@ -29,8 +29,8 @@ class OrdemDeServico(models.Model):
         CustomUser, on_delete=models.CASCADE, related_name="ordens_staff"
     )
     descricao = models.TextField(max_length=600)
-    previsao_chegada = models.DateTimeField()
-    previsao_execucao = models.DateTimeField()
+    previsao_chegada = models.DateTimeField(editable=True)
+    previsao_execucao = models.DateTimeField(editable=True)
     material = models.CharField(max_length=100, validators=[MinLengthValidator(3)])
     equipamento = models.CharField(max_length=100, validators=[MinLengthValidator(3)])
     data_criacao = models.DateTimeField(auto_now_add=True)

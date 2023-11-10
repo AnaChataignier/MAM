@@ -3,7 +3,7 @@ from main.helpers import is_staff
 from django.contrib.auth.decorators import user_passes_test
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .models import OrdemDeServico, Cliente, HistoricoOsFinalizada
-from .forms import OrdemDeServicoForm, ClienteForm
+from .forms import OrdemDeServicoForm, ClienteForm, GerenteOrdemDeServicoForm
 from django.contrib import messages
 from django.contrib.messages import constants
 from django.shortcuts import get_object_or_404
@@ -204,14 +204,14 @@ def crud_gerente_os(request, ordem_id):
     ordem = get_object_or_404(OrdemDeServico, id=ordem_id)
 
     if request.method == "POST":
-        form = OrdemDeServicoForm(request.POST, instance=ordem)
+        form = GerenteOrdemDeServicoForm(request.POST, instance=ordem)
         if form.is_valid():
             form.save()
             return redirect(
                 "gerente_lista_os"
             )  # Redireciona para a lista de ordens de serviço
     else:
-        form = OrdemDeServicoForm(instance=ordem)
+        form = GerenteOrdemDeServicoForm(instance=ordem)
 
     return render(request, "crud_gerente_os.html", {"form": form})
 
