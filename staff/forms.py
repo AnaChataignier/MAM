@@ -118,6 +118,17 @@ class AtrasoForm(forms.ModelForm):
             field.widget.attrs["class"] = "form-control"
 
 
+class ReagendarForm(forms.ModelForm):
+    class Meta:
+        model = OrdemDeServico
+        fields = ["descricao_reagendamento"]
+
+    def __init__(self, *args, **kwargs):
+        super(ReagendarForm, self).__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            field.widget.attrs["class"] = "form-control"
+
+
 class GerenteOrdemDeServicoForm(forms.ModelForm):
     tecnico = forms.ModelChoiceField(
         queryset=CustomUser.objects.filter(groups__name="Técnico"),

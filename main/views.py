@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from staff.forms import HistoricoOsFinalizadaForm, AtrasoForm
+from staff.forms import HistoricoOsFinalizadaForm, AtrasoForm, ReagendarForm
 from django.contrib.auth.decorators import user_passes_test
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
@@ -12,6 +12,8 @@ from authentication.forms import TelaUserForm
 from datetime import date, timedelta, datetime, time
 from django.urls import reverse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.contrib import messages
+from django.contrib.messages import constants
 
 
 @user_passes_test(is_tecnico)
@@ -299,6 +301,7 @@ def dashboard(request):
             previsao_chegada__date=today,
             tecnico=user,
             status__in=["Atenção", "Urgente", "Aguardando"],
+            reagendar=False,
         )
 
         # Realizadas hoje
@@ -443,3 +446,20 @@ def atraso(request, ordem_id):
         form = AtrasoForm(instance=ordem)
 
     return render(request, "atraso.html", {"form": form, "ordem": ordem})
+
+
+def reagendar(request, ordem_id):
+    ordem = OrdemDeServico.objects.get(id=ordem_id)
+    if request.method == "POST":
+        ordem.reagendar = True
+        form = ReagendarForm(request.POST, instance=ordem)
+        if form.is_valid():
+            form.save()
+            messages.add_message(
+                request, constants.SUCCESS, "Ordem enviada para reagendamento"
+            )
+            redirect_url = reverse("dashboard")
+            return redirect(redirect_url)
+    else:
+        form = ReagendarForm(instance=ordem)
+    return render(request, "reagendar.html", {"ordem": ordem, "form": form})
