@@ -478,10 +478,14 @@ def atraso(request, ordem_id):
     ordem = get_object_or_404(
         OrdemDeServico,
         id=ordem_id,
-        status__in=["Atenção", "Urgente", "Aguardando", "Concluído"],
+        status__in=["Atenção", "Urgente", "Aguardando"],
     )
     if request.method == "POST":
         form = AtrasoForm(request.POST, instance=ordem)
+        if ordem.status == "Aguardando":
+            ordem.status = "Atenção"
+        if ordem.status == "Atenção":
+            ordem.status = "Urgente"
         if form.is_valid():
             form.save()
             redirect_url = reverse("a_caminho", args=[ordem.id])
@@ -495,7 +499,7 @@ def atraso(request, ordem_id):
 def reagendar(request, ordem_id):
     ordem = OrdemDeServico.objects.get(
         id=ordem_id,
-        status__in=["Atenção", "Urgente", "Aguardando", "Concluído"],
+        status__in=["Atenção", "Urgente", "Aguardando"],
     )
     if request.method == "POST":
         ordem.status = "Reagendar"
