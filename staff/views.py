@@ -9,6 +9,7 @@ from django.contrib.messages import constants
 from authentication.forms import EnderecoForm
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
+from datetime import datetime
 
 
 @user_passes_test(is_staff)
@@ -60,6 +61,37 @@ def lista_os(request):
     filtros = request.GET.get("buscar")
 
     if filtros:
+        try:
+            data_filtrada = datetime.strptime(filtros, "%d-%m-%Y")
+            ordens = ordens.filter(previsao_chegada__date=data_filtrada.date())
+        except ValueError:
+            # Lidar com o caso em que o filtro não é uma data válida
+            pass
+        else:
+            # Se a conversão for bem-sucedida, filtre por data e ignore outros filtros
+            items_per_page = 4
+            paginator = Paginator(ordens, items_per_page)
+            page = request.GET.get("page")
+
+            try:
+                ordens = paginator.page(page)
+            except PageNotAnInteger:
+                ordens = paginator.page(1)
+            except EmptyPage:
+                ordens = paginator.page(paginator.num_pages)
+
+            return render(
+                request,
+                "lista_os.html",
+                {
+                    "ordens": ordens,
+                    "atrasos": atrasos,
+                    "total_reagendar": total_reagendar,
+                },
+            )
+
+    # Se não houver filtro por data, continue com os outros filtros
+    if filtros:
         ordens = ordens.filter(
             Q(ticket__icontains=filtros)
             | Q(cliente__nome__icontains=filtros)
@@ -69,7 +101,7 @@ def lista_os(request):
             | Q(cliente__endereco__cep__icontains=filtros)
         )
 
-    items_per_page = 4
+    items_per_page = 10
     paginator = Paginator(ordens, items_per_page)
     page = request.GET.get("page")
 
