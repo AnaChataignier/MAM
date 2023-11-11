@@ -213,6 +213,7 @@ def reagendar_staff(request):
     )
 
 
+@user_passes_test(is_staff)
 def update_reagendar(request, ordem_id):
     ordem = get_object_or_404(OrdemDeServico, id=ordem_id)
 
