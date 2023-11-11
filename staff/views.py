@@ -69,7 +69,7 @@ def lista_os(request):
             pass
         else:
             # Se a conversão for bem-sucedida, filtre por data e ignore outros filtros
-            items_per_page = 4
+            items_per_page = 10
             paginator = Paginator(ordens, items_per_page)
             page = request.GET.get("page")
 
