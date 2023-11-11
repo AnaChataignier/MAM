@@ -29,4 +29,4 @@ python manage.py runscript scripts.end_cli_os_script -v3
 ```
 python manage.py test authentication.tests.test_model.CustomUserTestCase
 ```
-Teste
+Teste1
