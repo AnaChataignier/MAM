@@ -41,10 +41,12 @@ class OrdemDeServico(models.Model):
     status = models.CharField(
         max_length=10, choices=STATUS_CHOICES, default="Aguardando"
     )
-    atraso_em_minutos = models.CharField(max_length=50, null=True, blank=True, choices=ATRASO_CHOICES)
+    atraso_em_minutos = models.CharField(
+        max_length=50, null=True, blank=True, choices=ATRASO_CHOICES
+    )
     atraso_descricao = models.TextField(max_length=400, null=True, blank=True)
-    reagendar = models.BooleanField(default=False)
     descricao_reagendamento = models.TextField(max_length=400, null=True, blank=True)
+    vezes_reagendada = models.IntegerField(default=0)
 
     def __str__(self):
         return f"Ordem de Serviço #{self.pk}"

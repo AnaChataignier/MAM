@@ -3,10 +3,38 @@
   <head>
     <meta charset="UTF-8" />
     <title>Erro</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f8f9fa;
+        text-align: center;
+        padding: 50px;
+      }
+
+      h1 {
+        color: #dc3545;
+      }
+
+      p {
+        color: #343a40;
+        margin-top: 20px;
+      }
+
+      pre {
+        text-align: left;
+        margin-top: 20px;
+        padding: 20px;
+        background-color: #e9ecef;
+        overflow: auto;
+      }
+    </style>
   </head>
   <body>
     <h1>Ocorreu um erro</h1>
     <p>{{ error_message }}</p>
-    <!-- Você pode adicionar mais informações de erro aqui, se necessário -->
+    
+    {% if error_details %}
+      <pre>{{ error_details|escape }}</pre>
+    {% endif %}
   </body>
 </html>

@@ -76,7 +76,7 @@ p {
             
             <!-- Lista das OS -->
             <div id="oc_lista">
-                <label class="mt-1 mb-2 ms-2 font-medium color04 color-yellow"><i class="bi bi-bi bi-card-heading"></i> Lista Ordens de Serviço com atraso:</label>
+                <label class="mt-1 mb-2 ms-2 font-medium color04 color-yellow"><i class="bi bi-bi bi-card-heading"></i> Lista Ordens de Serviço para reagendar:</label>
                 
                 
                 <script>
@@ -98,31 +98,32 @@ p {
               </script>
               <div class="tab-pane fade show active" id="pills-01" role="tabpanel" aria-labelledby="pills-home-tab" tabindex="0">
                 <!-- OS Urgente -->
-              {% if ordens_em_atraso %}  
-                {% for ordem in ordens_em_atraso %}
-                <div class="card">
+              {% if ordens_reagendar %}  
+                {% for ordem in ordens_reagendar %}
+                <a href="{% url 'update_reagendar' ordem.id %}">
+                <div class="card text-center mx-auto">
                     <div class="card-body">
                         <div class="row">
-                           
-                            <div class="col-9 col-md-11 mx-auto">
+      
+                            <div class="col-9 col-md-11 mx-auto" >
                                 <div class="oc_l_nome font-medium color04"><b>Ticket</b> #{{ ordem.ticket }}</div>
-                                <div class="oc_l_status font-medium {% if ordem.status == 'Urgente' %}color-red{% elif ordem.status == 'Atenção' %}color-yellow{% elif ordem.status == 'Aguardando' %}color-blue{% elif ordem.status == 'Concluído' %}color-green{% endif %}">{{ ordem.status }}</div>
-                                <div class="oc_l_data color04 font-dark"><b>Previsão de chegada: </b>{{ ordem.previsao_chegada }}</div>
+                                <div class="oc_l_status font-medium {% if ordem.status == 'Urgente' %}color-red{% elif ordem.status == 'Atenção' %}color-yellow{% elif ordem.status == 'Aguardando' %}color-blue{% elif ordem.status == 'Concluído' %}color-green{% elif ordem.status == 'Reagendar' %}color-red{% endif %}">{{ ordem.status }}</div>
+                                <div class="oc_l_data color04 font-dark"><b>Previsão de chegada antiga: </b>{{ ordem.previsao_chegada }}</div>
                                 <div class="oc_l_data color04 font-dark"><b>Técnico Responsável: </b>{{ ordem.tecnico.first_name }} {{ ordem.tecnico.last_name }} Tel - {{ordem.tecnico.telefone}}</div>
                                 <div class="oc_l_data color04 font-dark"><b>Staff Responsável: </b>{{ ordem.staff.first_name }} {{ ordem.staff.last_name }}</div>
                                 <div class="oc_l_data color04 font-dark"><b>Status Técnico: </b>{{ ordem.status_tecnico }}</div>
-                                <div class="oc_l_data color04 font-dark"><b>Atraso: </b>{{ ordem.atraso_em_minutos }} minutos</div>
-                                <div class="oc_l_data color04 font-dark"><b>Descrição Atraso: </b>{{ ordem.atraso_descricao }}</div>
+                                <div class="oc_l_data color04 font-dark"><b>Descrição reagendamento: </b>{{ ordem.descricao_reagendamento}}</div>
                                 <hr>
-                                <div class="oc_l_nome font-medium color05">Contatar cliente sobre atraso:</div>
+                                <div class="oc_l_nome font-medium color05">Dados Cliente:</div>
                                 <div class="oc_l_data color04 font-dark"><b>Cliente: </b>{{ ordem.cliente }}</div>
                                 <div class="oc_l_data color04 font-dark"><b>Contatar: </b>{{ ordem.cliente.telefone1 }}</div>
-                                <div class="oc_l_data color04 font-dark"><b>Contatar: </b>{{ ordem.cliente.telefone2}}</div>
+                                <div class="oc_l_data color04 font-dark"><b>Contatar: </b>{{ ordem.cliente.telefone2 }}</div>
                             </div>
                         </div>
                     </div>
                 </div>
                 <br>
+            </a>
             {% endfor %}
             {% endif %}           
               </div>
@@ -131,14 +132,3 @@ p {
 </body>
 </html>
 {% endblock %}
-{% comment %}
-<ul>
-    {% for ordem in ordens_em_atraso %}
-        <li>
-            {{ordem.staff.first_name}}
-            Ordem de Serviço #{{ ordem.ticket }} - {{ ordem.descricao }} ({{ ordem.atraso_em_minutos }} minutos de atraso)
-
-            Descrição: {{ ordem.atraso_descricao }}
-        </li>
-    {% endfor %}
-</ul> {% endcomment %}

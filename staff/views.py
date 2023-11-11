@@ -3,11 +3,12 @@ from main.helpers import is_staff
 from django.contrib.auth.decorators import user_passes_test
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .models import OrdemDeServico
-from .forms import OrdemDeServicoForm, ClienteForm
+from .forms import OrdemDeServicoForm, ClienteForm, ReagendarOrdemDeServicoForm
 from django.contrib import messages
 from django.contrib.messages import constants
 from authentication.forms import EnderecoForm
 from django.db.models import Q
+from django.shortcuts import get_object_or_404
 
 
 @user_passes_test(is_staff)
@@ -18,9 +19,20 @@ def staff(request):
         atraso_em_minutos__isnull=False,
         status__in=["Atenção", "Urgente", "Aguardando"],
     )
+    ordens_reagendar = OrdemDeServico.objects.filter(
+        staff=staff,
+        status="Reagendar",
+    )
+    total_reagendar = len(ordens_reagendar.values())
+
     atrasos = len(ordens_em_atraso.values())
+
     try:
-        return render(request, "staff.html", {"atrasos": atrasos})
+        return render(
+            request,
+            "staff.html",
+            {"atrasos": atrasos, "staff": staff, "total_reagendar": total_reagendar},
+        )
     except Exception as e:
         return render(request, "error.html", {"error_message": str(e)})
 
@@ -34,7 +46,15 @@ def lista_os(request):
         status__in=["Atenção", "Urgente", "Aguardando"],
     )
     atrasos = len(ordens_em_atraso.values())
-    ordens = OrdemDeServico.objects.filter(staff=request.user)
+    ordens = OrdemDeServico.objects.filter(
+        staff=request.user,
+        status__in=["Atenção", "Urgente", "Aguardando", "Concluído"],
+    )
+    ordens_reagendar = OrdemDeServico.objects.filter(
+        staff=staff,
+        status="Reagendar",
+    )
+    total_reagendar = len(ordens_reagendar.values())
 
     # Verifique se o parâmetro de pesquisa "buscar" está presente na solicitação GET
     filtros = request.GET.get("buscar")
@@ -66,6 +86,7 @@ def lista_os(request):
         {
             "ordens": ordens,
             "atrasos": atrasos,
+            "total_reagendar": total_reagendar,
         },
     )
 
@@ -136,6 +157,7 @@ def formulario_cliente(request):
         return render(request, "error.html", {"error_message": str(e)})
 
 
+@user_passes_test(is_staff)
 def ordens_em_atraso(request):
     # Recupere todas as ordens de serviço do usuário staff logado que tenham atraso
     staff = request.user
@@ -145,9 +167,63 @@ def ordens_em_atraso(request):
         status__in=["Atenção", "Urgente", "Aguardando"],
     )
     atrasos = len(ordens_em_atraso.values())
+    staff = request.user
+    ordens_reagendar = OrdemDeServico.objects.filter(
+        staff=staff,
+        status="Reagendar",
+    )
+    total_reagendar = len(ordens_reagendar.values())
 
     return render(
         request,
         "ordens_em_atraso.html",
-        {"ordens_em_atraso": ordens_em_atraso, "staff": staff, "atrasos": atrasos},
+        {
+            "ordens_em_atraso": ordens_em_atraso,
+            "staff": staff,
+            "atrasos": atrasos,
+            "total_reagendar": total_reagendar,
+        },
     )
+
+
+@user_passes_test(is_staff)
+def reagendar_staff(request):
+    staff = request.user
+    ordens_em_atraso = OrdemDeServico.objects.filter(
+        staff=staff,
+        atraso_em_minutos__isnull=False,
+        status__in=["Atenção", "Urgente", "Aguardando"],
+    )
+    atrasos = len(ordens_em_atraso.values())
+    ordens_reagendar = OrdemDeServico.objects.filter(
+        staff=staff,
+        status="Reagendar",
+    )
+    total_reagendar = len(ordens_reagendar.values())
+    print("weeee", ordens_reagendar)
+    return render(
+        request,
+        "reagendar_staff.html",
+        {
+            "ordens_reagendar": ordens_reagendar,
+            "staff": staff,
+            "total_reagendar": total_reagendar,
+            "atrasos": atrasos,
+        },
+    )
+
+
+def update_reagendar(request, ordem_id):
+    ordem = get_object_or_404(OrdemDeServico, id=ordem_id)
+
+    if request.method == "POST":
+        form = ReagendarOrdemDeServicoForm(request.POST, instance=ordem)
+        if form.is_valid():
+            form.save()
+            return redirect(
+                "reagendar_staff"
+            )  # Redireciona para a lista de ordens de serviço
+    else:
+        form = ReagendarOrdemDeServicoForm(instance=ordem)
+
+    return render(request, "update_reagendar.html", {"form": form, "ordem": ordem})

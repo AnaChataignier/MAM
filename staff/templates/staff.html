@@ -23,16 +23,34 @@ main{
 }
 
 .work {
-    font-size: 100px;
+    font-size: 120px;
     text-align: center;
-    display: block; /* Certifique-se de que o ícone seja exibido como bloco para o alinhamento horizontal funcionar */
-    color: orange;
+    display: block;
+    color: Orange;
+}
+
+.work:hover {
+
+    animation: rotate 10s linear infinite; /* 10s para 1 volta completa, linear para movimento suave, infinite para repetição infinita */
+}
+
+
+/* Define a animação de rotação */
+@keyframes rotate {
+    from {
+        transform: rotate(0deg); /* Começa a partir de 0 graus */
+    }
+    to {
+        transform: rotate(360deg); /* Termina em 360 graus (1 volta completa) */
+    }
 }
 h4{
     text-align: center;
+    color: Orange;
 }
 h5{
     text-align: center;
+    color: Orange;
 }
 p{
     font-size: 14px;

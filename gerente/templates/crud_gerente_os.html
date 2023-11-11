@@ -17,6 +17,7 @@
 }
 
 #id_ticket,
+#id_staff,
 #id_tecnico,
 #id_descricao,
 #id_previsao_chegada,
@@ -52,12 +53,16 @@ h2{
             <br>
             <h2>Atualizar OS </h2>
             <br>
+           
             <div class="inputs">
             {{ form.ticket }}
             </div>
             <div class="inputs">
             {{ form.tecnico }}
             </div>
+            <div class="inputs">
+              {{ form.staff }}
+              </div>  
             <div class="inputs">
             {{ form.descricao }}
             </div>

@@ -30,12 +30,12 @@
       {% block style %} {% endblock %}
 
       .logo {
-        font-size: 20px;
+        font-size: 40px;
         color: orange;
         display: block; /* Transformar os links em blocos para ocupar toda a largura disponível */
     
         text-align: center; /* Alinhar texto ao centro */
-        padding: 14px 16px; /* Preenchimento interno dos links */
+
         text-decoration: none; /* Remover sublinhado padrão dos links */
     }
     .navbar {
@@ -71,9 +71,7 @@
     a{
       text-decoration: none;
     }
-    a:hover{
-      text-decoration: underline;
-    }
+
     .but{
      margin:0 auto;
     }
@@ -84,7 +82,7 @@
       background-color: red;
       color: white;
       border-radius: 50%;
-      font-size: 14px;
+      font-size: 11px;
       position: relative;
     }
     .oi{
@@ -100,20 +98,25 @@
  <nav class="navbar">
   <ul>
     <li class="d-flex justify-content-center">
-      <a href="{% url 'staff' %}">
+      <a href="{% url 'staff' %}" title="Home">
         <i class="bi bi-person-workspace logo"></i>
       </a>
     </li>
     <li class="d-flex justify-content-center">
-      <a href="{% url 'lista_os' %}">Lista OS's</a>
+      <a href="{% url 'lista_os' %}" title="Lista OS'S">   <i class="bi bi-briefcase mala"></i></a>
     </li>
     <li class="d-flex justify-content-center">
-      <a href="{% url 'ordens_em_atraso' %}">
-        Atrasadas {% if atrasos != 0 %}<span class="badge">{{ atrasos }}</span>{% endif %}
+      <a href="{% url 'ordens_em_atraso' %}" title="Atrasadas">
+        <i class="bi bi-alarm"></i> {% if atrasos != 0 %}<span class="badge">{{ atrasos }}</span>{% endif %}
       </a>
     </li>
-    <li class="d-flex justify-content-center">
-      <a href="{% url 'sair' %}">Sair</a>
+    <li class="d-flex justify-content-center" title="Reagendar">
+      <a href="{% url 'reagendar_staff' %}">
+        <i class="bi bi-calendar3"></i> {% if total_reagendar != 0 %}<span class="badge">{{ total_reagendar }}</span>{% endif %}
+      </a>
+    </li>
+    <li class="d-flex justify-content-center" title="Sair">
+      <a href="{% url 'sair' %}"><i class="bi bi-door-open"></i></a>
     </li>
   </ul>
 </nav>

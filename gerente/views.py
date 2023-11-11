@@ -7,9 +7,11 @@ from authentication.forms import EnderecoForm
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Q
 from django.http import HttpResponse
+from django.contrib.auth.decorators import user_passes_test
+from main.helpers import is_gerente
 
 
-# Create your views here.
+@user_passes_test(is_gerente)
 def deletar_cliente(request, cliente_id):
     cliente = get_object_or_404(Cliente, id=cliente_id)
     cliente.delete()
@@ -17,6 +19,7 @@ def deletar_cliente(request, cliente_id):
     return redirect("gerente_lista_clientes")
 
 
+@user_passes_test(is_gerente)
 def gerente_lista_historico(request):
     historicos = HistoricoOsFinalizada.objects.all()
     return render(
@@ -28,6 +31,7 @@ def gerente_lista_historico(request):
     )
 
 
+@user_passes_test(is_gerente)
 def crud_gerente_clientes(request, cliente_id):
     try:
         cliente = get_object_or_404(Cliente, id=cliente_id)
@@ -62,6 +66,7 @@ def crud_gerente_clientes(request, cliente_id):
         return render(request, "error.html", {"error_message": str(e)})
 
 
+@user_passes_test(is_gerente)
 def gerente_lista_clientes(request):
     clientes = Cliente.objects.all()
     if "buscar" in request.GET:
@@ -91,6 +96,7 @@ def gerente_lista_clientes(request):
     )
 
 
+@user_passes_test(is_gerente)
 def crud_gerente_os(request, ordem_id):
     ordem = get_object_or_404(OrdemDeServico, id=ordem_id)
 
@@ -107,6 +113,7 @@ def crud_gerente_os(request, ordem_id):
     return render(request, "crud_gerente_os.html", {"form": form, "ordem": ordem})
 
 
+@user_passes_test(is_gerente)
 def deletar_os(request, ordem_id):
     ordem = get_object_or_404(OrdemDeServico, id=ordem_id)
     ordem.delete()
@@ -116,6 +123,7 @@ def deletar_os(request, ordem_id):
     return redirect("gerente_lista_os")
 
 
+@user_passes_test(is_gerente)
 def gerente(request):
     try:
         user = request.user
@@ -124,6 +132,7 @@ def gerente(request):
         return render(request, "error.html", {"error_message": str(e)})
 
 
+@user_passes_test(is_gerente)
 def gerente_lista_os(request):
     ordens = OrdemDeServico.objects.all()
     if "buscar" in request.GET:

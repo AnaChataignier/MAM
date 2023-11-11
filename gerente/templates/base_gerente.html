@@ -27,49 +27,48 @@
     />
     <link href="{% static 'assets/css/app_mamminfo.css' %}" rel="stylesheet" />
     <style>
-      {% block style %} {% endblock %}
-
+      
       .logo {
         font-size: 40px;
         color: lightgreen;
         display: block; /* Transformar os links em blocos para ocupar toda a largura disponível */
-    
+        
         text-align: center; /* Alinhar texto ao centro */
         padding: 1px 1px; /* Preenchimento interno dos links */
         text-decoration: none; /* Remover sublinhado padrão dos links */
-    }
-    .navbar {
-      background-color: #333; /* Cor de fundo da barra de navegação */
-      overflow: hidden;
-      padding: 0;
-      display: flex;
-  
-     
-    }
-    i:hover{
-      color: lightgreen;
-    }
-    .navbar ul {
-      list-style-type: none; /* Remover marcadores de lista */
-      margin: 0;
-      padding: 0;
-      display: flex;
-      justify-content: center;
-    }
-    
-    .navbar li {
-      align-items: center;
-    }
-    
-    .navbar a{
-      display: block; /* Transformar os links em blocos para ocupar toda a largura disponível */
+      }
+      .navbar {
+        background-color: #333; /* Cor de fundo da barra de navegação */
+        overflow: hidden;
+        padding: 0;
+        display: flex;
+        
+        
+      }
+      i:hover{
+        color: lightgreen;
+      }
+      .navbar ul {
+        list-style-type: none; /* Remover marcadores de lista */
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+      }
+      
+      .navbar li {
+        align-items: center;
+      }
+      
+      .navbar a{
+        display: block; /* Transformar os links em blocos para ocupar toda a largura disponível */
       color: white; /* Cor do texto dos links */
       text-align: center; /* Alinhar texto ao centro */
       padding: 14px 16px; /* Preenchimento interno dos links */
       text-decoration: none; /* Remover sublinhado padrão dos links */
     }
     
-  
+    
     a{
       text-decoration: none;
     }
@@ -77,35 +76,36 @@
       text-decoration: underline;
     }
     .but{
-     margin:0 auto;
+      margin:0 auto;
     }
     main{
       background-color: gray;
     }
-    dark
-    </style>
-  </head>
-  <nav class="navbar">
+    {% block style %} {% endblock %}
+    
+  </style>
+</head>
+<nav class="navbar">
   <ul>
     <li class="d-flex justify-content-center oi2">
-      <a href="{% url 'gerente' %}">
-        <i class="bi bi-person-workspace logo"></i>
+      <a href="{% url 'gerente' %}" title="Home">
+        <i class="bi bi-house logo logofora"></i>
       </a>
     </li>
     <li class="d-flex justify-content-center oi2">
-      <a href="{% url 'gerente_lista_os' %}">
-
+      <a href="{% url 'gerente_lista_os' %}" title="Lista OS's">
+        
         <i class="bi bi-briefcase mala"></i>
       </a>
     </li>
     <li class="d-flex justify-content-center oi2">
-      <a href="{% url 'gerente_lista_clientes' %}"><i class="bi bi-file-person-fill person"></i></a>
+      <a href="{% url 'gerente_lista_clientes' %}" title="Lista Clientes"><i class="bi bi-file-person-fill person"></i></a>
     </li>
     <li class="d-flex justify-content-center oi2">
-      <a href="{% url 'gerente_lista_historico' %}"><i class="bi bi-clock-history clock"></i></a>
+      <a href="{% url 'gerente_lista_historico' %}" title="Lista Históricos Ordens Finalizadas"><i class="bi bi-clock-history clock"></i></a>
     </li>
     <li class="d-flex justify-content-center oi2">
-      <a href="{% url 'sair' %}"><i class="bi bi-door-open"></i> Sair</a>
+      <a href="{% url 'sair' %}" title="Sair"><i class="bi bi-door-open"></i> Sair</a>
     </li>
   </ul>
 </nav>

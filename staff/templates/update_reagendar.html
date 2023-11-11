@@ -1,0 +1,75 @@
+
+{% extends "base_staff.html" %}
+
+{%load static%}
+
+{% block style %}
+.dentroform{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    
+}
+
+.inputs{
+    margin-bottom: 10px;
+}
+
+#id_ticket,
+#id_staff,
+#id_tecnico,
+#id_descricao,
+#id_previsao_chegada,
+#id_previsao_execucao,
+#id_material,
+#id_equipamento,
+#id_cliente,
+#id_contrato,
+#id_atividade,
+#id_status {
+  width: 350px;
+  padding: .375rem .75rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #495057;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid #ced4da;
+  border-radius: .25rem;
+  transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+  box-shadow: none;
+  outline: 0;
+  align-self: center; /* Isso centralizará os campos verticalmente */
+}
+h2{
+    color:orange;
+  }
+{% endblock %}
+{% block rest %}
+    <form method="post">
+        {% csrf_token %}
+        <div class="dentroform">
+            <br>
+            <h2>Atualizar Previsão de chegada</h2>
+            <br>
+            <div class="inputs">
+            {{ form.previsao_chegada }}
+            </div>
+            <div class="inputs">
+            {{ form.previsao_execucao }}
+            </div>
+            <div class="inputs">
+                {{ form.status }}
+            </div>
+            <br><br><br>
+            
+            
+            <input type="submit" value="Atualizar" class="btn btn-success ">
+            <div>
+    </form>
+    <br><br><br><br><br><br><br><br><br>     <br><br><br><br><br><br><br><br><br>           
+
+   
+
+    {% endblock %}

@@ -100,7 +100,12 @@ def os_detail(request, ordem_id):
     try:
         api_google_maps_key = CHAVE_API_GOOGLE
         user = request.user
-        ordem = get_object_or_404(OrdemDeServico, id=ordem_id, tecnico=user)
+        ordem = get_object_or_404(
+            OrdemDeServico,
+            id=ordem_id,
+            tecnico=user,
+            status__in=["Atenção", "Urgente", "Aguardando", "Concluído"],
+        )
         if ordem.status == "Concluído":
             return HttpResponse("Ordem de Serviço já finalizada")
         status_ordem = ordem.status
@@ -123,7 +128,11 @@ def a_caminho(request, ordem_id):
     try:
         api_google_maps_key = CHAVE_API_GOOGLE
         user = request.user
-        ordem = get_object_or_404(OrdemDeServico, id=ordem_id)
+        ordem = get_object_or_404(
+            OrdemDeServico,
+            id=ordem_id,
+            status__in=["Atenção", "Urgente", "Aguardando", "Concluído"],
+        )
         if ordem.status == "Concluído":
             return HttpResponse("Ordem de Serviço já finalizada")
         ordem.status_tecnico = "À Caminho"
@@ -141,7 +150,11 @@ def a_caminho(request, ordem_id):
 def no_local(request, ordem_id):
     try:
         user = request.user
-        ordem = get_object_or_404(OrdemDeServico, id=ordem_id)
+        ordem = get_object_or_404(
+            OrdemDeServico,
+            id=ordem_id,
+            status__in=["Atenção", "Urgente", "Aguardando", "Concluído"],
+        )
         if ordem.status == "Concluído":
             return HttpResponse("Ordem de Serviço já finalizada")
         ordem.status_tecnico = "No Local"
@@ -161,7 +174,11 @@ def finalizar_os(request, ordem_id):
         if request.method == "GET":
             historico_form = HistoricoOsFinalizadaForm()
             user = request.user
-            ordem = get_object_or_404(OrdemDeServico, id=ordem_id)
+            ordem = get_object_or_404(
+                OrdemDeServico,
+                id=ordem_id,
+                status__in=["Atenção", "Urgente", "Aguardando", "Concluído"],
+            )
             if ordem.status == "Concluído":
                 return HttpResponse("Ordem de Serviço já finalizada")
             ordem.status_tecnico = "Finalizado"
@@ -177,7 +194,11 @@ def finalizar_os(request, ordem_id):
             historico_form = HistoricoOsFinalizadaForm(request.POST, request.FILES)
             if historico_form.is_valid():
                 historico = historico_form.save(commit=False)
-                ordem = get_object_or_404(OrdemDeServico, id=ordem_id)
+                ordem = get_object_or_404(
+                    OrdemDeServico,
+                    id=ordem_id,
+                    status__in=["Atenção", "Urgente", "Aguardando", "Concluído"],
+                )
                 ordem.status = "Concluído"
                 ordem.save()
                 historico.ordem_de_servico = ordem
@@ -242,7 +263,9 @@ def dashboard(request):
 
         # cards hoje
         card_total_realizadas_hoje = OrdemDeServico.objects.filter(
-            previsao_chegada__date=today, tecnico=user
+            previsao_chegada__date=today,
+            tecnico=user,
+            status__in=["Atenção", "Urgente", "Aguardando", "Concluído"],
         )
 
         card_realizadas_hoje = OrdemDeServico.objects.filter(
@@ -256,7 +279,9 @@ def dashboard(request):
         )
         # card ontem
         card_total_realizadas_ontem = OrdemDeServico.objects.filter(
-            previsao_chegada__date=yesterday, tecnico=user
+            previsao_chegada__date=yesterday,
+            tecnico=user,
+            status__in=["Atenção", "Urgente", "Aguardando", "Concluído"],
         )
 
         card_realizadas_ontem = OrdemDeServico.objects.filter(
@@ -265,7 +290,9 @@ def dashboard(request):
 
         # card 2d
         card_total_realizadas_2d = OrdemDeServico.objects.filter(
-            previsao_chegada__date=day_before_yesterday, tecnico=user
+            previsao_chegada__date=day_before_yesterday,
+            tecnico=user,
+            status__in=["Atenção", "Urgente", "Aguardando", "Concluído"],
         )
 
         card_realizadas_2d = OrdemDeServico.objects.filter(
@@ -276,7 +303,9 @@ def dashboard(request):
 
         # card 3d
         card_total_realizadas_3d = OrdemDeServico.objects.filter(
-            previsao_chegada__date=three_days_ago, tecnico=user
+            previsao_chegada__date=three_days_ago,
+            tecnico=user,
+            status__in=["Atenção", "Urgente", "Aguardando", "Concluído"],
         )
 
         card_realizadas_3d = OrdemDeServico.objects.filter(
@@ -287,7 +316,9 @@ def dashboard(request):
 
         # card 4d
         card_total_realizadas_4d = OrdemDeServico.objects.filter(
-            previsao_chegada__date=four_days_ago, tecnico=user
+            previsao_chegada__date=four_days_ago,
+            tecnico=user,
+            status__in=["Atenção", "Urgente", "Aguardando", "Concluído"],
         )
 
         card_realizadas_4d = OrdemDeServico.objects.filter(
@@ -301,7 +332,6 @@ def dashboard(request):
             previsao_chegada__date=today,
             tecnico=user,
             status__in=["Atenção", "Urgente", "Aguardando"],
-            reagendar=False,
         )
 
         # Realizadas hoje
@@ -313,7 +343,9 @@ def dashboard(request):
 
         # Filtra todas as ordens de serviço de hoje
         all_ordens = OrdemDeServico.objects.filter(
-            tecnico=user, previsao_chegada__date=today
+            tecnico=user,
+            previsao_chegada__date=today,
+            status__in=["Atenção", "Urgente", "Aguardando", "Concluído"],
         )
 
         # Calcula o número de ordens de serviço para cada status
@@ -405,7 +437,10 @@ def tela_busca(request):
 
 @user_passes_test(is_tecnico)
 def tela_busca_resultado(request):
-    ordens = OrdemDeServico.objects.filter(tecnico=request.user)
+    ordens = OrdemDeServico.objects.filter(
+        tecnico=request.user,
+        status__in=["Atenção", "Urgente", "Aguardando", "Concluído"],
+    )
     if "buscar" in request.GET:
         buscar_ticket = request.GET["buscar"]
         if buscar_ticket:
@@ -421,7 +456,12 @@ def tela_busca_resultado(request):
 def os_detail2(request, ordem_id):
     try:
         user = request.user
-        ordem = get_object_or_404(OrdemDeServico, id=ordem_id, tecnico=user)
+        ordem = get_object_or_404(
+            OrdemDeServico,
+            id=ordem_id,
+            tecnico=user,
+            status__in=["Atenção", "Urgente", "Aguardando", "Concluído"],
+        )
         return render(
             request,
             "os_detail2.html",
@@ -435,7 +475,11 @@ def os_detail2(request, ordem_id):
 
 
 def atraso(request, ordem_id):
-    ordem = get_object_or_404(OrdemDeServico, id=ordem_id)
+    ordem = get_object_or_404(
+        OrdemDeServico,
+        id=ordem_id,
+        status__in=["Atenção", "Urgente", "Aguardando", "Concluído"],
+    )
     if request.method == "POST":
         form = AtrasoForm(request.POST, instance=ordem)
         if form.is_valid():
@@ -449,9 +493,14 @@ def atraso(request, ordem_id):
 
 
 def reagendar(request, ordem_id):
-    ordem = OrdemDeServico.objects.get(id=ordem_id)
+    ordem = OrdemDeServico.objects.get(
+        id=ordem_id,
+        status__in=["Atenção", "Urgente", "Aguardando", "Concluído"],
+    )
     if request.method == "POST":
-        ordem.reagendar = True
+        ordem.status = "Reagendar"
+        ordem.status_tecnico = "Aguardando Aceite"
+        ordem.vezes_reagendada += 1
         form = ReagendarForm(request.POST, instance=ordem)
         if form.is_valid():
             form.save()

@@ -7,4 +7,6 @@ urlpatterns = [
     path("formulario_os/", views.formulario_os, name="formulario_os"),
     path("formulario_cliente/", views.formulario_cliente, name="formulario_cliente"),
     path("ordens_em_atraso/", views.ordens_em_atraso, name="ordens_em_atraso"),
+    path("reagendar_staff/", views.reagendar_staff, name="reagendar_staff"),
+    path("update_reagendar/<int:ordem_id>", views.update_reagendar, name="update_reagendar"),
 ]

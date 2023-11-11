@@ -42,7 +42,7 @@ class OrdemDeServicoForm(forms.ModelForm):
         self.fields["status"].choices = [
             choice
             for choice in self.fields["status"].choices
-            if choice[0] != "Concluído"
+            if choice[0] not in ["Concluído", "Reagendada"]
         ]
 
         for field_name, field in self.fields.items():
@@ -144,10 +144,11 @@ class GerenteOrdemDeServicoForm(forms.ModelForm):
         model = OrdemDeServico
         exclude = [
             "endereco",
-            "staff",
             "status_tecnico",
             "atraso_em_minutos",
             "atraso_descricao",
+            "vezes_reagendada",
+            "descricao_reagendamento",
         ]
 
     def __init__(self, *args, **kwargs):
@@ -172,3 +173,24 @@ class GerenteOrdemDeServicoForm(forms.ModelForm):
         self.fields["material"].widget.attrs["placeholder"] = "Material"
         self.fields["equipamento"].widget.attrs["placeholder"] = "Equipamento"
         self.fields["contrato"].widget.attrs["placeholder"] = "Contrato"
+
+
+class ReagendarOrdemDeServicoForm(forms.ModelForm):
+    class Meta:
+        model = OrdemDeServico
+        fields = ["previsao_chegada", "previsao_execucao", "status"]
+
+    def __init__(self, *args, **kwargs):
+        super(ReagendarOrdemDeServicoForm, self).__init__(*args, **kwargs)
+
+        self.fields["status"].choices = [
+            choice
+            for choice in self.fields["status"].choices
+            if choice[0] not in ["Concluído", "Reagendar"]
+        ]
+
+        for field_name, field in self.fields.items():
+            if "class" in field.widget.attrs:
+                field.widget.attrs["class"] += " form-control"
+            else:
+                field.widget.attrs["class"] = "form-control"

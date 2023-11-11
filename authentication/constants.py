@@ -29,6 +29,7 @@ STATE_CHOICES = [
 ]
 
 STATUS_CHOICES = (
+    ("Reagendar", "Reagendar"),
     ("Aguardando", "Aguardando"),
     ("Atenção", "Atenção"),
     ("Urgente", "Urgente"),

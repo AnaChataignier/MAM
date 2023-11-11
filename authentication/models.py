@@ -48,3 +48,6 @@ class CustomUser(AbstractUser):
             self.foto.name = self.cliente_profile_filename(self.foto.name)
 
         super(CustomUser, self).save(*args, **kwargs)
+        
+    def __str__(self):
+        return f"{self.first_name} {self.last_name}"
