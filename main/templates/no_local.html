@@ -149,8 +149,11 @@
                 <a href="{% url 'finalizar_os' ordem.id %}" class="btn bg02 text-light w-100 box-shadow fs-6 font-bold mt-3"
                 >Finalizar</a
               >
-              <a href="{% url 'ocorrencias' ordem.id %}" class="btn bg04 text-light w-100 box-shadow fs-6 font-bold mt-3"
+                <a href="{% url 'ocorrencias' ordem.id %}" class="btn bg04 text-light w-100 box-shadow fs-6 font-bold mt-3"
                 >Adicionar Ocorrência</a
+              >
+              <a href="{% url 'reagendar' ordem.id %}" class="btn bg06 text-light w-100 box-shadow fs-6 font-bold mt-3"
+                >Reagendar</a
               >
              
               <button
@@ -160,6 +163,8 @@
                 Ajuda
              
               </div>
+              
+              
                 
              
             </div>
