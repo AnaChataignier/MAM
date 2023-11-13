@@ -24,6 +24,7 @@ urlpatterns = [
         "tela_busca_resultado/", views.tela_busca_resultado, name="tela_busca_resultado"
     ),
     path("reagendar/<int:ordem_id>", views.reagendar, name="reagendar"),
+    path("ocorrencias/<int:ordem_id>", views.ocorrencias, name="ocorrencias"),
 ]
 
 if settings.DEBUG:

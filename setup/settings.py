@@ -36,7 +36,8 @@ INSTALLED_APPS = [
     "rest_framework_simplejwt",
     "main",
     "django_extensions",
-    "staff"
+    "staff",
+    "gerente"
 ]
 
 MIDDLEWARE = [
@@ -54,7 +55,7 @@ ROOT_URLCONF = "setup.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        'DIRS': [os.path.join(BASE_DIR, 'gerente', 'templates')],
+        'DIRS': [],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [

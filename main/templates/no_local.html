@@ -74,14 +74,6 @@
                         <p><strong>Equipamento:</strong></p>
                         <p>{{ordem.equipamento}}</p>
                       </div>
-                      <div class="col-12 mt-2">
-                        <p><strong>Tempo Estimado:</strong></p>
-                        <p id="tempo-estimado"></p>
-                    </div>
-                    <div class="col-12 mt-2">
-                        <p><strong>Distância:</strong></p>
-                        <p id="distancia"></p>
-                    </div>
                     <div class="col-12 mt-2">
                         <p><strong>Status Técnico</strong></p>
                         <p>{{ ordem.status_tecnico }}</p>
@@ -97,19 +89,70 @@
                   </div>
                 </div>
               </div>
-              <br>
 
+
+
+
+
+
+
+              <div class="oc_ocorrencia">
+                <label class="mt-4 font-medium color04">Lista de Ocorrências:</label>
+                
+                {% for ocorrencia in ocorrencias %}
+                <div class="li_ocorrencia">
+                    <a class="btn btn-light" data-bs-toggle="collapse" href="#li_oc_{{ ocorrencia.id }}" role="button" aria-expanded="false" aria-controls="li_oc_{{ ocorrencia.id }}">
+                        <span class="icon_sm"><i class="bi bi-arrow-down-circle"></i></span>
+                        <div class="row">
+                            <div class="col-2">
+                                <div class="icon bg03_light">
+                                    <i class="bi bi-pencil-square text-dark"></i>
+                                </div>
+                            </div>
+                            <div class="col-10">
+                                <h5 class="font-bold color04">{{ ocorrencia.titulo }}</h5>
+                                <p class="font-regular color04">Clique para expandir</p>
+                            </div>
+                        </div>
+                    </a>
+                    <div class="collapse" id="li_oc_{{ ocorrencia.id }}">
+                        <div class="card card-body">
+                            <p>{{ ocorrencia.descricao }}</p>
+                            <hr>
+                            {% if ocorrencia.foto %}
+                                <img src="{{ ocorrencia.foto.url }}" alt="Foto da ocorrência">
+                            {% endif %}
+                            {% if ocorrencia.video %}
+                                <video width="100%" height="auto" controls class="box-shadow">
+                                    <source src="{{ ocorrencia.video.url }}" type="video/mp4">
+                                </video>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+             
+
+              </div>
+
+
+
+
+
+
+
+
+
+              <br>
+              
               <div class="oc_action">
                 <a href="{% url 'finalizar_os' ordem.id %}" class="btn bg02 text-light w-100 box-shadow fs-6 font-bold mt-3"
                 >Finalizar</a
               >
-              <button
-                id="btn-cheguei"
-                class="btn bg04 text-light w-100 box-shadow fs-6 font-bold mt-3"
-
+              <a href="{% url 'ocorrencias' ordem.id %}" class="btn bg04 text-light w-100 box-shadow fs-6 font-bold mt-3"
+                >Adicionar Ocorrência</a
               >
-                Reportar Ocorrência
-              </button>
+             
               <button
                 id="btn-problema"
                 class="btn bg05 text-light w-100 box-shadow fs-6 font-bold mt-3"

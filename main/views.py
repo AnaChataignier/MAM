@@ -1,5 +1,10 @@
 from django.shortcuts import render, redirect
-from staff.forms import HistoricoOsFinalizadaForm, AtrasoForm, ReagendarForm
+from staff.forms import (
+    HistoricoOsFinalizadaForm,
+    AtrasoForm,
+    ReagendarForm,
+    OcorrenciaForm,
+)
 from django.contrib.auth.decorators import user_passes_test
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
@@ -155,14 +160,20 @@ def no_local(request, ordem_id):
             id=ordem_id,
             status__in=["Atenção", "Urgente", "Aguardando", "Concluído"],
         )
+        
+        # Obtém as ocorrências associadas à ordem de serviço
+        ocorrencias = ordem.ocorrencias.all()
+
         if ordem.status == "Concluído":
             return HttpResponse("Ordem de Serviço já finalizada")
+        
         ordem.status_tecnico = "No Local"
         ordem.save()
+
         return render(
             request,
             "no_local.html",
-            {"ordem": ordem, "user": user},
+            {"ordem": ordem, "user": user, "ocorrencias": ocorrencias},
         )
     except Exception as e:
         return render(request, "error.html", {"error_message": str(e)})
@@ -516,3 +527,21 @@ def reagendar(request, ordem_id):
     else:
         form = ReagendarForm(instance=ordem)
     return render(request, "reagendar.html", {"ordem": ordem, "form": form})
+
+
+def ocorrencias(request, ordem_id):
+    ordem = get_object_or_404(OrdemDeServico, id=ordem_id)
+
+    if request.method == "POST":
+        form = OcorrenciaForm(request.POST, request.FILES)
+        if form.is_valid():
+            ocorrencia = form.save(commit=False)
+            ocorrencia.ordem_de_servico = ordem
+            ocorrencia.save()
+
+            redirect_url = reverse("no_local", args=[ordem.id])
+            return redirect(redirect_url)
+    else:
+        form = OcorrenciaForm()
+
+    return render(request, "ocorrencias.html", {"form": form, "ordem": ordem})

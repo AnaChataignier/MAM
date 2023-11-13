@@ -42,10 +42,10 @@ class OrdemDeServico(models.Model):
         max_length=10, choices=STATUS_CHOICES, default="Aguardando"
     )
     atraso_em_minutos = models.CharField(
-        max_length=50, null=True, blank=True, choices=ATRASO_CHOICES
+        max_length=50, choices=ATRASO_CHOICES
     )
-    atraso_descricao = models.TextField(max_length=400, null=True, blank=True)
-    descricao_reagendamento = models.TextField(max_length=400, null=True, blank=True)
+    atraso_descricao = models.TextField(max_length=400)
+    descricao_reagendamento = models.TextField(max_length=400)
     vezes_reagendada = models.IntegerField(default=0)
 
     def __str__(self):
@@ -60,7 +60,9 @@ class HistoricoOsFinalizada(models.Model):
     nome_responsavel = models.CharField(max_length=30, null=False)
     rg_responsavel = models.CharField(max_length=12, null=False)
     observacoes = models.TextField(max_length=400)
-    foto = models.ImageField(upload_to="img/historico_os_finalizada/")
+    foto = models.ImageField(
+        upload_to="img/historico_os_finalizada/", null=True, blank=True
+    )
 
     def cliente_ticket_filename(instance, filename):
         ext = filename.split(".")[-1]
@@ -71,3 +73,26 @@ class HistoricoOsFinalizada(models.Model):
         if self.foto:
             self.foto.name = self.cliente_ticket_filename(self.foto.name)
         super(HistoricoOsFinalizada, self).save(*args, **kwargs)
+
+
+class Ocorrencia(models.Model):
+    ordem_de_servico = models.ForeignKey(
+        OrdemDeServico, on_delete=models.CASCADE, related_name="ocorrencias"
+    )
+    titulo = models.CharField(max_length=100, validators=[MinLengthValidator(3)])
+    descricao = models.TextField(max_length=600)
+    data_criacao = models.DateTimeField(auto_now_add=True)
+    foto = models.ImageField(upload_to="img/ocorrencias/", null=True, blank=True)
+
+    def ticket_tecnico_ocorrencia(instance, filename):
+        ext = filename.split(".")[-1]
+        return f"{instance.ordem_de_servico.ticket} - {instance.ordem_de_servico.tecnico.first_name}{instance.ordem_de_servico.tecnico.first_name}.{ext}"
+
+    def save(self, *args, **kwargs):
+        # Chama a função que define o caminho da imagem
+        if self.foto:
+            self.foto.name = self.ticket_tecnico_ocorrencia(self.foto.name)
+        super(Ocorrencia, self).save(*args, **kwargs)
+
+    def __str__(self):
+        return f"Ocorrência para Ordem de Serviço #{self.ordem_de_servico.pk}"

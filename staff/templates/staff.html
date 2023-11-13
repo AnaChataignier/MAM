@@ -101,3 +101,13 @@ p{
     </div>
 </div>
     {% endblock %}
+
+    {%block script%}
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            setInterval(function () {
+                location.reload();
+            }, 30000);  // Recarrega a página a cada 30 segundos (ajuste conforme necessário)
+        });
+    </script>
+    {%endblock%}

@@ -1,5 +1,5 @@
 from django import forms
-from .models import OrdemDeServico, HistoricoOsFinalizada
+from .models import OrdemDeServico, HistoricoOsFinalizada, Ocorrencia
 from .models import Cliente
 from authentication.models import CustomUser
 
@@ -33,6 +33,8 @@ class OrdemDeServicoForm(forms.ModelForm):
             "status_tecnico",
             "atraso_em_minutos",
             "atraso_descricao",
+            "descricao_reagendamento",
+            "vezes_reagendada",
         ]
 
     def __init__(self, *args, **kwargs):
@@ -42,7 +44,7 @@ class OrdemDeServicoForm(forms.ModelForm):
         self.fields["status"].choices = [
             choice
             for choice in self.fields["status"].choices
-            if choice[0] not in ["Concluído", "Reagendada"]
+            if choice[0] not in ["Concluído", "Reagendar"]
         ]
 
         for field_name, field in self.fields.items():
@@ -194,3 +196,19 @@ class ReagendarOrdemDeServicoForm(forms.ModelForm):
                 field.widget.attrs["class"] += " form-control"
             else:
                 field.widget.attrs["class"] = "form-control"
+
+
+class OcorrenciaForm(forms.ModelForm):
+    class Meta:
+        model = Ocorrencia
+        fields = ["titulo", "descricao", "foto"]
+
+    def __init__(self, *args, **kwargs):
+        super(OcorrenciaForm, self).__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            field.widget.attrs["class"] = "form-control"
+
+        self.fields["titulo"].widget.attrs["placeholder"] = "Título"
+        self.fields["descricao"].widget.attrs[
+            "placeholder"
+        ] = "Descreva detalhadamente a ocorrência..."
