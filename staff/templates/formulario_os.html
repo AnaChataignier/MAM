@@ -49,15 +49,15 @@ h2{
 
 
     <br>
-    {% if messages %}
-    <br>
-    {% for message in messages %}
-        <div class="alert {{message.tags}}">
-            {{message}}
-        </div>
-    {% endfor %}
-    {% endif %}
     <form method="post" action="{% url 'formulario_os' %}">
+        {% if messages %}
+        <br>
+        {% for message in messages %}
+            <div class="alert {{message.tags}}">
+                {{message}}
+            </div>
+        {% endfor %}
+        {% endif %}
         {% csrf_token %}
         <div class="dentroform">
         <h2>Dados da OS </h2>

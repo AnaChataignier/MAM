@@ -23,16 +23,16 @@
       <section id="login_scr" class="bg01">
         <div class="container">
           <h1 class="font-bold">Mamminfo</h1>
-          {% if messages %}
-          <br>
-          {% for message in messages %}
-          <div class="alert alert-danger" role="alert">
-              {{ message }}
-            </div>
-          {% endfor %}
-      
-          {% endif %}
           <form id="form_login" method="post">
+            {% if messages %}
+            <br>
+            {% for message in messages %}
+            <div class="alert alert-danger" role="alert">
+                {{ message }}
+              </div>
+            {% endfor %}
+        
+            {% endif %}
             {% csrf_token %}
             <div class="mb-2">
               {{form.username}}
