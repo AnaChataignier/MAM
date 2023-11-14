@@ -1,4 +1,4 @@
-
+from django.contrib.messages import constants
 
 from pathlib import Path
 import os
@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     "main",
     "django_extensions",
     "staff",
-    "gerente"
+    "gerente",
 ]
 
 MIDDLEWARE = [
@@ -55,7 +55,7 @@ ROOT_URLCONF = "setup.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        'DIRS': [],
+        "DIRS": [],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -120,7 +120,6 @@ USE_TZ = True
 STATIC_URL = "/static/"
 
 STATICFILES_DIRS = [
-
     os.path.join(BASE_DIR, "main/templates/static"),
 ]
 
@@ -147,12 +146,11 @@ SIMPLE_JWT = {
     "SLIDING_TOKEN_LIFETIME": timedelta(days=1),
 }
 
-from django.contrib.messages import constants
 
 MESSAGE_TAGS = {
-    constants.DEBUG: 'alert-primary',
-    constants.ERROR: 'alert-danger',
-    constants.SUCCESS: 'alert-success',
-    constants.INFO: 'alert-info',
-    constants.WARNING: 'alert-warning',
+    constants.DEBUG: "alert-primary",
+    constants.ERROR: "alert-danger",
+    constants.SUCCESS: "alert-success",
+    constants.INFO: "alert-info",
+    constants.WARNING: "alert-warning",
 }
