@@ -49,6 +49,20 @@ def lista_os(request):
         atraso_em_minutos__gt=0,
     )
     atrasos = len(ordens_em_atraso.values())
+    data_atual = datetime.now().date()
+    todas_as_ordens = OrdemDeServico.objects.filter(staff=staff)
+    for ordem in todas_as_ordens:
+        data_previsao = ordem.previsao_chegada.date()
+        # Verifica as condições para alterar o status
+        if data_previsao < data_atual and ordem.status in [
+            "Atenção",
+            "Urgente",
+            "Aguardando",
+        ]:
+            # Atualiza o status e adiciona o motivo
+            ordem.status = "Reagendar"
+            ordem.descricao_reagendamento = "Ordem ignorada pelo técnico"
+            ordem.save()
     ordens = OrdemDeServico.objects.filter(
         staff=request.user,
         status__in=["Atenção", "Urgente", "Aguardando", "Concluído"],
@@ -221,7 +235,6 @@ def ordens_em_atraso(request):
     )
 
 
-
 @user_passes_test(is_staff)
 def reagendar_staff(request):
     staff = request.user
@@ -253,6 +266,10 @@ def reagendar_staff(request):
 @user_passes_test(is_staff)
 def update_reagendar(request, ordem_id):
     ordem = get_object_or_404(OrdemDeServico, id=ordem_id)
+    if ordem.atraso_em_minutos:
+        ordem.atraso_em_minutos = ''
+        ordem.atraso_descricao = ''
+        ordem.descricao_reagendamento = ''
 
     if request.method == "POST":
         form = ReagendarOrdemDeServicoForm(request.POST, instance=ordem)

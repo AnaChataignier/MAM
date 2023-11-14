@@ -34,6 +34,22 @@ def minhas_os(request):
         ordens_ativas_counter = OrdemDeServico.objects.filter(
             tecnico=user, status__in=["Atenção", "Urgente", "Aguardando", "Concluído"]
         )
+        data_atual = datetime.now().date()
+        todas_as_ordens = OrdemDeServico.objects.filter(tecnico=user)
+        for ordem in todas_as_ordens:
+            data_previsao = ordem.previsao_chegada.date()
+            # Verifica as condições para alterar o status
+            if data_previsao < data_atual and ordem.status in [
+                "Atenção",
+                "Urgente",
+                "Aguardando",
+            ]:
+                # Atualiza o status e adiciona o motivo
+                ordem.status = "Reagendar"
+                ordem.status_tecnico = "Aguardando Aceite"
+                ordem.vezes_reagendada += 1
+                ordem.descricao_reagendamento = "Ordem ignorada pelo técnico"
+                ordem.save()
         # Trate o filtro "Todas" separadamente
         if status_filter and status_filter != "Todas":
             ordens_ativas = ordens_ativas.filter(status=status_filter)
@@ -160,13 +176,13 @@ def no_local(request, ordem_id):
             id=ordem_id,
             status__in=["Atenção", "Urgente", "Aguardando", "Concluído"],
         )
-        
+
         # Obtém as ocorrências associadas à ordem de serviço
         ocorrencias = ordem.ocorrencias.all()
 
         if ordem.status == "Concluído":
             return HttpResponse("Ordem de Serviço já finalizada")
-        
+
         ordem.status_tecnico = "No Local"
         ordem.save()
 
