@@ -50,16 +50,16 @@ h2{
 
     <br>
     <form method="post" action="{% url 'formulario_os' %}">
-        {% if messages %}
-        <br>
-        {% for message in messages %}
-            <div class="alert {{message.tags}}">
-                {{message}}
-            </div>
-        {% endfor %}
-        {% endif %}
-        {% csrf_token %}
         <div class="dentroform">
+            {% if messages %}
+            <br>
+            {% for message in messages %}
+                <div class="alert {{message.tags}}">
+                    {{message}}
+                </div>
+            {% endfor %}
+            {% endif %}
+            {% csrf_token %}
         <h2>Dados da OS </h2>
         <div class="inputs">
         {{ os_form.ticket }}

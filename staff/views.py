@@ -19,6 +19,7 @@ def staff(request):
         staff=staff,
         atraso_em_minutos__isnull=False,
         status__in=["Atenção", "Urgente", "Aguardando"],
+        atraso_em_minutos__gt=0,
     )
     ordens_reagendar = OrdemDeServico.objects.filter(
         staff=staff,
@@ -45,6 +46,7 @@ def lista_os(request):
         staff=staff,
         atraso_em_minutos__isnull=False,
         status__in=["Atenção", "Urgente", "Aguardando"],
+        atraso_em_minutos__gt=0,
     )
     atrasos = len(ordens_em_atraso.values())
     ordens = OrdemDeServico.objects.filter(
@@ -196,15 +198,16 @@ def ordens_em_atraso(request):
     ordens_em_atraso = OrdemDeServico.objects.filter(
         staff=staff,
         atraso_em_minutos__isnull=False,
+        atraso_em_minutos__gt=0,
         status__in=["Atenção", "Urgente", "Aguardando"],
     )
-    atrasos = len(ordens_em_atraso.values())
-    staff = request.user
+    atrasos = ordens_em_atraso.count()
+
     ordens_reagendar = OrdemDeServico.objects.filter(
         staff=staff,
         status="Reagendar",
     )
-    total_reagendar = len(ordens_reagendar.values())
+    total_reagendar = ordens_reagendar.count()
 
     return render(
         request,
@@ -218,6 +221,7 @@ def ordens_em_atraso(request):
     )
 
 
+
 @user_passes_test(is_staff)
 def reagendar_staff(request):
     staff = request.user
@@ -225,6 +229,7 @@ def reagendar_staff(request):
         staff=staff,
         atraso_em_minutos__isnull=False,
         status__in=["Atenção", "Urgente", "Aguardando"],
+        atraso_em_minutos__gt=0,
     )
     atrasos = len(ordens_em_atraso.values())
     ordens_reagendar = OrdemDeServico.objects.filter(
