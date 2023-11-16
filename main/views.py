@@ -509,10 +509,6 @@ def atraso(request, ordem_id):
     )
     if request.method == "POST":
         form = AtrasoForm(request.POST, instance=ordem)
-        if ordem.status == "Aguardando":
-            ordem.status = "Atenção"
-        if ordem.status == "Atenção":
-            ordem.status = "Urgente"
         if form.is_valid():
             form.save()
             redirect_url = reverse("a_caminho", args=[ordem.id])
