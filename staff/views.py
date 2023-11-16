@@ -275,9 +275,8 @@ def update_reagendar(request, ordem_id):
         form = ReagendarOrdemDeServicoForm(request.POST, instance=ordem)
         if form.is_valid():
             form.save()
-            return redirect(
-                "reagendar_staff"
-            )  # Redireciona para a lista de ordens de serviço
+            messages.add_message(request, constants.SUCCESS, "Ordem reagendada com sucesso")
+            return redirect("reagendar_staff") 
     else:
         form = ReagendarOrdemDeServicoForm(instance=ordem)
 
