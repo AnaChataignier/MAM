@@ -17,7 +17,7 @@ from django.shortcuts import get_object_or_404
 from datetime import datetime
 from authentication.models import CustomUser
 from geopy.distance import geodesic
-from .helpers import obter_lat_lng_endereco, obter_lat_lng_tecnicos
+
 
 
 @user_passes_test(is_staff)
@@ -186,45 +186,6 @@ def lista_os_sem_tecnico(request):
     ordens = OrdemDeServico.objects.filter(staff=staff, tecnico__isnull=True)
     return render(request, "lista_os_sem_tecnico.html", {"ordens": ordens})
 
-
-@user_passes_test(is_staff)
-def update_tecnico(request, ordem_id):
-    ordem = get_object_or_404(OrdemDeServico, id=ordem_id)
-    lat_long_ordem = obter_lat_lng_endereco(ordem.endereco)
-    tecnicos = CustomUser.objects.filter(groups__name="Técnico")
-    # Calcular distância entre a ordem e cada técnico usando geopy
-    distancias = {}
-    for tecnico in tecnicos:
-        lat_long_tecnico = obter_lat_lng_endereco(tecnico.endereco)
-        distancia = geodesic(lat_long_ordem, lat_long_tecnico).kilometers
-        distancias[tecnico] = distancia
-
-    # Ordenar os técnicos pela distância e selecionar os 10 mais próximos
-    tecnicos_ordenados = sorted(distancias.items(), key=lambda x: x[1])[:10]
-
-    if request.method == "POST":
-        form = EscolherTecnicoForm(request.POST)
-        if form.is_valid():
-            ordem.tecnico = form.cleaned_data["tecnico"]
-            ordem.save()
-            messages.add_message(
-                request, constants.SUCCESS, "Técnico associado à ordem com sucesso!"
-            )
-            return redirect("formulario_os")
-    else:
-        form = EscolherTecnicoForm()
-
-    return render(
-        request,
-        "update_tecnico.html",
-        {
-            "form": form,
-            "ordem_id": ordem_id,
-            "ordem": ordem,
-            "tecnicos": tecnicos,
-            "tecnicos_proximos": tecnicos_ordenados,
-        },
-    )
 
 
 @user_passes_test(is_staff)
