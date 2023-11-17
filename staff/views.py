@@ -192,8 +192,6 @@ def update_tecnico(request, ordem_id):
     ordem = get_object_or_404(OrdemDeServico, id=ordem_id)
     lat_long_ordem = obter_lat_lng_endereco(ordem.endereco)
     tecnicos = CustomUser.objects.filter(groups__name="Técnico")
-    lat_long_tecnicos = obter_lat_lng_tecnicos()
-
     # Calcular distância entre a ordem e cada técnico usando geopy
     distancias = {}
     for tecnico in tecnicos:
