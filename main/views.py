@@ -442,41 +442,50 @@ def dashboard(request):
 
 @user_passes_test(is_tecnico)
 def tela_user(request):
-    if request.method == "POST":
-        user = request.user
-        form = TelaUserForm(request.POST, request.FILES, instance=request.user)
-        if form.is_valid():
-            form.save()
-            return redirect(
-                "dashboard"
-            )  # Redirecione para a página de perfil após a edição
-    else:
-        user = request.user
-        form = TelaUserForm(instance=request.user)
+    try:
+        if request.method == "POST":
+            user = request.user
+            form = TelaUserForm(request.POST, request.FILES, instance=request.user)
+            if form.is_valid():
+                form.save()
+                return redirect(
+                    "dashboard"
+                )  # Redirecione para a página de perfil após a edição
+        else:
+            user = request.user
+            form = TelaUserForm(instance=request.user)
 
-    return render(request, "tela_user.html", {"form": form, "user": user})
+        return render(request, "tela_user.html", {"form": form, "user": user})
+    except Exception as e:
+        return render(request, "error.html", {"error_message": str(e)})
 
 
 @user_passes_test(is_tecnico)
 def tela_busca(request):
-    return render(request, "tela_busca.html")
+    try:
+        return render(request, "tela_busca.html")
+    except Exception as e:
+        return render(request, "error.html", {"error_message": str(e)})
 
 
 @user_passes_test(is_tecnico)
 def tela_busca_resultado(request):
-    ordens = OrdemDeServico.objects.filter(
-        tecnico=request.user,
-        status__in=["Atenção", "Urgente", "Aguardando", "Concluído"],
-    )
-    if "buscar" in request.GET:
-        buscar_ticket = request.GET["buscar"]
-        if buscar_ticket:
-            ordens = ordens.filter(
-                Q(ticket__icontains=buscar_ticket)
-                | Q(cliente__nome__icontains=buscar_ticket)
-            )
+    try:
+        ordens = OrdemDeServico.objects.filter(
+            tecnico=request.user,
+            status__in=["Atenção", "Urgente", "Aguardando", "Concluído"],
+        )
+        if "buscar" in request.GET:
+            buscar_ticket = request.GET["buscar"]
+            if buscar_ticket:
+                ordens = ordens.filter(
+                    Q(ticket__icontains=buscar_ticket)
+                    | Q(cliente__nome__icontains=buscar_ticket)
+                )
 
-    return render(request, "tela_busca_resultado.html", {"ordens": ordens})
+        return render(request, "tela_busca_resultado.html", {"ordens": ordens})
+    except Exception as e:
+        return render(request, "error.html", {"error_message": str(e)})
 
 
 @user_passes_test(is_tecnico)
@@ -502,61 +511,70 @@ def os_detail2(request, ordem_id):
 
 
 def atraso(request, ordem_id):
-    ordem = get_object_or_404(
-        OrdemDeServico,
-        id=ordem_id,
-        status__in=["Atenção", "Urgente", "Aguardando"],
-    )
-    if request.method == "POST":
-        form = AtrasoForm(request.POST, instance=ordem)
-        if form.is_valid():
-            form.save()
-            redirect_url = reverse("a_caminho", args=[ordem.id])
-            messages.add_message(
-                request, constants.SUCCESS, "Atraso reportado"
-            )
-            return redirect(redirect_url)
-    else:
-        form = AtrasoForm(instance=ordem)
+    try:
+        ordem = get_object_or_404(
+            OrdemDeServico,
+            id=ordem_id,
+            status__in=["Atenção", "Urgente", "Aguardando"],
+        )
+        if request.method == "POST":
+            form = AtrasoForm(request.POST, instance=ordem)
+            if form.is_valid():
+                form.save()
+                redirect_url = reverse("a_caminho", args=[ordem.id])
+                messages.add_message(
+                    request, constants.SUCCESS, "Atraso reportado"
+                )
+                return redirect(redirect_url)
+        else:
+            form = AtrasoForm(instance=ordem)
 
-    return render(request, "atraso.html", {"form": form, "ordem": ordem})
+        return render(request, "atraso.html", {"form": form, "ordem": ordem})
+    except Exception as e:
+        return render(request, "error.html", {"error_message": str(e)})
 
 
 def reagendar(request, ordem_id):
-    ordem = OrdemDeServico.objects.get(
-        id=ordem_id,
-        status__in=["Atenção", "Urgente", "Aguardando"],
-    )
-    if request.method == "POST":
-        ordem.status = "Reagendar"
-        ordem.status_tecnico = "Aguardando Aceite"
-        ordem.vezes_reagendada += 1
-        form = ReagendarForm(request.POST, instance=ordem)
-        if form.is_valid():
-            form.save()
-            messages.add_message(
-                request, constants.SUCCESS, "Ordem enviada para reagendamento"
-            )
-            redirect_url = reverse("dashboard")
-            return redirect(redirect_url)
-    else:
-        form = ReagendarForm(instance=ordem)
-    return render(request, "reagendar.html", {"ordem": ordem, "form": form})
+    try:
+        ordem = OrdemDeServico.objects.get(
+            id=ordem_id,
+            status__in=["Atenção", "Urgente", "Aguardando"],
+        )
+        if request.method == "POST":
+            ordem.status = "Reagendar"
+            ordem.status_tecnico = "Aguardando Aceite"
+            ordem.vezes_reagendada += 1
+            form = ReagendarForm(request.POST, instance=ordem)
+            if form.is_valid():
+                form.save()
+                messages.add_message(
+                    request, constants.SUCCESS, "Ordem enviada para reagendamento"
+                )
+                redirect_url = reverse("dashboard")
+                return redirect(redirect_url)
+        else:
+            form = ReagendarForm(instance=ordem)
+        return render(request, "reagendar.html", {"ordem": ordem, "form": form})
+    except Exception as e:
+        return render(request, "error.html", {"error_message": str(e)})
 
 
 def ocorrencias(request, ordem_id):
-    ordem = get_object_or_404(OrdemDeServico, id=ordem_id)
+    try:
+        ordem = get_object_or_404(OrdemDeServico, id=ordem_id)
 
-    if request.method == "POST":
-        form = OcorrenciaForm(request.POST, request.FILES)
-        if form.is_valid():
-            ocorrencia = form.save(commit=False)
-            ocorrencia.ordem_de_servico = ordem
-            ocorrencia.save()
+        if request.method == "POST":
+            form = OcorrenciaForm(request.POST, request.FILES)
+            if form.is_valid():
+                ocorrencia = form.save(commit=False)
+                ocorrencia.ordem_de_servico = ordem
+                ocorrencia.save()
 
-            redirect_url = reverse("no_local", args=[ordem.id])
-            return redirect(redirect_url)
-    else:
-        form = OcorrenciaForm()
+                redirect_url = reverse("no_local", args=[ordem.id])
+                return redirect(redirect_url)
+        else:
+            form = OcorrenciaForm()
 
-    return render(request, "ocorrencias.html", {"form": form, "ordem": ordem})
+        return render(request, "ocorrencias.html", {"form": form, "ordem": ordem})
+    except Exception as e:
+        return render(request, "error.html", {"error_message": str(e)})

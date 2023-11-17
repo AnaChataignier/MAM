@@ -51,6 +51,14 @@
     color: orange;
     font-size: 15px;
   }
+
+  .loading{
+text-align: center;
+  }
+  .loading i{
+    font-size: 80px;
+    color: orange;
+  }
 {% endblock %}
 
 {% block rest %}
@@ -64,8 +72,12 @@
           <!-- OS Urgente -->
           <label class="mt-2 font-medium color04">Completar cadastro das seguintes ordens:</label>
           <hr>
+          <div id="loading-indicator" style="display: none;" class="loading">
+            <!-- Adicione aqui o indicador de carregamento, como um spinner ou texto -->
+            <i class="bi bi-hourglass-split"></i>
+          </div>
           {% for ordem in ordens %}
-          <a href="{% url 'update_tecnico' ordem.id %}">
+          <a href="{% url 'update_tecnico' ordem.id %}" id="a">
             <div class="oc_lista_item">
               <div class="row">
                 <div class="col-2 col-md-1">
@@ -123,4 +135,24 @@
     
     </div>
   </section>
+  {% block script %}
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Quando o documento HTML é carregado, esconde o indicador de carregamento
+      document.getElementById('loading-indicator').style.display = 'none';
+  
+      // Ao clicar no botão para carregar a lista de ordens de serviço
+      document.getElementById('a').addEventListener('click', function() {
+        // Mostra o indicador de carregamento
+        document.getElementById('loading-indicator').style.display = 'block';
+  
+        // Supondo que você está fazendo uma requisição assíncrona para carregar os dados, após um certo tempo, oculta o indicador de carregamento
+        setTimeout(function() {
+          document.getElementById('loading-indicator').style.display = 'none';
+        }, 3000); // Tempo de exemplo: 3000 milissegundos = 3 segundos. Você pode ajustar esse valor conforme necessário.
+      });
+    });
+  </script>
+
+  {% endblock %}
 {% endblock %}

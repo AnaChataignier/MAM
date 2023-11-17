@@ -22,22 +22,21 @@ from staff.helpers import obter_lat_lng_endereco, obter_lat_lng_tecnicos
 
 @user_passes_test(is_staff)
 def staff(request):
-    staff = request.user
-    ordens_em_atraso = OrdemDeServico.objects.filter(
-        staff=staff,
-        atraso_em_minutos__isnull=False,
-        status__in=["Atenção", "Urgente", "Aguardando"],
-        atraso_em_minutos__gt=0,
-    )
-    ordens_reagendar = OrdemDeServico.objects.filter(
-        staff=staff,
-        status="Reagendar",
-    )
-    total_reagendar = len(ordens_reagendar.values())
-
-    atrasos = len(ordens_em_atraso.values())
-
     try:
+        staff = request.user
+        ordens_em_atraso = OrdemDeServico.objects.filter(
+            staff=staff,
+            atraso_em_minutos__isnull=False,
+            status__in=["Atenção", "Urgente", "Aguardando"],
+            atraso_em_minutos__gt=0,
+        )
+        ordens_reagendar = OrdemDeServico.objects.filter(
+            staff=staff,
+            status="Reagendar",
+        )
+        total_reagendar = len(ordens_reagendar.values())
+
+        atrasos = len(ordens_em_atraso.values())
         return render(
             request,
             "staff.html",
@@ -49,70 +48,73 @@ def staff(request):
 
 @user_passes_test(is_staff)
 def lista_os(request):
-    staff = request.user
-    ordens_em_atraso = OrdemDeServico.objects.filter(
-        staff=staff,
-        atraso_em_minutos__isnull=False,
-        status__in=["Atenção", "Urgente", "Aguardando"],
-        atraso_em_minutos__gt=0,
-    )
-    atrasos = len(ordens_em_atraso.values())
-    data_atual = datetime.now().date()
-    todas_as_ordens = OrdemDeServico.objects.filter(staff=staff)
-    for ordem in todas_as_ordens:
-        data_previsao = ordem.previsao_chegada.date()
-        # Verifica as condições para alterar o status
-        if data_previsao < data_atual and ordem.status in [
-            "Atenção",
-            "Urgente",
-            "Aguardando",
-        ]:
-            # Atualiza o status e adiciona o motivo
-            ordem.status = "Reagendar"
-            ordem.descricao_reagendamento = "Ordem ignorada pelo técnico"
-            ordem.save()
-    ordens = OrdemDeServico.objects.filter(
-        staff=request.user,
-        status__in=["Atenção", "Urgente", "Aguardando", "Concluído"],
-    )
-    ordens_reagendar = OrdemDeServico.objects.filter(
-        staff=staff,
-        status="Reagendar",
-    )
-    total_reagendar = len(ordens_reagendar.values())
+    try:
+        staff = request.user
+        ordens_em_atraso = OrdemDeServico.objects.filter(
+            staff=staff,
+            atraso_em_minutos__isnull=False,
+            status__in=["Atenção", "Urgente", "Aguardando"],
+            atraso_em_minutos__gt=0,
+        )
+        atrasos = len(ordens_em_atraso.values())
+        data_atual = datetime.now().date()
+        todas_as_ordens = OrdemDeServico.objects.filter(staff=staff)
+        for ordem in todas_as_ordens:
+            data_previsao = ordem.previsao_chegada.date()
+            # Verifica as condições para alterar o status
+            if data_previsao < data_atual and ordem.status in [
+                "Atenção",
+                "Urgente",
+                "Aguardando",
+            ]:
+                # Atualiza o status e adiciona o motivo
+                ordem.status = "Reagendar"
+                ordem.descricao_reagendamento = "Ordem ignorada pelo técnico"
+                ordem.save()
+        ordens = OrdemDeServico.objects.filter(
+            staff=request.user,
+            status__in=["Atenção", "Urgente", "Aguardando", "Concluído"],
+        )
+        ordens_reagendar = OrdemDeServico.objects.filter(
+            staff=staff,
+            status="Reagendar",
+        )
+        total_reagendar = len(ordens_reagendar.values())
 
-    # Verifique se o parâmetro de pesquisa "buscar" está presente na solicitação GET
-    filtros = request.GET.get("buscar")
+        # Verifique se o parâmetro de pesquisa "buscar" está presente na solicitação GET
+        filtros = request.GET.get("buscar")
 
-    if filtros:
-        try:
-            data_filtrada = datetime.strptime(filtros, "%d-%m-%Y")
-            ordens = ordens.filter(previsao_chegada__date=data_filtrada.date())
-        except ValueError:
-            # Lidar com o caso em que o filtro não é uma data válida
-            pass
-        else:
-            # Se a conversão for bem-sucedida, filtre por data e ignore outros filtros
-            items_per_page = 10
-            paginator = Paginator(ordens, items_per_page)
-            page = request.GET.get("page")
-
+        if filtros:
             try:
-                ordens = paginator.page(page)
-            except PageNotAnInteger:
-                ordens = paginator.page(1)
-            except EmptyPage:
-                ordens = paginator.page(paginator.num_pages)
+                data_filtrada = datetime.strptime(filtros, "%d-%m-%Y")
+                ordens = ordens.filter(previsao_chegada__date=data_filtrada.date())
+            except ValueError:
+                # Lidar com o caso em que o filtro não é uma data válida
+                pass
+            else:
+                # Se a conversão for bem-sucedida, filtre por data e ignore outros filtros
+                items_per_page = 10
+                paginator = Paginator(ordens, items_per_page)
+                page = request.GET.get("page")
 
-            return render(
-                request,
-                "lista_os.html",
-                {
-                    "ordens": ordens,
-                    "atrasos": atrasos,
-                    "total_reagendar": total_reagendar,
-                },
-            )
+                try:
+                    ordens = paginator.page(page)
+                except PageNotAnInteger:
+                    ordens = paginator.page(1)
+                except EmptyPage:
+                    ordens = paginator.page(paginator.num_pages)
+
+                return render(
+                    request,
+                    "lista_os.html",
+                    {
+                        "ordens": ordens,
+                        "atrasos": atrasos,
+                        "total_reagendar": total_reagendar,
+                    },
+                )
+    except Exception as e:
+        return render(request, "error.html", {"error_message": str(e)})
 
     # Se não houver filtro por data, continue com os outros filtros
     if filtros:
@@ -181,50 +183,56 @@ def formulario_os(request):
 
 
 def update_tecnico(request, ordem_id):
-    ordem = get_object_or_404(OrdemDeServico, id=ordem_id)
-    lat_long_ordem = obter_lat_lng_endereco(ordem.endereco)
-    tecnicos = CustomUser.objects.filter(groups__name="Técnico")
+    try:
+        ordem = get_object_or_404(OrdemDeServico, id=ordem_id)
+        lat_long_ordem = obter_lat_lng_endereco(ordem.endereco)
+        tecnicos = CustomUser.objects.filter(groups__name="Técnico")
 
-    # Calcular distância entre a ordem e cada técnico usando geopy
-    distancias = {}
-    for tecnico in tecnicos:
-        lat_long_tecnico = obter_lat_lng_endereco(tecnico.endereco)
-        distancia = geodesic(lat_long_ordem, lat_long_tecnico).kilometers
-        distancias[tecnico] = distancia
+        # Calcular distância entre a ordem e cada técnico usando geopy
+        distancias = {}
+        for tecnico in tecnicos:
+            lat_long_tecnico = obter_lat_lng_endereco(tecnico.endereco)
+            distancia = geodesic(lat_long_ordem, lat_long_tecnico).kilometers
+            distancias[tecnico] = distancia
 
-    # Ordenar os técnicos pela distância e selecionar os 10 mais próximos
-    tecnicos_ordenados = sorted(distancias.items(), key=lambda x: x[1])[:10]
+        # Ordenar os técnicos pela distância e selecionar os 10 mais próximos
+        tecnicos_ordenados = sorted(distancias.items(), key=lambda x: x[1])[:10]
 
-    if request.method == "POST":
-        form = EscolherTecnicoForm(request.POST)
-        if form.is_valid():
-            ordem.tecnico = form.cleaned_data["tecnico"]
-            ordem.save()
-            messages.add_message(
-                request, constants.SUCCESS, "Técnico associado à ordem com sucesso!"
-            )
-            return redirect("formulario_os")
-    else:
-        form = EscolherTecnicoForm()
+        if request.method == "POST":
+            form = EscolherTecnicoForm(request.POST)
+            if form.is_valid():
+                ordem.tecnico = form.cleaned_data["tecnico"]
+                ordem.save()
+                messages.add_message(
+                    request, constants.SUCCESS, "Técnico associado à ordem com sucesso!"
+                )
+                return redirect("formulario_os")
+        else:
+            form = EscolherTecnicoForm()
 
-    return render(
-        request,
-        "update_tecnico.html",
-        {
-            "form": form,
-            "ordem_id": ordem_id,
-            "ordem": ordem,
-            "tecnicos": tecnicos,
-            "tecnicos_proximos": tecnicos_ordenados,
-        },
-    )
+        return render(
+            request,
+            "update_tecnico.html",
+            {
+                "form": form,
+                "ordem_id": ordem_id,
+                "ordem": ordem,
+                "tecnicos": tecnicos,
+                "tecnicos_proximos": tecnicos_ordenados,
+            },
+        )
+    except Exception as e:
+        return render(request, "error.html", {"error_message": str(e)})
 
 
 @user_passes_test(is_staff)
 def lista_os_sem_tecnico(request):
-    staff = request.user
-    ordens = OrdemDeServico.objects.filter(staff=staff, tecnico__isnull=True)
-    return render(request, "lista_os_sem_tecnico.html", {"ordens": ordens})
+    try:
+        staff = request.user
+        ordens = OrdemDeServico.objects.filter(staff=staff, tecnico__isnull=True)
+        return render(request, "lista_os_sem_tecnico.html", {"ordens": ordens})
+    except Exception as e:
+        return render(request, "error.html", {"error_message": str(e)})
 
 
 @user_passes_test(is_staff)
@@ -259,79 +267,88 @@ def formulario_cliente(request):
 
 @user_passes_test(is_staff)
 def ordens_em_atraso(request):
-    # Recupere todas as ordens de serviço do usuário staff logado que tenham atraso
-    staff = request.user
-    ordens_em_atraso = OrdemDeServico.objects.filter(
-        staff=staff,
-        atraso_em_minutos__isnull=False,
-        atraso_em_minutos__gt=0,
-        status__in=["Atenção", "Urgente", "Aguardando"],
-    )
-    atrasos = ordens_em_atraso.count()
+    try:
+        # Recupere todas as ordens de serviço do usuário staff logado que tenham atraso
+        staff = request.user
+        ordens_em_atraso = OrdemDeServico.objects.filter(
+            staff=staff,
+            atraso_em_minutos__isnull=False,
+            atraso_em_minutos__gt=0,
+            status__in=["Atenção", "Urgente", "Aguardando"],
+        )
+        atrasos = ordens_em_atraso.count()
 
-    ordens_reagendar = OrdemDeServico.objects.filter(
-        staff=staff,
-        status="Reagendar",
-    )
-    total_reagendar = ordens_reagendar.count()
+        ordens_reagendar = OrdemDeServico.objects.filter(
+            staff=staff,
+            status="Reagendar",
+        )
+        total_reagendar = ordens_reagendar.count()
 
-    return render(
-        request,
-        "ordens_em_atraso.html",
-        {
-            "ordens_em_atraso": ordens_em_atraso,
-            "staff": staff,
-            "atrasos": atrasos,
-            "total_reagendar": total_reagendar,
-        },
-    )
+        return render(
+            request,
+            "ordens_em_atraso.html",
+            {
+                "ordens_em_atraso": ordens_em_atraso,
+                "staff": staff,
+                "atrasos": atrasos,
+                "total_reagendar": total_reagendar,
+            },
+        )
+    except Exception as e:
+        return render(request, "error.html", {"error_message": str(e)})
 
 
 @user_passes_test(is_staff)
 def reagendar_staff(request):
-    staff = request.user
-    ordens_em_atraso = OrdemDeServico.objects.filter(
-        staff=staff,
-        atraso_em_minutos__isnull=False,
-        status__in=["Atenção", "Urgente", "Aguardando"],
-        atraso_em_minutos__gt=0,
-    )
-    atrasos = len(ordens_em_atraso.values())
-    ordens_reagendar = OrdemDeServico.objects.filter(
-        staff=staff,
-        status="Reagendar",
-    )
-    total_reagendar = len(ordens_reagendar.values())
-    print("weeee", ordens_reagendar)
-    return render(
-        request,
-        "reagendar_staff.html",
-        {
-            "ordens_reagendar": ordens_reagendar,
-            "staff": staff,
-            "total_reagendar": total_reagendar,
-            "atrasos": atrasos,
-        },
-    )
+    try:
+        staff = request.user
+        ordens_em_atraso = OrdemDeServico.objects.filter(
+            staff=staff,
+            atraso_em_minutos__isnull=False,
+            status__in=["Atenção", "Urgente", "Aguardando"],
+            atraso_em_minutos__gt=0,
+        )
+        atrasos = len(ordens_em_atraso.values())
+        ordens_reagendar = OrdemDeServico.objects.filter(
+            staff=staff,
+            status="Reagendar",
+        )
+        total_reagendar = len(ordens_reagendar.values())
+        print("weeee", ordens_reagendar)
+        return render(
+            request,
+            "reagendar_staff.html",
+            {
+                "ordens_reagendar": ordens_reagendar,
+                "staff": staff,
+                "total_reagendar": total_reagendar,
+                "atrasos": atrasos,
+            },
+        )
+    except Exception as e:
+        return render(request, "error.html", {"error_message": str(e)})
 
 
 @user_passes_test(is_staff)
 def update_reagendar(request, ordem_id):
-    ordem = get_object_or_404(OrdemDeServico, id=ordem_id)
-    if ordem.atraso_em_minutos:
-        ordem.atraso_em_minutos = ""
-        ordem.atraso_descricao = ""
-        ordem.descricao_reagendamento = ""
+    try:
+        ordem = get_object_or_404(OrdemDeServico, id=ordem_id)
+        if ordem.atraso_em_minutos:
+            ordem.atraso_em_minutos = ""
+            ordem.atraso_descricao = ""
+            ordem.descricao_reagendamento = ""
 
-    if request.method == "POST":
-        form = ReagendarOrdemDeServicoForm(request.POST, instance=ordem)
-        if form.is_valid():
-            form.save()
-            messages.add_message(
-                request, constants.SUCCESS, "Ordem reagendada com sucesso"
-            )
-            return redirect("reagendar_staff")
-    else:
-        form = ReagendarOrdemDeServicoForm(instance=ordem)
+        if request.method == "POST":
+            form = ReagendarOrdemDeServicoForm(request.POST, instance=ordem)
+            if form.is_valid():
+                form.save()
+                messages.add_message(
+                    request, constants.SUCCESS, "Ordem reagendada com sucesso"
+                )
+                return redirect("reagendar_staff")
+        else:
+            form = ReagendarOrdemDeServicoForm(instance=ordem)
 
-    return render(request, "update_reagendar.html", {"form": form, "ordem": ordem})
+        return render(request, "update_reagendar.html", {"form": form, "ordem": ordem})
+    except Exception as e:
+        return render(request, "error.html", {"error_message": str(e)})

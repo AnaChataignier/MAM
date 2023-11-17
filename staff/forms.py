@@ -208,6 +208,7 @@ class EscolherTecnicoForm(forms.ModelForm):
         super(EscolherTecnicoForm, self).__init__(*args, **kwargs)
         self.fields["tecnico"].widget = forms.Select(attrs={"class": "form-control"})
         self.fields["tecnico"].queryset = self.get_tecnicos_queryset()
+        self.fields["tecnico"].empty_label = "Escolha um técnico"
 
     def get_tecnicos_queryset(self):
         group_tecnico = Group.objects.get(name="Técnico")

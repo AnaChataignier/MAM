@@ -17,7 +17,7 @@
 
 
 #id_tecnico {
-  width: 350px;
+  width: 300px;
   padding: .375rem .75rem;
   font-size: 1rem;
   line-height: 1.5;
@@ -36,13 +36,16 @@ h2{
   }
   h3{
     color:orange;
+    font-size: 14px;
   }
 
   hr{
     color:orange;
   }
   p{
-    color
+    color:orange;
+    font-size: 14px;
+    text-align: center;
   }
 {% endblock %}
 {% block rest %}
@@ -65,7 +68,7 @@ h2{
                 {% endfor %}
             </ol>
         {% endif %}
-            <h2>Escolha um técnico para concluir o cadastro:</h2>
+            <h3>Escolha um técnico para concluir o cadastro:</h3>
             <div class="inputs">
                 {{ form.as_p }}
             </div>
