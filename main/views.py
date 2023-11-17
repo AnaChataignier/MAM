@@ -512,6 +512,9 @@ def atraso(request, ordem_id):
         if form.is_valid():
             form.save()
             redirect_url = reverse("a_caminho", args=[ordem.id])
+            messages.add_message(
+                request, constants.SUCCESS, "Atraso reportado"
+            )
             return redirect(redirect_url)
     else:
         form = AtrasoForm(instance=ordem)
