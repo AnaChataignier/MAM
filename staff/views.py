@@ -3,7 +3,12 @@ from main.helpers import is_staff
 from django.contrib.auth.decorators import user_passes_test
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .models import OrdemDeServico
-from .forms import OrdemDeServicoForm, ClienteForm, ReagendarOrdemDeServicoForm
+from .forms import (
+    OrdemDeServicoForm,
+    ClienteForm,
+    ReagendarOrdemDeServicoForm,
+    EscolherTecnicoForm,
+)
 from django.contrib import messages
 from django.contrib.messages import constants
 from authentication.forms import EnderecoForm
@@ -112,9 +117,9 @@ def lista_os(request):
             Q(ticket__icontains=filtros)
             | Q(cliente__nome__icontains=filtros)
             | Q(status__icontains=filtros)
-            | Q(cliente__endereco__cidade__icontains=filtros)
-            | Q(cliente__endereco__rua__icontains=filtros)
-            | Q(cliente__endereco__cep__icontains=filtros)
+            | Q(endereco__cidade__icontains=filtros)
+            | Q(endereco__rua__icontains=filtros)
+            | Q(endereco__cep__icontains=filtros)
         )
 
     items_per_page = 10
@@ -144,25 +149,30 @@ def formulario_os(request):
     try:
         if request.method == "POST":
             os_form = OrdemDeServicoForm(request.POST)
-            if os_form.is_valid():
+            endereco_form = EnderecoForm(request.POST)
+            if os_form.is_valid() and endereco_form.is_valid():
                 ordem_de_servico = os_form.save(commit=False)
                 ordem_de_servico.staff = request.user
+                endereco = endereco_form.save()
+                ordem_de_servico.endereco = endereco
                 ordem_de_servico.status_tecnico = "Aguardando Aceite"
                 ordem_de_servico.save()
                 messages.add_message(
-                    request, constants.SUCCESS, "Dados cadastrados com sucesso"
+                    request, constants.SUCCESS, "Dados salvos!"
                 )
-                return redirect("formulario_os")
+                return redirect("lista_os_sem_tecnico")
             else:
                 messages.add_message(request, constants.ERROR, "Formulário inválido")
                 return redirect("formulario_os")
         else:
             os_form = OrdemDeServicoForm()
+            endereco_form = EnderecoForm()
         return render(
             request,
             "formulario_os.html",
             {
                 "os_form": os_form,
+                "endereco_form": endereco_form,
             },
         )
     except Exception as e:
@@ -170,18 +180,43 @@ def formulario_os(request):
 
 
 @user_passes_test(is_staff)
+def lista_os_sem_tecnico(request):
+    staff = request.user
+    ordens = OrdemDeServico.objects.filter(staff=staff, tecnico__isnull=True)
+    return render(request, "lista_os_sem_tecnico.html", {"ordens": ordens})
+
+@user_passes_test(is_staff)
+def update_tecnico(request, ordem_id):
+    ordem = get_object_or_404(OrdemDeServico, id=ordem_id)
+    if request.method == "POST":
+        form = EscolherTecnicoForm(request.POST, instance=ordem)
+        if form.is_valid():
+            form.save()
+            messages.add_message(
+                request, constants.SUCCESS, "Ordem cadastrada com sucesso!"
+            )
+            return redirect("formulario_os")
+    else:
+        form = EscolherTecnicoForm(instance=ordem)
+
+    return render(
+        request,
+        "update_tecnico.html",
+        {
+            "form": form,
+        },
+    )
+
+
+@user_passes_test(is_staff)
 def formulario_cliente(request):
     try:
         if request.method == "POST":
             cliente_form = ClienteForm(request.POST)
-            endereco_form = EnderecoForm(request.POST)
 
-            if cliente_form.is_valid() and endereco_form.is_valid():
+            if cliente_form.is_valid():
                 cliente = cliente_form.save(commit=False)
-                endereco = endereco_form.save()
-                cliente.endereco = endereco
                 cliente.save()
-
                 messages.add_message(
                     request, constants.SUCCESS, "Dados cadastrados com sucesso"
                 )
@@ -191,14 +226,12 @@ def formulario_cliente(request):
 
         else:
             cliente_form = ClienteForm()
-            endereco_form = EnderecoForm()
 
         return render(
             request,
             "formulario_cliente.html",
             {
                 "cliente_form": cliente_form,
-                "endereco_form": endereco_form,
             },
         )
     except Exception as e:
@@ -267,16 +300,18 @@ def reagendar_staff(request):
 def update_reagendar(request, ordem_id):
     ordem = get_object_or_404(OrdemDeServico, id=ordem_id)
     if ordem.atraso_em_minutos:
-        ordem.atraso_em_minutos = ''
-        ordem.atraso_descricao = ''
-        ordem.descricao_reagendamento = ''
+        ordem.atraso_em_minutos = ""
+        ordem.atraso_descricao = ""
+        ordem.descricao_reagendamento = ""
 
     if request.method == "POST":
         form = ReagendarOrdemDeServicoForm(request.POST, instance=ordem)
         if form.is_valid():
             form.save()
-            messages.add_message(request, constants.SUCCESS, "Ordem reagendada com sucesso")
-            return redirect("reagendar_staff") 
+            messages.add_message(
+                request, constants.SUCCESS, "Ordem reagendada com sucesso"
+            )
+            return redirect("reagendar_staff")
     else:
         form = ReagendarOrdemDeServicoForm(instance=ordem)
 

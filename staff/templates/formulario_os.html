@@ -49,7 +49,8 @@ h2{
 
 
     <br>
-    <form method="post" action="{% url 'formulario_os' %}">
+    <form method="POST" action="{% url 'formulario_os' %}">
+        {% csrf_token %}
         <div class="dentroform">
             {% if messages %}
             <br>
@@ -59,13 +60,9 @@ h2{
                 </div>
             {% endfor %}
             {% endif %}
-            {% csrf_token %}
         <h2>Dados da OS </h2>
         <div class="inputs">
         {{ os_form.ticket }}
-        </div>
-        <div class="inputs">
-        {{ os_form.tecnico }}
         </div>
         <div class="inputs">
         {{ os_form.descricao }}
@@ -94,13 +91,71 @@ h2{
         <div class="inputs">
         {{ os_form.status }}
         </div>
-              
+        <h2>Endereço da OS </h2>
+        <div class="inputs">
+            {{ endereco_form.cep }}
+        </div>
+        <div class="inputs">
+            {{ endereco_form.estado }}
+        </div>
+        <div class="inputs">
+            {{ endereco_form.cidade }}
+        </div>
+        <div class="inputs">
+            {{ endereco_form.bairro }}
+        </div>
+        <div class="inputs">
+            {{ endereco_form.rua}}
+        </div>
+        <div class="inputs">
+            {{ endereco_form.numero}}
+        </div>
+        <div class="inputs">
+            {{ endereco_form.complemento }}
+        </div>
 
 
         <input type="submit" value="Cadastrar" class="btn btn-success">
         <div>
         </form>
         <hr>
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                var cepField = document.querySelector("[name='cep']");
+                if (cepField) {
+                    cepField.addEventListener("blur", function () {
+                        var cep = this.value;
+                        var url = `http://viacep.com.br/ws/${cep}/json/`;
+        
+                        fetch(url)
+                            .then((response) => response.json())
+                            .then((data) => {
+                                document.querySelector("[name='rua']").value = data.logradouro;
+                                document.querySelector("[name='bairro']").value = data.bairro;
+                                document.querySelector("[name='cidade']").value = data.localidade;
+                                document.querySelector("[name='estado']").value = data.uf;
+                            });
+                    });
+                }
+            });
+        </script>
         
 
+{% endblock %}
+{% block script2 %}
+<script>
+    $(document).ready(function () {
+        // Aplicar a máscara de CEP (#####-###) apenas ao campo CEP com o id 'id_cep'
+        $("#id_cep").mask("00000-000");
+    });
+    $(document).ready(function () {
+        $("#id_telefone1").mask("(00) 00000-0000");
+    });
+    $(document).ready(function () {
+        $("#id_telefone2").mask("(00) 00000-0000");
+    });
+    $(document).ready(function () {
+        $("#id_rg").mask("00.000.000-0");
+    });
+</script>
 {% endblock %}

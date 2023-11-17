@@ -1,0 +1,125 @@
+{% extends "base_staff.html" %}
+
+{% load static %}
+
+{% block style %}
+  .color-red {
+    color: red;
+  }
+
+  .color-yellow {
+    color: #ffae00;
+  }
+
+  .color-blue {
+    color: blue;
+  } 
+
+  .color-green {
+    color: #1cbf71;
+  }
+
+  .pagination {
+    text-align: center;
+    margin: 0 auto;
+    color: #000;
+  }
+
+  .pagination a {
+    text-align: center;
+    color: #000;
+    text-decoration: none;
+    margin: 0 10px;
+    text-weight: bold;
+    font-size: 14px;
+    color: orange;
+    font-weight: bold;
+  }
+
+  .pagination a:hover {
+    text-decoration: underline;
+  }
+
+  /* Estilos para a página atual */
+  .current-page {
+    font-weight: bold;
+    font-size: 16px;
+  }      
+
+  h5, label {
+    text-align: center;
+    color: orange;
+    font-size: 15px;
+  }
+{% endblock %}
+
+{% block rest %}
+  <section id="lista_oc_scr">
+    <div class="container">
+      <!-- Lista das OS -->
+      <div id="oc_lista">
+        
+
+        <div class="tab-pane fade show active" id="pills-01" role="tabpanel" aria-labelledby="pills-home-tab" tabindex="0">
+          <!-- OS Urgente -->
+          <label class="mt-2 font-medium color04">Completar cadastro das seguintes ordens:</label>
+          <hr>
+          {% for ordem in ordens %}
+          <a href="{% url 'update_tecnico' ordem.id %}">
+            <div class="oc_lista_item">
+              <div class="row">
+                <div class="col-2 col-md-1">
+                  <div class="icon bg-light"><i class="bi bi-briefcase text-dark"></i></div>
+                </div>
+                <div class="col-10 col-md-11">
+                    <div class="oc_l_nome font-medium color04">Ticket #{{ ordem.ticket }}</div>
+                    <div class="oc_l_status font-medium {% if ordem.status == 'Urgente' %}color-red{% elif ordem.status == 'Atenção' %}color-yellow{% elif ordem.status == 'Aguardando' %}color-blue{% elif ordem.status == 'Concluído' %}color-green{% endif %}">{{ ordem.status }}</div>
+                  <div class="oc_l_data color04 font-dark">Descrição: {{ ordem.descricao }}</div>
+                  <div class="oc_l_data color04 font-dark">Previsão de chegada: {{ ordem.previsao_chegada }}</div>
+                  <div class="oc_l_data color04 font-dark">Técnico Responsável: {{ ordem.tecnico.first_name }} {{ ordem.tecnico.last_name }}</div>
+                  <div class="oc_l_data color04 font-dark">Staff Responsável: {{ ordem.staff.first_name }} {{ ordem.staff.last_name }}</div>
+                  <div class="oc_l_data color04 font-dark">Cliente: {{ ordem.cliente.nome }} - {{ ordem.cliente.endereco }}</div>
+                  <div class="oc_l_data color04 font-dark">Detalhes: Material - {{ ordem.material}} Equipamentos - {{ordem.equipamento}}</div>
+                  <div class="oc_l_data color04 font-dark">Atraso: {{ ordem.atraso_em_minutos }}m</div>
+                  {% if ordem.ocorrencias.all %}
+                    <div class="oc_l_data color07 font-dark ">
+                      Ocorrências
+                      <ul>
+                        {% for ocorrencia in ordem.ocorrencias.all %}
+                          <li>{{ ocorrencia.titulo }} - {{ ocorrencia.descricao }}</li>
+                        {% endfor %}
+                      </ul>
+                    </div>
+                  {% else %}
+                    <div class="oc_l_data color04 font-dark">Sem ocorrências</div>
+                  {% endif %}
+                  <!-- ... (outros detalhes da ordem de serviço) -->
+
+                  {% if ordem.status == "Urgente" %}
+                    <div class="status_icon bg05 text-light">
+                      <i class="bi bi-exclamation-triangle-fill"></i>
+                    </div>
+                  {% elif ordem.status == "Atenção" %}
+                    <div class="status_icon bg06 text-dark">
+                      <i class="bi bi-flag"></i>
+                    </div>
+                  {% elif ordem.status == "Aguardando" %}
+                    <div class="status_icon bg01 text-light">
+                      <i class="bi bi-clock"></i>
+                    </div>
+                  {% elif ordem.status == "Concluído" %} 
+                    <div class="status_icon bg02 text-light">
+                      <i class="bi bi-check-circle"></i>
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+        <!-- Lista das OS -->
+      </div>
+    
+    </div>
+  </section>
+{% endblock %}

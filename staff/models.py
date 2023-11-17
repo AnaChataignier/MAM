@@ -12,7 +12,6 @@ from authentication.constants import (
 class Cliente(models.Model):
     nome = models.CharField(max_length=50, validators=[MinLengthValidator(3)])
     rg = models.CharField(max_length=12, validators=[MinLengthValidator(3)])
-    endereco = models.ForeignKey(Endereco, on_delete=models.CASCADE)
     telefone1 = models.CharField(max_length=15, validators=[MinLengthValidator(3)])
     telefone2 = models.CharField(max_length=15, validators=[MinLengthValidator(3)])
 
@@ -23,7 +22,7 @@ class Cliente(models.Model):
 class OrdemDeServico(models.Model):
     ticket = models.CharField(max_length=200, unique=True)
     tecnico = models.ForeignKey(
-        CustomUser, on_delete=models.CASCADE, related_name="ordens_técnico"
+        CustomUser, on_delete=models.CASCADE, related_name="ordens_técnico", null=True, default=None
     )
     staff = models.ForeignKey(
         CustomUser, on_delete=models.CASCADE, related_name="ordens_staff"
@@ -35,15 +34,14 @@ class OrdemDeServico(models.Model):
     equipamento = models.CharField(max_length=100, validators=[MinLengthValidator(3)])
     data_criacao = models.DateTimeField(auto_now_add=True)
     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
+    endereco = models.ForeignKey(Endereco, on_delete=models.CASCADE)
     contrato = models.CharField(max_length=700, null=True, blank=True)
     atividade = models.CharField(max_length=50, choices=ACTIVITY_CHOICES)
     status_tecnico = models.CharField(max_length=50, choices=TECNICAL_CHOICES)
     status = models.CharField(
         max_length=10, choices=STATUS_CHOICES, default="Aguardando"
     )
-    atraso_em_minutos = models.CharField(
-        max_length=50, choices=ATRASO_CHOICES
-    )
+    atraso_em_minutos = models.CharField(max_length=50, choices=ATRASO_CHOICES)
     atraso_descricao = models.TextField(max_length=400)
     descricao_reagendamento = models.TextField(max_length=400)
     vezes_reagendada = models.IntegerField(default=0)

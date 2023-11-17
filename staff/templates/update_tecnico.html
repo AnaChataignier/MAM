@@ -1,0 +1,73 @@
+{% extends "base_staff.html" %}
+
+{%load static%}
+
+{% block style %}
+.dentroform{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    
+}
+
+.inputs{
+    margin-bottom: 10px;
+}
+
+#id_ticket,
+#id_tecnico,
+#id_descricao,
+#id_previsao_chegada,
+#id_previsao_execucao,
+#id_material,
+#id_equipamento,
+#id_cliente,
+#id_contrato,
+#id_atividade,
+#id_status {
+  width: 350px;
+  padding: .375rem .75rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #495057;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid #ced4da;
+  border-radius: .25rem;
+  transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+  box-shadow: none;
+  outline: 0;
+  align-self: center; /* Isso centralizará os campos verticalmente */
+}
+h2{
+    color:orange;
+  }
+{% endblock %}
+{% block rest %}
+
+
+
+    <br>
+    <form method="POST">
+        {% csrf_token %}
+        <div class="dentroform">
+            
+        <h2>Escolha um técnico para concluir o cadastro:</h2>
+        <br>
+        <br>
+        <h2>Técnicos no mesmo bairro:</h2>
+        <div class="inputs">
+            {{ form.tecnico}}
+            </div>
+
+        
+        <input type="submit" value="Cadastrar" class="btn btn-success">
+        <div>
+        </form>
+        <hr>
+       
+        
+
+{% endblock %}
+

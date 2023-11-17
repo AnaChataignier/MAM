@@ -15,10 +15,10 @@ class OrdemDeServicoForm(forms.ModelForm):
         widget=forms.DateTimeInput(attrs={"type": "datetime-local"}),
         input_formats=["%Y-%m-%dT%H:%M"],
     )
-    tecnico = forms.ModelChoiceField(
-        queryset=CustomUser.objects.filter(groups__name="Técnico"),
-        empty_label="Selecione um técnico",
-    )
+    # tecnico = forms.ModelChoiceField(
+    #     queryset=CustomUser.objects.filter(groups__name="Técnico"),
+    #     empty_label="Selecione um técnico",
+    # )
     cliente = forms.ModelChoiceField(
         queryset=Cliente.objects.all(),
         widget=forms.Select(attrs={"placeholder": "Selecione um cliente"}),
@@ -35,6 +35,7 @@ class OrdemDeServicoForm(forms.ModelForm):
             "atraso_descricao",
             "descricao_reagendamento",
             "vezes_reagendada",
+            "tecnico",
         ]
 
     def __init__(self, *args, **kwargs):
@@ -54,7 +55,6 @@ class OrdemDeServicoForm(forms.ModelForm):
                 field.widget.attrs["class"] = "form-control"
 
         self.fields["ticket"].widget.attrs["placeholder"] = "Número ticket"
-        self.fields["tecnico"].widget.attrs["placeholder"] = "Técnico"
         self.fields["descricao"].widget.attrs["placeholder"] = "Descrição..."
         self.fields["material"].widget.attrs["placeholder"] = "Material"
         self.fields["equipamento"].widget.attrs["placeholder"] = "Equipamento"
@@ -86,7 +86,7 @@ class HistoricoOsFinalizadaForm(forms.ModelForm):
 class ClienteForm(forms.ModelForm):
     class Meta:
         model = Cliente
-        exclude = ["endereco"]
+        fields = "__all__"
 
     def __init__(self, *args, **kwargs):
         super(ClienteForm, self).__init__(*args, **kwargs)
@@ -196,6 +196,24 @@ class ReagendarOrdemDeServicoForm(forms.ModelForm):
                 field.widget.attrs["class"] += " form-control"
             else:
                 field.widget.attrs["class"] = "form-control"
+
+
+class EscolherTecnicoForm(forms.ModelForm):
+    class Meta:
+        model = OrdemDeServico
+        fields = ["tecnico"]
+
+    def __init__(self, *args, **kwargs):
+        super(EscolherTecnicoForm, self).__init__(*args, **kwargs)
+
+        for field_name, field in self.fields.items():
+            if "class" in field.widget.attrs:
+                field.widget.attrs["class"] += " form-control"
+            else:
+                field.widget.attrs["class"] = "form-control"
+
+        self.fields["tecnico"].widget = forms.Select(attrs={"class": "form-control"})
+
 
 
 class OcorrenciaForm(forms.ModelForm):
