@@ -15,17 +15,8 @@
     margin-bottom: 10px;
 }
 
-#id_ticket,
-#id_tecnico,
-#id_descricao,
-#id_previsao_chegada,
-#id_previsao_execucao,
-#id_material,
-#id_equipamento,
-#id_cliente,
-#id_contrato,
-#id_atividade,
-#id_status {
+
+#id_tecnico {
   width: 350px;
   padding: .375rem .75rem;
   font-size: 1rem;
@@ -43,6 +34,17 @@
 h2{
     color:orange;
   }
+  h3{
+    color:orange;
+  }
+
+  hr{
+    color:orange;
+  }
+  p{
+    color:orange;
+  
+  }
 {% endblock %}
 {% block rest %}
 
@@ -52,22 +54,34 @@ h2{
     <form method="POST">
         {% csrf_token %}
         <div class="dentroform">
-            
-        <h2>Escolha um técnico para concluir o cadastro:</h2>
-        <br>
-        <br>
-        <h2>Técnicos no mesmo bairro:</h2>
-        <div class="inputs">
-            {{ form.tecnico}}
+            {% if tecnicos_proximos %}
+            <p>Essa OS tem como endereço: {{ ordem.endereco }}</p>
+            <br>
+            <h3>Os 10 técnicos mais próximos:</h3>
+            <br>
+            <ol>
+                {% for tecnico, distancia in tecnicos_proximos %}
+                    <li>{{ tecnico }} - Reside em {{tecnico.endereco.cidade}} bairro {{tecnico.endereco.bairro}} - Distância: {{ distancia|floatformat:"2" }} km</li>
+                    <hr>
+                {% endfor %}
+            </ol>
+        {% endif %}
+            <h2>Escolha um técnico para concluir o cadastro:</h2>
+            <br>
+            <div class="inputs">
+                {{ form.as_p }}
             </div>
+            <input type="submit" value="Cadastrar" class="btn btn-success">
+        </div>
+    </form>
+    
+   
+    
 
-        
-        <input type="submit" value="Cadastrar" class="btn btn-success">
-        <div>
-        </form>
-        <hr>
-       
-        
+    
+  
+    <br>     <br>     <br>     <br>     <br>     <br>     <br>     <br>     <br>     <br>     <br>
+    <br>     <br>     <br>     <br>     <br>     <br>     <br>     <br>     <br>     
+    <hr>
 
 {% endblock %}
-

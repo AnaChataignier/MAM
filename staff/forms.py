@@ -2,6 +2,7 @@ from django import forms
 from .models import OrdemDeServico, HistoricoOsFinalizada, Ocorrencia
 from .models import Cliente
 from authentication.models import CustomUser
+from django.contrib.auth.models import Group
 
 # import re
 
@@ -205,15 +206,12 @@ class EscolherTecnicoForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(EscolherTecnicoForm, self).__init__(*args, **kwargs)
-
-        for field_name, field in self.fields.items():
-            if "class" in field.widget.attrs:
-                field.widget.attrs["class"] += " form-control"
-            else:
-                field.widget.attrs["class"] = "form-control"
-
         self.fields["tecnico"].widget = forms.Select(attrs={"class": "form-control"})
+        self.fields["tecnico"].queryset = self.get_tecnicos_queryset()
 
+    def get_tecnicos_queryset(self):
+        group_tecnico = Group.objects.get(name="Técnico")
+        return group_tecnico.user_set.all()
 
 
 class OcorrenciaForm(forms.ModelForm):
