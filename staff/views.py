@@ -17,30 +17,20 @@ from django.shortcuts import get_object_or_404
 from datetime import datetime
 from authentication.models import CustomUser
 from geopy.distance import geodesic
-from staff.helpers import obter_lat_lng_endereco, obter_lat_lng_tecnicos
+from staff.helpers import obter_lat_lng_endereco
+from .helpers import calcula_atraso_reagendamento
 
 
 @user_passes_test(is_staff)
 def staff(request):
     try:
         staff = request.user
-        ordens_em_atraso = OrdemDeServico.objects.filter(
-            staff=staff,
-            atraso_em_minutos__isnull=False,
-            status__in=["Atenção", "Urgente", "Aguardando"],
-            atraso_em_minutos__gt=0,
-        )
-        ordens_reagendar = OrdemDeServico.objects.filter(
-            staff=staff,
-            status="Reagendar",
-        )
-        total_reagendar = len(ordens_reagendar.values())
+        avisos = calcula_atraso_reagendamento(staff)
 
-        atrasos = len(ordens_em_atraso.values())
         return render(
             request,
             "staff.html",
-            {"atrasos": atrasos, "staff": staff, "total_reagendar": total_reagendar},
+            {"staff": staff, **avisos},
         )
     except Exception as e:
         return render(request, "error.html", {"error_message": str(e)})
@@ -50,13 +40,7 @@ def staff(request):
 def lista_os(request):
     try:
         staff = request.user
-        ordens_em_atraso = OrdemDeServico.objects.filter(
-            staff=staff,
-            atraso_em_minutos__isnull=False,
-            status__in=["Atenção", "Urgente", "Aguardando"],
-            atraso_em_minutos__gt=0,
-        )
-        atrasos = len(ordens_em_atraso.values())
+        avisos = calcula_atraso_reagendamento(staff)
         data_atual = datetime.now().date()
         todas_as_ordens = OrdemDeServico.objects.filter(staff=staff)
         for ordem in todas_as_ordens:
@@ -75,11 +59,6 @@ def lista_os(request):
             staff=request.user,
             status__in=["Atenção", "Urgente", "Aguardando", "Concluído"],
         )
-        ordens_reagendar = OrdemDeServico.objects.filter(
-            staff=staff,
-            status="Reagendar",
-        )
-        total_reagendar = len(ordens_reagendar.values())
 
         # Verifique se o parâmetro de pesquisa "buscar" está presente na solicitação GET
         filtros = request.GET.get("buscar")
@@ -109,8 +88,7 @@ def lista_os(request):
                     "lista_os.html",
                     {
                         "ordens": ordens,
-                        "atrasos": atrasos,
-                        "total_reagendar": total_reagendar,
+                        **avisos,
                     },
                 )
     except Exception as e:
@@ -143,8 +121,7 @@ def lista_os(request):
         "lista_os.html",
         {
             "ordens": ordens,
-            "atrasos": atrasos,
-            "total_reagendar": total_reagendar,
+            **avisos,
         },
     )
 
@@ -152,6 +129,8 @@ def lista_os(request):
 @user_passes_test(is_staff)
 def formulario_os(request):
     try:
+        staff = request.user
+        avisos = calcula_atraso_reagendamento(staff)
         if request.method == "POST":
             os_form = OrdemDeServicoForm(request.POST)
             endereco_form = EnderecoForm(request.POST)
@@ -176,14 +155,18 @@ def formulario_os(request):
             {
                 "os_form": os_form,
                 "endereco_form": endereco_form,
+                **avisos,
             },
         )
     except Exception as e:
         return render(request, "error.html", {"error_message": str(e)})
 
+
 @user_passes_test(is_staff)
 def update_tecnico(request, ordem_id):
     try:
+        staff = request.user
+        avisos = calcula_atraso_reagendamento(staff)
         ordem = get_object_or_404(OrdemDeServico, id=ordem_id)
         lat_long_ordem = obter_lat_lng_endereco(ordem.endereco)
         tecnicos = CustomUser.objects.filter(groups__name="Técnico")
@@ -219,6 +202,7 @@ def update_tecnico(request, ordem_id):
                 "ordem": ordem,
                 "tecnicos": tecnicos,
                 "tecnicos_proximos": tecnicos_ordenados,
+                **avisos,
             },
         )
     except Exception as e:
@@ -229,8 +213,11 @@ def update_tecnico(request, ordem_id):
 def lista_os_sem_tecnico(request):
     try:
         staff = request.user
+        avisos = calcula_atraso_reagendamento(staff)
         ordens = OrdemDeServico.objects.filter(staff=staff, tecnico__isnull=True)
-        return render(request, "lista_os_sem_tecnico.html", {"ordens": ordens})
+        return render(
+            request, "lista_os_sem_tecnico.html", {"ordens": ordens, **avisos}
+        )
     except Exception as e:
         return render(request, "error.html", {"error_message": str(e)})
 
@@ -238,6 +225,8 @@ def lista_os_sem_tecnico(request):
 @user_passes_test(is_staff)
 def formulario_cliente(request):
     try:
+        staff = request.user
+        avisos = calcula_atraso_reagendamento(staff)
         if request.method == "POST":
             cliente_form = ClienteForm(request.POST)
 
@@ -257,9 +246,7 @@ def formulario_cliente(request):
         return render(
             request,
             "formulario_cliente.html",
-            {
-                "cliente_form": cliente_form,
-            },
+            {"cliente_form": cliente_form, **avisos},
         )
     except Exception as e:
         return render(request, "error.html", {"error_message": str(e)})
@@ -268,21 +255,14 @@ def formulario_cliente(request):
 @user_passes_test(is_staff)
 def ordens_em_atraso(request):
     try:
-        # Recupere todas as ordens de serviço do usuário staff logado que tenham atraso
         staff = request.user
+        avisos = calcula_atraso_reagendamento(staff)
         ordens_em_atraso = OrdemDeServico.objects.filter(
             staff=staff,
             atraso_em_minutos__isnull=False,
             atraso_em_minutos__gt=0,
             status__in=["Atenção", "Urgente", "Aguardando"],
         )
-        atrasos = ordens_em_atraso.count()
-
-        ordens_reagendar = OrdemDeServico.objects.filter(
-            staff=staff,
-            status="Reagendar",
-        )
-        total_reagendar = ordens_reagendar.count()
 
         return render(
             request,
@@ -290,8 +270,7 @@ def ordens_em_atraso(request):
             {
                 "ordens_em_atraso": ordens_em_atraso,
                 "staff": staff,
-                "atrasos": atrasos,
-                "total_reagendar": total_reagendar,
+                **avisos,
             },
         )
     except Exception as e:
@@ -302,27 +281,18 @@ def ordens_em_atraso(request):
 def reagendar_staff(request):
     try:
         staff = request.user
-        ordens_em_atraso = OrdemDeServico.objects.filter(
-            staff=staff,
-            atraso_em_minutos__isnull=False,
-            status__in=["Atenção", "Urgente", "Aguardando"],
-            atraso_em_minutos__gt=0,
-        )
-        atrasos = len(ordens_em_atraso.values())
+        avisos = calcula_atraso_reagendamento(staff)
         ordens_reagendar = OrdemDeServico.objects.filter(
             staff=staff,
             status="Reagendar",
         )
-        total_reagendar = len(ordens_reagendar.values())
-        print("weeee", ordens_reagendar)
         return render(
             request,
             "reagendar_staff.html",
             {
                 "ordens_reagendar": ordens_reagendar,
                 "staff": staff,
-                "total_reagendar": total_reagendar,
-                "atrasos": atrasos,
+                **avisos,
             },
         )
     except Exception as e:
@@ -332,6 +302,8 @@ def reagendar_staff(request):
 @user_passes_test(is_staff)
 def update_reagendar(request, ordem_id):
     try:
+        staff = request.user
+        avisos = calcula_atraso_reagendamento(staff)
         ordem = get_object_or_404(OrdemDeServico, id=ordem_id)
         if ordem.atraso_em_minutos:
             ordem.atraso_em_minutos = ""
@@ -349,6 +321,6 @@ def update_reagendar(request, ordem_id):
         else:
             form = ReagendarOrdemDeServicoForm(instance=ordem)
 
-        return render(request, "update_reagendar.html", {"form": form, "ordem": ordem})
+        return render(request, "update_reagendar.html", {"form": form, "ordem": ordem, **avisos})
     except Exception as e:
         return render(request, "error.html", {"error_message": str(e)})

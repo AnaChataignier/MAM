@@ -1,6 +1,27 @@
 import requests
 from config import CHAVE_API_GOOGLE
 from authentication.models import CustomUser
+from .models import OrdemDeServico
+
+
+def calcula_atraso_reagendamento(user):
+    try:
+        ordens_em_atraso = OrdemDeServico.objects.filter(
+            staff=user,
+            atraso_em_minutos__isnull=False,
+            status__in=["Atenção", "Urgente", "Aguardando"],
+            atraso_em_minutos__gt=0,
+        )
+        ordens_reagendar = OrdemDeServico.objects.filter(
+            staff=user,
+            status="Reagendar",
+        )
+        total_reagendar = len(ordens_reagendar)
+        atrasos = len(ordens_em_atraso)
+        return {"atrasos": atrasos, "total_reagendar": total_reagendar}
+    except Exception as e:
+        print(f"Erro ao calcular aviso: {e}")
+        return {"atrasos": 0, "total_reagendar": 0}
 
 
 def obter_lat_lng_tecnicos():
