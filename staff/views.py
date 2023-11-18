@@ -181,7 +181,7 @@ def formulario_os(request):
     except Exception as e:
         return render(request, "error.html", {"error_message": str(e)})
 
-
+@user_passes_test(is_staff)
 def update_tecnico(request, ordem_id):
     try:
         ordem = get_object_or_404(OrdemDeServico, id=ordem_id)
