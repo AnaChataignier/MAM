@@ -9,7 +9,7 @@ source .venv/bin/activate
 ```
 
 ```
-pip install requirements
+pip install -r requirements
 ```
 
 
