@@ -22,7 +22,11 @@ class Cliente(models.Model):
 class OrdemDeServico(models.Model):
     ticket = models.CharField(max_length=200, unique=True)
     tecnico = models.ForeignKey(
-        CustomUser, on_delete=models.CASCADE, related_name="ordens_técnico", null=True, default=None
+        CustomUser,
+        on_delete=models.CASCADE,
+        related_name="ordens_técnico",
+        null=True,
+        default=None,
     )
     staff = models.ForeignKey(
         CustomUser, on_delete=models.CASCADE, related_name="ordens_staff"
@@ -61,6 +65,9 @@ class HistoricoOsFinalizada(models.Model):
     foto = models.ImageField(
         upload_to="img/historico_os_finalizada/", null=True, blank=True
     )
+    video = models.FileField(
+        upload_to="videos/historico_os_finalizada/", null=True, blank=True
+    )
 
     def cliente_ticket_filename(instance, filename):
         ext = filename.split(".")[-1]
@@ -70,6 +77,8 @@ class HistoricoOsFinalizada(models.Model):
         # Chama a função que define o caminho da imagem
         if self.foto:
             self.foto.name = self.cliente_ticket_filename(self.foto.name)
+        if self.video:
+            self.video.name = self.cliente_ticket_filename(self.video.name)
         super(HistoricoOsFinalizada, self).save(*args, **kwargs)
 
 
@@ -81,6 +90,7 @@ class Ocorrencia(models.Model):
     descricao = models.TextField(max_length=600)
     data_criacao = models.DateTimeField(auto_now_add=True)
     foto = models.ImageField(upload_to="img/ocorrencias/", null=True, blank=True)
+    video = models.FileField(upload_to="videos/ocorrencias/", null=True, blank=True)
 
     def ticket_tecnico_ocorrencia(instance, filename):
         ext = filename.split(".")[-1]
@@ -90,6 +100,8 @@ class Ocorrencia(models.Model):
         # Chama a função que define o caminho da imagem
         if self.foto:
             self.foto.name = self.ticket_tecnico_ocorrencia(self.foto.name)
+        if self.video:
+            self.video.name = self.ticket_tecnico_ocorrencia(self.video.name)
         super(Ocorrencia, self).save(*args, **kwargs)
 
     def __str__(self):

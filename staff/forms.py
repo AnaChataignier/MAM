@@ -218,7 +218,7 @@ class EscolherTecnicoForm(forms.ModelForm):
 class OcorrenciaForm(forms.ModelForm):
     class Meta:
         model = Ocorrencia
-        fields = ["titulo", "descricao", "foto"]
+        fields = ["titulo", "descricao", "foto", "video"]
 
     def __init__(self, *args, **kwargs):
         super(OcorrenciaForm, self).__init__(*args, **kwargs)
