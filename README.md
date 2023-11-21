@@ -20,15 +20,11 @@ Como base para o início da aplicação, foi recebido apenas uma planilha com 19
 <br>
 <h3 align='center'>Tecnologias utilizadas</h3>
 
-
-                                                - Postgres-Sqlite
-                                                - Django
-                                                - Python
-                                                - HTML
-                                                - CSS
+<p align='center'>
+                Postgres - Sqlite                 - Django                             - Python                                 - HTML                                           - CSS
                                                 - Javcascript
                                                 - jquery
-                                                - Bootstrap
+                                                - Bootstrap</p>
 
 <h3 align='center'>Como executar o projeto</h3>
 
