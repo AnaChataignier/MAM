@@ -7,7 +7,7 @@
   <a href="#contato">Contato</a>
 </p>
 <h1 align='center'>
-  <img src='https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Typescript_logo_2020.svg/2048px-Typescript_logo_2020.svg.png' width="200" heigth="200"/>
+  <img src='https://github.com/AnaChataignier/MAM/blob/master/mam.png?raw=true' width="450" heigth="450"/>
 </h1>
 
 <h2 align='center'>Sobre o projeto</h2>
