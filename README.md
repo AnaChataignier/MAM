@@ -1,4 +1,4 @@
-<h3 align='center'Blogs Apir</h3>
+<h3 align='center'Blogs Apir></h3>
  <p align="center">
   <a href="#sobre-o-projeto">Sobre o Projeto</a> •
   <a href="#tecnologias-utilizadas">Tecnologias Utilizadas</a> • 
@@ -13,9 +13,10 @@
 <h2 align='center'>Sobre o projeto</h2>
 
 
-<p align='center'>Esse projeto foi um pedido da empresa Maminfo. Ela é basicamente uma empresa que presta serviços diversos na casa ou empresa de clientes. Um técnico recebe uma ordem de seerviço com um endereço e vai até o cliente realizar.O pedido foi um app que controlasse todo o sistema de realização de ordens de serviço da mesma, criando uma aplicação que abrigasse tudo o que fosse necessário para o funcionamento das ordens de serviço sem sair do aplicativo, então precisamos trabalhar com a api do Google Maps para que o usuário não necessite sair da aplicação para usar apps auxiliares como o waze.
-Como base para o início da aplicação, foi recebido apenas uma planilha com 19 colunas e uma idéia de como o app deveria funcionar. Após normalizar a planilha, iniciei a preparação do banco de dados e o projeto foi inciado.
-
+<p align='center'>A plataforma Maminfo é aplicativo feito sob medida para atender às necessidades da Maminfo | Soluções Unificadas,
+uma renomada empresa de Consultoria e Integradora de Soluções em TI e telecomunicação.
+Este projeto, concebido como um serviço de "delivery" para otimizar o gerenciamento de serviços técnicos,
+representa um marco significativo na modernização dos processos operacionais da empresa.
 </p>
 <br>
 <h3 align='center'>Tecnologias utilizadas</h3>
@@ -25,6 +26,17 @@ Como base para o início da aplicação, foi recebido apenas uma planilha com 19
                                                 - Javcascript
                                                 - jquery
                                                 - Bootstrap</p>
+<h3 align='center'>Principais Recursos</h3>
+
+<p align='center'>Painel Técnico Personalizado.<br>
+Desenvolvemos um painel de controle exclusivo para técnicos, onde eles têm acesso às ordens de serviço do dia,
+integrado com a API do Google Maps para guia-lo e otimizar as rotas.</p>
+<p align='center'>Implementamos um robusto sistema de ordens de serviço, permitindo o registro, acompanhamento e finalização eficiente de cada tarefa técnica.
+Os técnicos podem relatar atrasos, reagendar e adicionar ocorrências, incluindo fotos para documentação.</p>
+<p align='center'>Utilizamos a API do Via CEP para o registro preciso de endereços, proporcionando uma experiência de usuário mais fluida.</p>
+<p align='center'>Criamos uma interface de staff para registrar ordens de serviço, alocar técnicos e gerenciar clientes.</p>
+<p align='center'>Além disso, implementamos alertas automáticos para a equipe em casos de atraso relatado pelos técnicos.</p>
+
 
 <h3 align='center'>Como executar o projeto</h3>
 
@@ -49,7 +61,7 @@ python3 -m venv .venv && source .venv/bin/activate
 Crie na raiz do projeto um arquivo chamado config.py lá coloque:
 ```bash
 CHAVE_API_GOOGLE = "SUA CHAVE DE API DA GOOGLE"
-KEY_PROJETO = "django-insecure-x8d3xqxs=npvg2e2e8fpt!%!voqh+s77r@s!8*nv&6)gzkx=(x"
+KEY_PROJETO = "SECRET KEY DO SEU PROJETO"
 
 
 ```
@@ -58,15 +70,24 @@ Instale as dependências
 pip install -r requirements
 
 ```
+<br>
+<br>
+<h3>Colaboradores</h3>
 
-<h3 align='center'>Como navegar pelo projeto:</h3>
+<p>Este projeto foi elaborado, pensado e analizado cuidadosamente cada detalhe <br> por Ana Chataignier e Carlos Henrique Tonini</p>
 
-
-
-<p align='center'>Para mais informações sobre o projeto, entre em contato comigo por meio das seguintes redes sociais:</p>
-
-<p align='center'>E-mail: carloshtbraga@gmail.com</p>
-
-<p align='center'>LinkedIn: https://www.linkedin.com/in/carloshtbraga</p>
-
-<p align='center'>Website: https://portf-lio-react-red.vercel.app</p>
+| [<img src="https://avatars.githubusercontent.com/AnaChataignier" width=115><br><sub>Ana Chataignier</sub>](https://github.com/AnaChataignier) |  [<img src="https://avatars.githubusercontent.com/carloshtbraga" width=115><br><sub>Carlos Henrique Tonini</sub>](https://github.com/carloshtbraga)  |
+| :---: | :---: 
+<br>
+<p>Para mais informações sobre o projeto, entre em contato conosco por meio das seguintes redes sociais:</p>
+<br>
+<p >Carlos Henrique Tonini</p>
+<p >E-mail: carloshtbraga@gmail.com</p>
+<p>LinkedIn: https://www.linkedin.com/in/carloshtbraga</p>
+<p >Website: https://portf-lio-react-red.vercel.app</p>
+ 
+<br>
+<p>Ana Chataignier</p>
+<p >E-mail: anachataignier2@gmail.com</p>
+<p >LinkedIn:https://www.linkedin.com/in/ana-chataignier-6a3768263/</p>
+<p >Website: https://github.com/AnaChataignier</p>
