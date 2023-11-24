@@ -19,7 +19,7 @@ from django.urls import reverse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib import messages
 from django.contrib.messages import constants
-
+from django.db.models import Case, When, IntegerField
 
 @user_passes_test(is_tecnico)
 def minhas_os(request):
@@ -30,7 +30,7 @@ def minhas_os(request):
         user = request.user
         ordens_ativas = OrdemDeServico.objects.filter(
             tecnico=user, status__in=["Atenção", "Urgente", "Aguardando", "Concluído"]
-        )
+        ).order_by('-previsao_chegada')
         ordens_ativas_counter = OrdemDeServico.objects.filter(
             tecnico=user, status__in=["Atenção", "Urgente", "Aguardando", "Concluído"]
         )
@@ -229,9 +229,7 @@ def finalizar_os(request, ordem_id):
                 ordem.status = "Concluído"
                 ordem.save()
                 historico.ordem_de_servico = ordem
-
                 historico.save()
-
                 return redirect("dashboard")
             else:
                 return render(
@@ -353,13 +351,20 @@ def dashboard(request):
             status__in=["Concluído"],
             tecnico=user,
         )
+        ordem_status = Case(
+            When(status='Urgente', then=1),
+            When(status='Atenção', then=2),
+            When(status='Aguardando', then=3),
+            default=4,  
+            output_field=IntegerField(),
+)
 
         # Proximas hoje
         proximas_hoje = OrdemDeServico.objects.filter(
             previsao_chegada__date=today,
             tecnico=user,
             status__in=["Atenção", "Urgente", "Aguardando"],
-        )
+        ).order_by(ordem_status)
 
         # Realizadas hoje
         realizadas_hoje = OrdemDeServico.objects.filter(

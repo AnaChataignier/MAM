@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from main.helpers import is_staff
 from django.contrib.auth.decorators import user_passes_test
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from .models import OrdemDeServico
+from .models import OrdemDeServico, Ocorrencia
 from .forms import (
     OrdemDeServicoForm,
     ClienteForm,
@@ -308,9 +308,11 @@ def update_reagendar(request, ordem_id):
         if ordem.atraso_em_minutos:
             ordem.atraso_em_minutos = ""
             ordem.atraso_descricao = ""
-            ordem.descricao_reagendamento = ""
-
         if request.method == "POST":
+            ordem.descricao_reagendamento = ""
+            ocorrencias = Ocorrencia.objects.filter(ordem_de_servico=ordem)
+            if ocorrencias:
+                ocorrencias.delete()
             form = ReagendarOrdemDeServicoForm(request.POST, instance=ordem)
             if form.is_valid():
                 form.save()
@@ -321,6 +323,8 @@ def update_reagendar(request, ordem_id):
         else:
             form = ReagendarOrdemDeServicoForm(instance=ordem)
 
-        return render(request, "update_reagendar.html", {"form": form, "ordem": ordem, **avisos})
+        return render(
+            request, "update_reagendar.html", {"form": form, "ordem": ordem, **avisos}
+        )
     except Exception as e:
         return render(request, "error.html", {"error_message": str(e)})
