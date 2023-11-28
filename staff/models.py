@@ -49,6 +49,7 @@ class OrdemDeServico(models.Model):
     atraso_descricao = models.TextField(max_length=400)
     descricao_reagendamento = models.TextField(max_length=400)
     vezes_reagendada = models.IntegerField(default=0)
+    aceite = models.BooleanField(default=False)
 
     def __str__(self):
         return f"Ordem de Serviço #{self.pk}"

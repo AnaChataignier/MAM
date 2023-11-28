@@ -113,18 +113,32 @@
                   <li>
                     <a href="{% url 'tela_user' %}" class="font-medium color04"
                       ><i class="bi bi-gear-fill"></i> Configurações</a
-                    >
-                  </li>
-                  <li>
-                    <a href="{% url 'sair'%}" class="font-medium color04"
+                      >
+                    </li>
+                    <li>
+                      <a href="{% url 'aceite'%}" class="font-medium color04"
+                        ><i class="bi bi-clock"></i> Ordens Pendentes</a
+                      >
+                    </li>
+                    <li>
+                      <a href="{% url 'sair'%}" class="font-medium color04"
                       ><i class="bi bi-door-open"></i> Logout</a
-                    >
-                  </li>
-                </ul>
+                      >
+                    </li>
+                  </ul>
               </div>
             </div>
           </div>
         </div>
+        {% if messages %}
+          <br>
+          {% for message in messages %}
+          <div class="alert alert-success" role="alert">
+              {{ message }}
+            </div>
+          {% endfor %}
+      
+          {% endif %}
       </header>
 
       {% block rest %}{% endblock %}

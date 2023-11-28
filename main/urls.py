@@ -25,6 +25,12 @@ urlpatterns = [
     ),
     path("reagendar/<int:ordem_id>", views.reagendar, name="reagendar"),
     path("ocorrencias/<int:ordem_id>", views.ocorrencias, name="ocorrencias"),
+    path("aceite/", views.aceite, name="aceite"),
+    path("aceitar_ordem/<int:ordem_id>", views.aceitar_ordem, name="aceitar_ordem"),
+    path("recusar_ordem/<int:ordem_id>", views.recusar_ordem, name="recusar_ordem"),
+
+
+
 ]
 
 if settings.DEBUG:

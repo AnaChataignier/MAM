@@ -35,7 +35,7 @@ class CustomUserForm(UserCreationForm):
         self.fields["password1"].widget.attrs["placeholder"] = "Senha"
         self.fields["password2"].widget.attrs["placeholder"] = "Confirmação de Senha"
         self.fields["username"].widget.attrs["placeholder"] = "Usuário"
-
+        
 
 class EnderecoForm(forms.ModelForm):
     cep = forms.CharField(max_length=9, required=True)
@@ -62,7 +62,7 @@ class EnderecoForm(forms.ModelForm):
         self.fields["estado"].widget.attrs["placeholder"] = "Estado"
         self.fields["numero"].widget.attrs["placeholder"] = "Numero"
         self.fields["complemento"].widget.attrs["placeholder"] = "Complemento"
-
+        
 
 class CustomAuthenticationForm(AuthenticationForm):
     def __init__(self, *args, **kwargs):

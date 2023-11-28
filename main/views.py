@@ -21,6 +21,7 @@ from django.contrib import messages
 from django.contrib.messages import constants
 from django.db.models import Case, When, IntegerField
 
+
 @user_passes_test(is_tecnico)
 def minhas_os(request):
     try:
@@ -29,10 +30,14 @@ def minhas_os(request):
 
         user = request.user
         ordens_ativas = OrdemDeServico.objects.filter(
-            tecnico=user, status__in=["Atenção", "Urgente", "Aguardando", "Concluído"]
-        ).order_by('-previsao_chegada')
+            tecnico=user,
+            status__in=["Atenção", "Urgente", "Aguardando", "Concluído"],
+            aceite=True,
+        ).order_by("-previsao_chegada")
         ordens_ativas_counter = OrdemDeServico.objects.filter(
-            tecnico=user, status__in=["Atenção", "Urgente", "Aguardando", "Concluído"]
+            tecnico=user,
+            status__in=["Atenção", "Urgente", "Aguardando", "Concluído"],
+            aceite=True,
         )
         data_atual = datetime.now().date()
         todas_as_ordens = OrdemDeServico.objects.filter(tecnico=user)
@@ -291,26 +296,40 @@ def dashboard(request):
             previsao_chegada__date=today,
             tecnico=user,
             status__in=["Atenção", "Urgente", "Aguardando", "Concluído"],
+            aceite=True,
         )
 
         card_realizadas_hoje = OrdemDeServico.objects.filter(
-            previsao_chegada__date=today, status__in=["Concluído"], tecnico=user
+            previsao_chegada__date=today,
+            status__in=["Concluído"],
+            tecnico=user,
+            aceite=True,
         )
         card_aguardando_hoje = OrdemDeServico.objects.filter(
-            previsao_chegada__date=today, status__in=["Aguardando"], tecnico=user
+            previsao_chegada__date=today,
+            status__in=["Aguardando"],
+            tecnico=user,
+            aceite=True,
         )
         card_atencao_hoje = OrdemDeServico.objects.filter(
-            previsao_chegada__date=today, status__in=["Atenção"], tecnico=user
+            previsao_chegada__date=today,
+            status__in=["Atenção"],
+            tecnico=user,
+            aceite=True,
         )
         # card ontem
         card_total_realizadas_ontem = OrdemDeServico.objects.filter(
             previsao_chegada__date=yesterday,
             tecnico=user,
             status__in=["Atenção", "Urgente", "Aguardando", "Concluído"],
+            aceite=True,
         )
 
         card_realizadas_ontem = OrdemDeServico.objects.filter(
-            previsao_chegada__date=yesterday, status__in=["Concluído"], tecnico=user
+            previsao_chegada__date=yesterday,
+            status__in=["Concluído"],
+            tecnico=user,
+            aceite=True,
         )
 
         # card 2d
@@ -318,12 +337,14 @@ def dashboard(request):
             previsao_chegada__date=day_before_yesterday,
             tecnico=user,
             status__in=["Atenção", "Urgente", "Aguardando", "Concluído"],
+            aceite=True,
         )
 
         card_realizadas_2d = OrdemDeServico.objects.filter(
             previsao_chegada__date=day_before_yesterday,
             status__in=["Concluído"],
             tecnico=user,
+            aceite=True,
         )
 
         # card 3d
@@ -331,11 +352,13 @@ def dashboard(request):
             previsao_chegada__date=three_days_ago,
             tecnico=user,
             status__in=["Atenção", "Urgente", "Aguardando", "Concluído"],
+            aceite=True,
         )
 
         card_realizadas_3d = OrdemDeServico.objects.filter(
             previsao_chegada__date=three_days_ago,
             status__in=["Concluído"],
+            aceite=True,
             tecnico=user,
         )
 
@@ -344,26 +367,29 @@ def dashboard(request):
             previsao_chegada__date=four_days_ago,
             tecnico=user,
             status__in=["Atenção", "Urgente", "Aguardando", "Concluído"],
+            aceite=True,
         )
 
         card_realizadas_4d = OrdemDeServico.objects.filter(
             previsao_chegada__date=four_days_ago,
             status__in=["Concluído"],
             tecnico=user,
+            aceite=True,
         )
         ordem_status = Case(
-            When(status='Urgente', then=1),
-            When(status='Atenção', then=2),
-            When(status='Aguardando', then=3),
-            default=4,  
+            When(status="Urgente", then=1),
+            When(status="Atenção", then=2),
+            When(status="Aguardando", then=3),
+            default=4,
             output_field=IntegerField(),
-)
+        )
 
         # Proximas hoje
         proximas_hoje = OrdemDeServico.objects.filter(
             previsao_chegada__date=today,
             tecnico=user,
             status__in=["Atenção", "Urgente", "Aguardando"],
+            aceite=True,
         ).order_by(ordem_status)
 
         # Realizadas hoje
@@ -371,6 +397,7 @@ def dashboard(request):
             previsao_chegada__date=today,
             tecnico=user,
             status__in=["Concluído"],
+            aceite=True,
         )
 
         # Filtra todas as ordens de serviço de hoje
@@ -378,6 +405,7 @@ def dashboard(request):
             tecnico=user,
             previsao_chegada__date=today,
             status__in=["Atenção", "Urgente", "Aguardando", "Concluído"],
+            aceite=True,
         )
 
         # Calcula o número de ordens de serviço para cada status
@@ -479,6 +507,7 @@ def tela_busca_resultado(request):
         ordens = OrdemDeServico.objects.filter(
             tecnico=request.user,
             status__in=["Atenção", "Urgente", "Aguardando", "Concluído"],
+            aceite=True,
         )
         if "buscar" in request.GET:
             buscar_ticket = request.GET["buscar"]
@@ -486,6 +515,8 @@ def tela_busca_resultado(request):
                 ordens = ordens.filter(
                     Q(ticket__icontains=buscar_ticket)
                     | Q(cliente__nome__icontains=buscar_ticket)
+                    | Q(equipamento__icontains=buscar_ticket)
+                    | Q(material__icontains=buscar_ticket)
                 )
 
         return render(request, "tela_busca_resultado.html", {"ordens": ordens})
@@ -527,9 +558,7 @@ def atraso(request, ordem_id):
             if form.is_valid():
                 form.save()
                 redirect_url = reverse("a_caminho", args=[ordem.id])
-                messages.add_message(
-                    request, constants.SUCCESS, "Atraso reportado"
-                )
+                messages.add_message(request, constants.SUCCESS, "Atraso reportado")
                 return redirect(redirect_url)
         else:
             form = AtrasoForm(instance=ordem)
@@ -543,7 +572,7 @@ def reagendar(request, ordem_id):
     try:
         ordem = OrdemDeServico.objects.get(
             id=ordem_id,
-            status__in=["Atenção", "Urgente", "Aguardando"],
+            status__in=["Atenção", "Urgente", "Aguardando"], aceite = True
         )
         if request.method == "POST":
             ordem.status = "Reagendar"
@@ -583,3 +612,54 @@ def ocorrencias(request, ordem_id):
         return render(request, "ocorrencias.html", {"form": form, "ordem": ordem})
     except Exception as e:
         return render(request, "error.html", {"error_message": str(e)})
+
+
+def aceite(request):
+    user = request.user
+    ordens_pendentes = OrdemDeServico.objects.filter(
+        aceite=False, tecnico=user, status__in=["Atenção", "Urgente", "Aguardando"]
+    )
+    data_atual = datetime.now().date()
+    for ordem in ordens_pendentes:
+        data_previsao = ordem.previsao_chegada.date()
+        # Verifica as condições para alterar o status
+        if data_previsao < data_atual and ordem.status in [
+            "Atenção",
+            "Urgente",
+            "Aguardando",
+        ]:
+            # Atualiza o status e adiciona o motivo
+            ordem.status = "Reagendar"
+            ordem.status_tecnico = "Aguardando Aceite"
+            ordem.vezes_reagendada += 1
+            ordem.descricao_reagendamento = "Ordem ignorada pelo técnico"
+            ordem.save()
+
+    return render(request, "aceite.html", {"ordens_pendentes": ordens_pendentes})
+
+
+def aceitar_ordem(request, ordem_id):
+    ordem = get_object_or_404(OrdemDeServico, id=ordem_id)
+    if request.method == "POST":
+        ordem.aceite = True
+        ordem.save()
+        messages.add_message(request, constants.SUCCESS, "Ordem Aceita")
+        return redirect("aceite")
+    else:
+        messages.warning(request, "Esta ordem já foi aceita anteriormente.")
+    return redirect("aceite")
+
+
+def recusar_ordem(request, ordem_id):
+    ordem = get_object_or_404(OrdemDeServico, id=ordem_id)
+    if request.method == "POST":
+        ordem.status = "Reagendar"
+        ordem.status_tecnico = "Aguardando Aceite"
+        ordem.vezes_reagendada += 1
+        ordem.descricao_reagendamento = "Ordem recusada pelo técnico"
+        ordem.save()
+        messages.add_message(
+            request, constants.SUCCESS, "Ordem enviada para reagendamento"
+        )
+        return redirect("aceite")
+    return redirect("aceite")

@@ -305,11 +305,13 @@ def update_reagendar(request, ordem_id):
         staff = request.user
         avisos = calcula_atraso_reagendamento(staff)
         ordem = get_object_or_404(OrdemDeServico, id=ordem_id)
-        if ordem.atraso_em_minutos:
-            ordem.atraso_em_minutos = ""
-            ordem.atraso_descricao = ""
         if request.method == "POST":
+            if ordem.atraso_em_minutos:
+                ordem.atraso_em_minutos = ""
+                ordem.atraso_descricao = ""
             ordem.descricao_reagendamento = ""
+            ordem.aceite = False
+            ordem.save()
             ocorrencias = Ocorrencia.objects.filter(ordem_de_servico=ordem)
             if ocorrencias:
                 ocorrencias.delete()

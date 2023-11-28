@@ -86,7 +86,8 @@
                   <div class="oc_l_data color04 font-dark">Cliente: {{ ordem.cliente.nome }}</div>
                   <div class="oc_l_data color04 font-dark">Endereço da OS: {{ ordem.endereco }}</div>
                   <div class="oc_l_data color04 font-dark">Detalhes: Material - {{ ordem.material}} Equipamentos - {{ordem.equipamento}}</div>
-                  <div class="oc_l_data color04 font-dark">Atraso: {{ ordem.atraso_em_minutos }}m</div>
+                  <div class="oc_l_data color04 font-dark">Atraso em minutos: {{ ordem.atraso_em_minutos }}</div>
+                  <div class="oc_l_data color04 font-dark">Aceite: {{ ordem.aceite }}</div>
                   {% if ordem.ocorrencias.all %}
                     <div class="oc_l_data color07 font-dark ">
                       Ocorrências
