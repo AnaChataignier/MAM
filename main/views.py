@@ -9,7 +9,7 @@ from django.contrib.auth.decorators import user_passes_test
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from config import CHAVE_API_GOOGLE
-from .helpers import is_tecnico, is_tecnico_and_owner
+from .helpers import is_tecnico, is_tecnico_and_owner, calcula_aceite
 from django.db.models import Q, Count
 from decimal import Decimal
 from staff.models import OrdemDeServico, HistoricoOsFinalizada
@@ -420,6 +420,9 @@ def dashboard(request):
         percent_urgente = 0
         percent_aguardando = 0
 
+        # Calcula Aceite
+        aceites = calcula_aceite(user)
+
         # Calcula a porcentagem de cada status em relação ao total de ordens
         for count in counts:
             if count["status"] == "Concluído":
@@ -465,6 +468,7 @@ def dashboard(request):
                 "card_realizadas_4d": len(card_realizadas_4d),
                 "proximas_hoje": proximas_hoje,
                 "realizadas_hoje": realizadas_hoje,
+                **aceites,
             },
         )
     except Exception as e:
@@ -571,8 +575,7 @@ def atraso(request, ordem_id):
 def reagendar(request, ordem_id):
     try:
         ordem = OrdemDeServico.objects.get(
-            id=ordem_id,
-            status__in=["Atenção", "Urgente", "Aguardando"], aceite = True
+            id=ordem_id, status__in=["Atenção", "Urgente", "Aguardando"], aceite=True
         )
         if request.method == "POST":
             ordem.status = "Reagendar"
@@ -635,7 +638,11 @@ def aceite(request):
             ordem.descricao_reagendamento = "Ordem ignorada pelo técnico"
             ordem.save()
 
-    return render(request, "aceite.html", {"ordens_pendentes": ordens_pendentes})
+    return render(
+        request,
+        "aceite.html",
+        {"ordens_pendentes": ordens_pendentes, "qtdos": len(ordens_pendentes)},
+    )
 
 
 def aceitar_ordem(request, ordem_id):

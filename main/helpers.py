@@ -31,3 +31,16 @@ def is_tecnico_and_owner(view_func):
         )  # Ou redirecione para uma página de erro
 
     return _wrapped_view
+
+
+def calcula_aceite(user):
+    try:
+        ordens = OrdemDeServico.objects.filter(
+            tecnico=user, aceite=False, status__in=["Aguardando", "Atenção", "Urgente"]
+        )
+        ordens_pendentes = len(ordens)
+        return {"ordens_pendentes": ordens_pendentes}
+
+    except Exception as e:
+        print(f"Erro ao calcular aviso: {e}")
+        return {"ordens_pendentes": 0}

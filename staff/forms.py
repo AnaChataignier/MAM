@@ -181,10 +181,13 @@ class GerenteOrdemDeServicoForm(forms.ModelForm):
 class ReagendarOrdemDeServicoForm(forms.ModelForm):
     class Meta:
         model = OrdemDeServico
-        fields = ["previsao_chegada", "previsao_execucao", "status"]
+        fields = ["previsao_chegada", "previsao_execucao", "status", "tecnico"]
 
     def __init__(self, *args, **kwargs):
         super(ReagendarOrdemDeServicoForm, self).__init__(*args, **kwargs)
+        self.fields["tecnico"].widget = forms.Select(attrs={"class": "form-control"})
+        self.fields["tecnico"].queryset = self.get_tecnicos_queryset()
+        self.fields["tecnico"].empty_label = "Escolha um técnico"
 
         self.fields["status"].choices = [
             choice
@@ -197,6 +200,10 @@ class ReagendarOrdemDeServicoForm(forms.ModelForm):
                 field.widget.attrs["class"] += " form-control"
             else:
                 field.widget.attrs["class"] = "form-control"
+                
+    def get_tecnicos_queryset(self):
+        group_tecnico = Group.objects.get(name="Técnico")
+        return group_tecnico.user_set.all()
 
 
 class EscolherTecnicoForm(forms.ModelForm):

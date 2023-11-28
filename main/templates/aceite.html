@@ -62,7 +62,10 @@ text-align: center;
               <div class="tab-pane fade show active" id="pills-01" role="tabpanel" aria-labelledby="pills-home-tab" tabindex="0">
                 <!-- OS Urgente -->
                 <label class="mt-2 font-medium color04">Total de {{qtdos}} OS's:</label>
+                <br>
+                <br>
                 {% for ordem in ordens_pendentes %}
+                
                 <div class="oc_lista_item">
                       <a href="{% url 'os_detail2' ordem.id %}" class="a-whole"></a>
                       <div class="row">
@@ -73,7 +76,9 @@ text-align: center;
                               <div class="oc_l_data color04 font-light">Previsão de chegada - {{ ordem.previsao_chegada }}</div>
                               <div class="oc_l_nome font-medium color04">Ticket #{{ ordem.ticket }}</div>
                               <div class="oc_l_status font-medium {% if ordem.status == 'Urgente' %}color-red{% elif ordem.status == 'Atenção' %}color-yellow{% elif ordem.status == 'Aguardando' %}color-blue{% elif ordem.status == 'Concluído' %}color-green{% endif %}">{{ ordem.status }}</div>
-                          </div>
+                              
+                         </div>            
+                                      
                           {% if ordem.status == "Urgente" %}
                               <div class="status_icon bg05 text-light">
                                   <i class="bi bi-exclamation-triangle-fill"></i>
@@ -91,37 +96,25 @@ text-align: center;
                                 <i class="bi bi-check-circle"></i>
                             </div>
                           {% endif %}
-                      </div>
+                            
+                          </div>  
                   </div>
                    <!-- Adicione botões Aceitar e Recusar aqui -->
-            <form method="post" action="{% url 'aceitar_ordem' ordem.id %}">
-              {% csrf_token %}
-              <button type="submit" class="btn btn-success">Aceitar</button>
-          </form>
-          <form method="post" action="{% url 'recusar_ordem' ordem.id %}">
-              {% csrf_token %}
-              <button type="submit" class="btn btn-danger">Recusar</button>
-          </form>
+                   <div class="btn-group" role="group">
+                    <form method="post" action="{% url 'aceitar_ordem' ordem.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-success">Aceitar</button>
+                    </form>
+                    <br><br>
+                    <form method="post" action="{% url 'recusar_ordem' ordem.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">Recusar</button>
+                    </form>
+                </div>
+
                   {% endfor %}
                 </div>
-                <!-- Lista das OS -->
-                <div class="pagination">
-                  <span class="step-links">
-                      {% if ordens_ativas.has_previous %}
-                          <a href="?page=1">&laquo;</a>
-                          <a href="?page={{ ordens_ativas.previous_page_number }}">anterior</a>
-                      {% endif %}
-          
-                      <span class="current-page">
-                          Página {{ ordens_ativas.number }} de {{ ordens_ativas.paginator.num_pages }}.
-                      </span>
-          
-                      {% if ordens_ativas.has_next %}
-                          <a href="?page={{ ordens_ativas.next_page_number }}">próxima</a>
-                          <a href="?page={{ ordens_ativas.paginator.num_pages }}">&raquo;</a>
-                      {% endif %}
-                  </span>
-              </div>
+                <!-- Lista das OS --> 
               </div>
       </section>
   {% endblock %}
