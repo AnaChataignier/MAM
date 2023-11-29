@@ -285,6 +285,7 @@ def reagendar_staff(request):
         ordens_reagendar = OrdemDeServico.objects.filter(
             staff=staff,
             status="Reagendar",
+            aceite=False,
         )
         return render(
             request,

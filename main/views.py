@@ -597,6 +597,7 @@ def reagendar(request, ordem_id):
         )
         if request.method == "POST":
             ordem.status = "Reagendar"
+            ordem.aceite = False
             ordem.status_tecnico = "Aguardando Aceite"
             ordem.vezes_reagendada += 1
             form = ReagendarForm(request.POST, instance=ordem)
@@ -683,6 +684,7 @@ def recusar_ordem(request, ordem_id):
     if request.method == "POST":
         ordem.status = "Reagendar"
         ordem.status_tecnico = "Aguardando Aceite"
+        ordem.aceite = False
         ordem.vezes_reagendada += 1
         ordem.descricao_reagendamento = "Ordem recusada pelo técnico"
         ordem.save()

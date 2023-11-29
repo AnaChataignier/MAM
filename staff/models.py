@@ -63,9 +63,6 @@ class HistoricoOsFinalizada(models.Model):
     nome_responsavel = models.CharField(max_length=30, null=False)
     rg_responsavel = models.CharField(max_length=12, null=False)
     observacoes = models.TextField(max_length=400)
-    foto = models.ImageField(
-        upload_to="img/historico_os_finalizada/", null=True, blank=True
-    )
     video = models.FileField(
         upload_to="videos/historico_os_finalizada/", null=True, blank=True
     )
@@ -107,3 +104,16 @@ class Ocorrencia(models.Model):
 
     def __str__(self):
         return f"Ocorrência para Ordem de Serviço #{self.ordem_de_servico.pk}"
+
+
+class FotoHistorico(models.Model):
+    historico = models.ForeignKey(
+        'HistoricoOsFinalizada', 
+        on_delete=models.CASCADE, 
+        related_name='fotos'
+    )
+    foto = models.ImageField(
+        upload_to="img/historico_os_finalizada/", 
+        null=True, 
+        blank=True
+    ) 

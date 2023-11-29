@@ -15,6 +15,7 @@ def calcula_atraso_reagendamento(user):
         ordens_reagendar = OrdemDeServico.objects.filter(
             staff=user,
             status="Reagendar",
+            aceite=False,
         )
         total_reagendar = len(ordens_reagendar)
         atrasos = len(ordens_em_atraso)
