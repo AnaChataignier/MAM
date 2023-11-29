@@ -67,7 +67,7 @@ text-align: center;
                 {% for ordem in ordens_pendentes %}
                 
                 <div class="oc_lista_item">
-                      <a href="{% url 'os_detail2' ordem.id %}" class="a-whole"></a>
+                      <a href="{% url 'os_detail3' ordem.id %}" class="a-whole"></a>
                       <div class="row">
                           <div class="col-2 col-md-1">
                               <div class="icon bg-light"><i class="bi bi-briefcase text-dark"></i></div>
@@ -100,17 +100,7 @@ text-align: center;
                           </div>  
                   </div>
                    <!-- Adicione botões Aceitar e Recusar aqui -->
-                   <div class="btn-group" role="group">
-                    <form method="post" action="{% url 'aceitar_ordem' ordem.id %}">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-success">Aceitar</button>
-                    </form>
-                    <br><br>
-                    <form method="post" action="{% url 'recusar_ordem' ordem.id %}">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-danger">Recusar</button>
-                    </form>
-                </div>
+                  
 
                   {% endfor %}
                 </div>

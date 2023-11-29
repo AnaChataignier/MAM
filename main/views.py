@@ -550,6 +550,24 @@ def os_detail2(request, ordem_id):
         return render(request, "error.html", {"error_message": str(e)})
 
 
+def os_detail3(request, ordem_id):
+    user = request.user
+    ordem = get_object_or_404(
+        OrdemDeServico,
+        id=ordem_id,
+        tecnico=user,
+        status__in=["Atenção", "Urgente", "Aguardando", "Concluído"],
+    )
+    return render(
+            request,
+            "os_detail3.html",
+            {
+                "ordem": ordem,
+                "user": user,
+            },
+        )
+
+
 def atraso(request, ordem_id):
     try:
         ordem = get_object_or_404(
@@ -637,6 +655,9 @@ def aceite(request):
             ordem.vezes_reagendada += 1
             ordem.descricao_reagendamento = "Ordem ignorada pelo técnico"
             ordem.save()
+    ordens_pendentes = OrdemDeServico.objects.filter(
+        aceite=False, tecnico=user, status__in=["Atenção", "Urgente", "Aguardando"]
+    )
 
     return render(
         request,
