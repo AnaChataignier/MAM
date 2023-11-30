@@ -111,11 +111,18 @@ i{
                                     class="oc_l_status font-medium {% if ordem.status == 'Urgente' %}color-red{% elif ordem.status == 'Atenção' %}color-yellow{% elif ordem.status == 'Aguardando' %}color-blue{% elif ordem.status == 'Concluído' %}color-green{% endif %}">
                                     {{ ordem.status }}</div>
                                     <hr>
-                                    {% if historico.foto %}
-                                    <img class="imagem" src="{{historico.foto.url}}">
-                                    {% else %}
-                                        <!-- Código para lidar com o caso em que a foto não existe -->
-                                    {% endif %}
+                                    {% if historico.fotos.all %}
+                                    <p>Fotos:</p>
+                                    <div class="row">
+                                        {% for foto in historico.fotos.all %}
+                                            <div class="col-md-3 mb-2">
+                                                <img class="imagem" src="{{ foto.foto.url }}" style="width: 100%; height: auto;">
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                {% else %}
+                                    <!-- Código para lidar com o caso em que não há fotos -->
+                                {% endif %}
                             </div>
 
                         </div>

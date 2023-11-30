@@ -25,7 +25,7 @@ def deletar_cliente(request, cliente_id):
 @user_passes_test(is_gerente)
 def gerente_lista_historico(request):
     try:
-        historicos = HistoricoOsFinalizada.objects.all()
+        historicos = HistoricoOsFinalizada.objects.prefetch_related("fotos").all()
         return render(
             request,
             "gerente_lista_historico.html",
