@@ -12,7 +12,7 @@ from config import CHAVE_API_GOOGLE
 from .helpers import is_tecnico, is_tecnico_and_owner, calcula_aceite
 from django.db.models import Q, Count
 from decimal import Decimal
-from staff.models import OrdemDeServico, HistoricoOsFinalizada
+from staff.models import OrdemDeServico, HistoricoOsFinalizada, FotoHistorico
 from authentication.forms import TelaUserForm
 from datetime import date, timedelta, datetime, time
 from django.urls import reverse
@@ -216,6 +216,7 @@ def finalizar_os(request, ordem_id):
             ordem.status_tecnico = "Finalizado"
             ordem.save()
 
+            # Passe as informações necessárias para a template de finalização
             return render(
                 request,
                 "finalizar_os.html",
@@ -225,7 +226,8 @@ def finalizar_os(request, ordem_id):
         elif request.method == "POST":
             historico_form = HistoricoOsFinalizadaForm(request.POST, request.FILES)
             if historico_form.is_valid():
-                historico = historico_form.save(commit=False)
+                fotos = request.FILES.getlist("fotos")
+
                 ordem = get_object_or_404(
                     OrdemDeServico,
                     id=ordem_id,
@@ -233,8 +235,15 @@ def finalizar_os(request, ordem_id):
                 )
                 ordem.status = "Concluído"
                 ordem.save()
+
+                historico = historico_form.save(commit=False)
                 historico.ordem_de_servico = ordem
                 historico.save()
+
+                # Salvando as fotos na instância de HistoricoOsFinalizada
+                for foto in fotos:
+                    FotoHistorico.objects.create(historico=historico, foto=foto)
+
                 return redirect("dashboard")
             else:
                 return render(
@@ -245,6 +254,53 @@ def finalizar_os(request, ordem_id):
         return HttpResponse("Método não permitido")
     except Exception as e:
         return render(request, "error.html", {"error_message": str(e)})
+
+
+# @is_tecnico_and_owner
+# def finalizar_os(request, ordem_id):
+#     try:
+#         if request.method == "GET":
+#             historico_form = HistoricoOsFinalizadaForm()
+#             user = request.user
+#             ordem = get_object_or_404(
+#                 OrdemDeServico,
+#                 id=ordem_id,
+#                 status__in=["Atenção", "Urgente", "Aguardando", "Concluído"],
+#             )
+#             if ordem.status == "Concluído":
+#                 return HttpResponse("Ordem de Serviço já finalizada")
+#             ordem.status_tecnico = "Finalizado"
+#             ordem.save()
+
+#             return render(
+#                 request,
+#                 "finalizar_os.html",
+#                 {"ordem": ordem, "user": user, "historico_form": historico_form},
+#             )
+
+#         elif request.method == "POST":
+#             historico_form = HistoricoOsFinalizadaForm(request.POST, request.FILES)
+#             if historico_form.is_valid():
+#                 historico = historico_form.save(commit=False)
+#                 ordem = get_object_or_404(
+#                     OrdemDeServico,
+#                     id=ordem_id,
+#                     status__in=["Atenção", "Urgente", "Aguardando", "Concluído"],
+#                 )
+#                 ordem.status = "Concluído"
+#                 ordem.save()
+#                 historico.ordem_de_servico = ordem
+#                 historico.save()
+#                 return redirect("dashboard")
+#             else:
+#                 return render(
+#                     request,
+#                     "finalizar_os.html",
+#                     {"historico_form": historico_form},
+#                 )
+#         return HttpResponse("Método não permitido")
+#     except Exception as e:
+#         return render(request, "error.html", {"error_message": str(e)})
 
 
 @user_passes_test(is_tecnico)
@@ -559,13 +615,13 @@ def os_detail3(request, ordem_id):
         status__in=["Atenção", "Urgente", "Aguardando", "Concluído"],
     )
     return render(
-            request,
-            "os_detail3.html",
-            {
-                "ordem": ordem,
-                "user": user,
-            },
-        )
+        request,
+        "os_detail3.html",
+        {
+            "ordem": ordem,
+            "user": user,
+        },
+    )
 
 
 def atraso(request, ordem_id):

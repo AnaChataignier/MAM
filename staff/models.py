@@ -67,17 +67,17 @@ class HistoricoOsFinalizada(models.Model):
         upload_to="videos/historico_os_finalizada/", null=True, blank=True
     )
 
-    def cliente_ticket_filename(instance, filename):
-        ext = filename.split(".")[-1]
-        return f"{instance.nome_responsavel}_{instance.ordem_de_servico.ticket}.{ext}"
+    # def cliente_ticket_filename(instance, filename):
+    #     ext = filename.split(".")[-1]
+    #     return f"{instance.nome_responsavel}_{instance.ordem_de_servico.ticket}.{ext}"
 
-    def save(self, *args, **kwargs):
-        # Chama a função que define o caminho da imagem
-        if self.foto:
-            self.foto.name = self.cliente_ticket_filename(self.foto.name)
-        if self.video:
-            self.video.name = self.cliente_ticket_filename(self.video.name)
-        super(HistoricoOsFinalizada, self).save(*args, **kwargs)
+    # def save(self, *args, **kwargs):
+    #     # Chama a função que define o caminho da imagem
+    #     if self.foto:
+    #         self.foto.name = self.cliente_ticket_filename(self.foto.name)
+    #     if self.video:
+    #         self.video.name = self.cliente_ticket_filename(self.video.name)
+    #     super(HistoricoOsFinalizada, self).save(*args, **kwargs)
 
 
 class Ocorrencia(models.Model):
@@ -108,12 +108,8 @@ class Ocorrencia(models.Model):
 
 class FotoHistorico(models.Model):
     historico = models.ForeignKey(
-        'HistoricoOsFinalizada', 
-        on_delete=models.CASCADE, 
-        related_name='fotos'
+        "HistoricoOsFinalizada", on_delete=models.CASCADE, related_name="fotos"
     )
     foto = models.ImageField(
-        upload_to="img/historico_os_finalizada/", 
-        null=True, 
-        blank=True
-    ) 
+        upload_to="img/historico_os_finalizada/", null=True, blank=True
+    )
