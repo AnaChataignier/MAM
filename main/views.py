@@ -29,6 +29,7 @@ def minhas_os(request):
         previsao_chegada_filter = request.GET.get("previsao_chegada")
 
         user = request.user
+        aceites = calcula_aceite(user)
         ordens_ativas = OrdemDeServico.objects.filter(
             tecnico=user,
             status__in=["Atenção", "Urgente", "Aguardando", "Concluído"],
@@ -51,7 +52,7 @@ def minhas_os(request):
             ]:
                 # Atualiza o status e adiciona o motivo
                 ordem.status = "Reagendar"
-                ordem.status_tecnico = "Aguardando Aceite"
+                ordem.status_tecnico = "Aguardando Início"
                 ordem.vezes_reagendada += 1
                 ordem.descricao_reagendamento = "Ordem ignorada pelo técnico"
                 ordem.save()
@@ -108,7 +109,7 @@ def minhas_os(request):
         return render(
             request,
             "minhas_os.html",
-            {"ordens_ativas": ordens_ativas, "qtdos": len(ordens_ativas_counter)},
+            {"ordens_ativas": ordens_ativas, "qtdos": len(ordens_ativas_counter), **aceites},
         )
     except Exception as e:
         return render(request, "error.html", {"error_message": str(e)})
@@ -126,6 +127,7 @@ def os_detail(request, ordem_id):
     try:
         api_google_maps_key = CHAVE_API_GOOGLE
         user = request.user
+        aceites = calcula_aceite(user)
         ordem = get_object_or_404(
             OrdemDeServico,
             id=ordem_id,
@@ -143,6 +145,7 @@ def os_detail(request, ordem_id):
                 "user": user,
                 "status_ordem": status_ordem,
                 "api_google_maps_key": api_google_maps_key,
+                **aceites,
             },
         )
     except Exception as e:
@@ -154,6 +157,7 @@ def a_caminho(request, ordem_id):
     try:
         api_google_maps_key = CHAVE_API_GOOGLE
         user = request.user
+        aceites = calcula_aceite(user)
         ordem = get_object_or_404(
             OrdemDeServico,
             id=ordem_id,
@@ -166,7 +170,7 @@ def a_caminho(request, ordem_id):
         return render(
             request,
             "a_caminho.html",
-            {"ordem": ordem, "user": user, "api_google_maps_key": api_google_maps_key},
+            {"ordem": ordem, "user": user, "api_google_maps_key": api_google_maps_key, **aceites},
         )
     except Exception as e:
         return render(request, "error.html", {"error_message": str(e)})
@@ -176,6 +180,7 @@ def a_caminho(request, ordem_id):
 def no_local(request, ordem_id):
     try:
         user = request.user
+        aceites = calcula_aceite(user)
         ordem = get_object_or_404(
             OrdemDeServico,
             id=ordem_id,
@@ -194,7 +199,7 @@ def no_local(request, ordem_id):
         return render(
             request,
             "no_local.html",
-            {"ordem": ordem, "user": user, "ocorrencias": ocorrencias},
+            {"ordem": ordem, "user": user, "ocorrencias": ocorrencias, **aceites},
         )
     except Exception as e:
         return render(request, "error.html", {"error_message": str(e)})
@@ -206,6 +211,7 @@ def finalizar_os(request, ordem_id):
         if request.method == "GET":
             historico_form = HistoricoOsFinalizadaForm()
             user = request.user
+            aceites = calcula_aceite(user)
             ordem = get_object_or_404(
                 OrdemDeServico,
                 id=ordem_id,
@@ -249,7 +255,7 @@ def finalizar_os(request, ordem_id):
                 return render(
                     request,
                     "finalizar_os.html",
-                    {"historico_form": historico_form},
+                    {"historico_form": historico_form, **aceites},
                 )
         return HttpResponse("Método não permitido")
     except Exception as e:
@@ -536,8 +542,9 @@ def dashboard(request):
 @user_passes_test(is_tecnico)
 def tela_user(request):
     try:
+        user = request.user
+        aceites = calcula_aceite(user)
         if request.method == "POST":
-            user = request.user
             form = TelaUserForm(request.POST, request.FILES, instance=request.user)
             if form.is_valid():
                 form.save()
@@ -548,7 +555,7 @@ def tela_user(request):
             user = request.user
             form = TelaUserForm(instance=request.user)
 
-        return render(request, "tela_user.html", {"form": form, "user": user})
+        return render(request, "tela_user.html", {"form": form, "user": user, **aceites})
     except Exception as e:
         return render(request, "error.html", {"error_message": str(e)})
 
@@ -556,14 +563,18 @@ def tela_user(request):
 @user_passes_test(is_tecnico)
 def tela_busca(request):
     try:
-        return render(request, "tela_busca.html")
+        user = request.user
+        aceites = calcula_aceite(user)
+        return render(request, "tela_busca.html", {"user": user, **aceites})
     except Exception as e:
-        return render(request, "error.html", {"error_message": str(e)})
+        return render(request, "error.html", {"error_message": str(e)}) 
 
 
 @user_passes_test(is_tecnico)
 def tela_busca_resultado(request):
     try:
+        user = request.user
+        aceites = calcula_aceite(user)
         ordens = OrdemDeServico.objects.filter(
             tecnico=request.user,
             status__in=["Atenção", "Urgente", "Aguardando", "Concluído"],
@@ -579,7 +590,7 @@ def tela_busca_resultado(request):
                     | Q(material__icontains=buscar_ticket)
                 )
 
-        return render(request, "tela_busca_resultado.html", {"ordens": ordens})
+        return render(request, "tela_busca_resultado.html", {"ordens": ordens, **aceites})
     except Exception as e:
         return render(request, "error.html", {"error_message": str(e)})
 
@@ -588,6 +599,7 @@ def tela_busca_resultado(request):
 def os_detail2(request, ordem_id):
     try:
         user = request.user
+        aceites = calcula_aceite(user)
         ordem = get_object_or_404(
             OrdemDeServico,
             id=ordem_id,
@@ -600,6 +612,7 @@ def os_detail2(request, ordem_id):
             {
                 "ordem": ordem,
                 "user": user,
+                **aceites,
             },
         )
     except Exception as e:
@@ -608,6 +621,7 @@ def os_detail2(request, ordem_id):
 
 def os_detail3(request, ordem_id):
     user = request.user
+    aceites = calcula_aceite(user)
     ordem = get_object_or_404(
         OrdemDeServico,
         id=ordem_id,
@@ -620,6 +634,7 @@ def os_detail3(request, ordem_id):
         {
             "ordem": ordem,
             "user": user,
+            **aceites,
         },
     )
 
@@ -631,6 +646,8 @@ def atraso(request, ordem_id):
             id=ordem_id,
             status__in=["Atenção", "Urgente", "Aguardando"],
         )
+        user = request.user
+        aceites = calcula_aceite(user)
         if request.method == "POST":
             form = AtrasoForm(request.POST, instance=ordem)
             if form.is_valid():
@@ -641,7 +658,7 @@ def atraso(request, ordem_id):
         else:
             form = AtrasoForm(instance=ordem)
 
-        return render(request, "atraso.html", {"form": form, "ordem": ordem})
+        return render(request, "atraso.html", {"form": form, "ordem": ordem, **aceites})
     except Exception as e:
         return render(request, "error.html", {"error_message": str(e)})
 
@@ -651,10 +668,12 @@ def reagendar(request, ordem_id):
         ordem = OrdemDeServico.objects.get(
             id=ordem_id, status__in=["Atenção", "Urgente", "Aguardando"], aceite=True
         )
+        user = request.user
+        aceites = calcula_aceite(user)
         if request.method == "POST":
             ordem.status = "Reagendar"
             ordem.aceite = False
-            ordem.status_tecnico = "Aguardando Aceite"
+            ordem.status_tecnico = "Aguardando Início"
             ordem.vezes_reagendada += 1
             form = ReagendarForm(request.POST, instance=ordem)
             if form.is_valid():
@@ -666,13 +685,15 @@ def reagendar(request, ordem_id):
                 return redirect(redirect_url)
         else:
             form = ReagendarForm(instance=ordem)
-        return render(request, "reagendar.html", {"ordem": ordem, "form": form})
+        return render(request, "reagendar.html", {"ordem": ordem, "form": form, **aceites})
     except Exception as e:
         return render(request, "error.html", {"error_message": str(e)})
 
 
 def ocorrencias(request, ordem_id):
     try:
+        user = request.user
+        aceites = calcula_aceite(user)
         ordem = get_object_or_404(OrdemDeServico, id=ordem_id)
 
         if request.method == "POST":
@@ -687,13 +708,14 @@ def ocorrencias(request, ordem_id):
         else:
             form = OcorrenciaForm()
 
-        return render(request, "ocorrencias.html", {"form": form, "ordem": ordem})
+        return render(request, "ocorrencias.html", {"form": form, "ordem": ordem, **aceites})
     except Exception as e:
         return render(request, "error.html", {"error_message": str(e)})
 
 
 def aceite(request):
     user = request.user
+    aceites = calcula_aceite(user)
     ordens_pendentes = OrdemDeServico.objects.filter(
         aceite=False, tecnico=user, status__in=["Atenção", "Urgente", "Aguardando"]
     )
@@ -708,7 +730,7 @@ def aceite(request):
         ]:
             # Atualiza o status e adiciona o motivo
             ordem.status = "Reagendar"
-            ordem.status_tecnico = "Aguardando Aceite"
+            ordem.status_tecnico = "Aguardando Início"
             ordem.vezes_reagendada += 1
             ordem.descricao_reagendamento = "Ordem ignorada pelo técnico"
             ordem.save()
@@ -719,7 +741,7 @@ def aceite(request):
     return render(
         request,
         "aceite.html",
-        {"ordens_pendentes": ordens_pendentes, "qtdos": len(ordens_pendentes)},
+        {"ordens_pendentes": ordens_pendentes, "qtdos": len(ordens_pendentes), **aceites},
     )
 
 
@@ -739,7 +761,7 @@ def recusar_ordem(request, ordem_id):
     ordem = get_object_or_404(OrdemDeServico, id=ordem_id)
     if request.method == "POST":
         ordem.status = "Reagendar"
-        ordem.status_tecnico = "Aguardando Aceite"
+        ordem.status_tecnico = "Aguardando Início"
         ordem.aceite = False
         ordem.vezes_reagendada += 1
         ordem.descricao_reagendamento = "Ordem recusada pelo técnico"

@@ -49,7 +49,7 @@ def create_cliente_and_endereco():
         data_criacao=fake.past_datetime(start_date="-30d"),
         cliente=cliente,
         atividade="Manutenção",
-        status_tecnico="Aguardando Aceite",
+        status_tecnico="Aguardando Início",
     )
 
 

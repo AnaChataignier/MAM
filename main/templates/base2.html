@@ -38,7 +38,7 @@
           <div id="super_menu">
             <div class="row">
               <div class="col-3 text-start">
-                <i class="bi bi-justify i_main"></i> {% if aceites != 0 %}<span class="badge">{{ aceites }}</span>{% endif %}
+                <i class="bi bi-justify i_main"></i> {% if pendentes != 0 %}<span class="badge">{{ pendentes }}</span>{% endif %}
               </li>
               </div>
               <div class="col-9 text-end">
@@ -67,7 +67,9 @@
               aria-controls="collapseExample"
             ></button>
             <div class="collapse" id="col_menu_main">
+      
               <div class="card card-body box-shadow">
+
                 <ul>
                   <!-- Botao caso app tenha fechado e user precisa voltar para OS que ja estava em andamento -->
                   {% comment %}
@@ -116,9 +118,9 @@
                       ><i class="bi bi-gear-fill"></i> Configurações</a
                       >
                     </li>
-                    <li >
+                    <li class="d-flex justify-content" >
                       <a href="{% url 'aceite'%}" class="font-medium color04"
-                        ><i class="bi bi-clock"></i> Ordens Pendentes {% if aceites != 0 %}<span class="badge">{{ aceites }}</span>{% endif %}</a
+                        ><i class="bi bi-clock"></i> Ordens Pendentes {% if pendentes != 0 %}<span class="badge">{{ pendentes }}</span>{% endif %}</a
                       >
                     </li>
                     <li>
@@ -155,8 +157,8 @@
           ></a>
         </li>
         <li class="col-3 p-0 mt-1 text-end text-md-center">
-          <a href="{% url 'tela_busca' %}" class="text-end text-md-center"
-            ><i class="bi bi-search"></i
+          <a href="{% url 'aceite' %}" class="text-end text-md-center"
+            ><i class="bi bi-clock">{% if pendentes != 0 %}<span class="badge">{{ pendentes }}</span>{% endif %}</i
           ></a>
         </li>
         <li class="col-3 mt-1">

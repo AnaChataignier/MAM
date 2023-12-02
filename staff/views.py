@@ -139,7 +139,7 @@ def formulario_os(request):
                 ordem_de_servico.staff = request.user
                 endereco = endereco_form.save()
                 ordem_de_servico.endereco = endereco
-                ordem_de_servico.status_tecnico = "Aguardando Aceite"
+                ordem_de_servico.status_tecnico = "Aguardando Início"
                 ordem_de_servico.save()
                 messages.add_message(request, constants.SUCCESS, "Dados salvos!")
                 return redirect("lista_os_sem_tecnico")

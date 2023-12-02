@@ -44,7 +44,7 @@ ACTIVITY_CHOICES = (
 )
 
 TECNICAL_CHOICES = (
-    ("Aguardando Aceite", "Aguardando Aceite"),
+    ("Aguardando Início", "Aguardando Início"),
     ("À Caminho", "À Caminho"),
     ("No Local", "No local"),
     ("Finalizado", "Finalizado"),

@@ -3,7 +3,14 @@ position: relative; width: 100%; height: 175px; -moz-user-select: none;
 -webkit-user-select: none; -ms-user-select: none; user-select: none; }
 .signature-pad { position: absolute; left: 0; top: 0; width:100%; height:175px;
 background: #dde4e8; border: 1px dotted #aaa; margin-bottom: 10px;
-border-radius: 8px; } {% endblock %} {% block cdn %}
+border-radius: 8px; } .badge{
+  background-color: red;
+  color: white;
+  border-radius: 50%;
+  font-size: 11px;
+  position: relative;
+}
+ {% endblock %} {% block cdn %}
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <!-- Adicione a biblioteca jQuery Mask Plugin -->

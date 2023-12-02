@@ -39,7 +39,7 @@ class Migration(migrations.Migration):
                 ('data_criacao', models.DateTimeField(auto_now_add=True)),
                 ('contrato', models.CharField(blank=True, max_length=700, null=True)),
                 ('atividade', models.CharField(choices=[('Manutenção', 'Manutenção'), ('Ativação', 'Ativação'), ('Logística', 'Logística'), ('Teste Interno', 'Teste Interno')], max_length=50)),
-                ('status_tecnico', models.CharField(choices=[('Aguardando Aceite', 'Aguardando Aceite'), ('À Caminho', 'À Caminho'), ('No Local', 'No local'), ('Finalizado', 'Finalizado')], max_length=50)),
+                ('status_tecnico', models.CharField(choices=[('Aguardando Início', 'Aguardando Início'), ('À Caminho', 'À Caminho'), ('No Local', 'No local'), ('Finalizado', 'Finalizado')], max_length=50)),
                 ('status', models.CharField(choices=[('Reagendar', 'Reagendar'), ('Aguardando', 'Aguardando'), ('Atenção', 'Atenção'), ('Urgente', 'Urgente'), ('Concluído', 'Concluído')], default='Aguardando', max_length=10)),
                 ('atraso_em_minutos', models.CharField(choices=[('', 'Selecione'), ('15', '15 minutos'), ('30', '30 minutos'), ('60', '1 hora'), ('120', '2 horas'), ('180', '3 horas')], max_length=50)),
                 ('atraso_descricao', models.TextField(max_length=400)),

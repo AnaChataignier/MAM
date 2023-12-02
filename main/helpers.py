@@ -38,9 +38,9 @@ def calcula_aceite(user):
         ordens = OrdemDeServico.objects.filter(
             tecnico=user, aceite=False, status__in=["Aguardando", "Atenção", "Urgente"]
         )
-        ordens_pendentes = len(ordens)
-        return {"ordens_pendentes": ordens_pendentes}
+        pendentes = len(ordens)
+        return {"pendentes": pendentes}
 
     except Exception as e:
         print(f"Erro ao calcular aviso: {e}")
-        return {"ordens_pendentes": 0}
+        return {"pendentes": 0}
