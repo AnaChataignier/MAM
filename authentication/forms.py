@@ -7,9 +7,7 @@ from django.contrib.auth.forms import AuthenticationForm
 
 class CustomUserForm(UserCreationForm):
     GROUP_CHOICES = [
-        ("Técnico", "Técnico"),
-        ("Staff", "Staff"),
-        ("Gerente", "Gerente"),
+        ("Técnico", "Técnico")
     ]
 
     group = forms.ChoiceField(choices=GROUP_CHOICES)
