@@ -13,7 +13,7 @@
 <h2 align='center'>Sobre o projeto</h2>
 
 
-<p align='center'>A plataforma Maminfo é aplicativo feito sob medida para atender às necessidades da Maminfo | Soluções Unificadas,
+<p align='center'>A. plataforma Maminfo é aplicativo feito sob medida para atender às necessidades da Maminfo | Soluções Unificadas,
 uma renomada empresa de Consultoria e Integradora de Soluções em TI e telecomunicação.
 Este projeto, concebido como um serviço de "delivery" para otimizar o gerenciamento de serviços técnicos,
 representa um marco significativo na modernização dos processos operacionais da empresa.
