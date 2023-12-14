@@ -13,7 +13,7 @@
 <h2 align='center'>Sobre o projeto</h2>
 
 
-<p align='center'>A. plataforma Maminfo é aplicativo feito sob medida para atender às necessidades da Maminfo | Soluções Unificadas,
+<p align='center'>A plataforma Maminfo é um aplicativo feito sob medida para atender às necessidades da Maminfo | Soluções Unificadas,
 uma renomada empresa de Consultoria e Integradora de Soluções em TI e telecomunicação.
 Este projeto, concebido como um serviço de "delivery" para otimizar o gerenciamento de serviços técnicos,
 representa um marco significativo na modernização dos processos operacionais da empresa.
@@ -22,7 +22,7 @@ representa um marco significativo na modernização dos processos operacionais d
 <h3 align='center'>Tecnologias utilizadas</h3>
 
 <p align='center'>
-                Postgres - Sqlite                 - Django                             - Python                                 - HTML                                           - CSS
+               Sqlite                 - Django                             - Python                                 - HTML                                           - CSS
                                                 - Javcascript
                                                 - jquery
                                                 - Bootstrap</p>
@@ -41,8 +41,7 @@ Os técnicos podem relatar atrasos, reagendar e adicionar ocorrências, incluind
 <h3 align='center'>Como executar o projeto</h3>
 
 
-<p align='center'>Esse projeto está adaptado para que interessados possam brincar um pouco e e conhecer essa versão que não é a final
-Basta seguir os passos abaixo
+<p align='center'>Para membros da equipe
 </p>
 
 <p align='center'>Com tudo instalado, siga os passos abaixo para executar o projeto:</p>
@@ -58,11 +57,10 @@ Inicie o ambiente virtual e entre nele :
 python3 -m venv .venv && source .venv/bin/activate
 
 ```
-Crie na raiz do projeto um arquivo chamado config.py lá coloque:
+Crie na raiz do projeto um arquivo chamado config.py e cole:
 ```bash
 CHAVE_API_GOOGLE = "SUA CHAVE DE API DA GOOGLE"
-KEY_PROJETO = "SECRET KEY DO SEU PROJETO"
-
+KEY_PROJETO = "django-insecure-x8d3xqxs=npvg2e2e8fpt!%!voqh+s77r@s!8*nv&6)gzkx=(x"
 
 ```
 Instale as dependências
@@ -70,6 +68,16 @@ Instale as dependências
 pip install -r requirements
 
 ```
+Crie um superuser:
+```bash
+python manage.py createsuperuser 
+```
+Perfis Staff e gerente deverão ser criados pelo admin.
+
+
+
+
+
 <br>
 <br>
 <h3>Colaboradores</h3>
